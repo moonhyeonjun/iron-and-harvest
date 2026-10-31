@@ -59,3 +59,13 @@
 - IH-002 done, ENV-001 resolved, IH-004 ready. Codex 설계/기술·Claude Code 기능 구현 역할 명시.
 - 다음: Claude Code 인수인계용 IH-101 명세, 또는 IH-004 CI. Windows/export/성능은 미검증.
 - 상세 명령/증거: [IH-002 검증](IH-002-VALIDATION.md). Git 반영은 후속 기록.
+
+### IH-002 통합·Foundation 기준점
+
+- 작업 커밋5cadb74de45c2c3d1f8faeb8e3c5be00b69d2ec7 원격 push 완료.
+- PR #1 병합: develop=87b6a19bce9c61225bdc1eb15044618645694cab.
+- PR #2 병합: main=fd376d22b2e5a1566d9e97ef3caa231394eb6977. 두 병합 모두 GitHub API에서 성공 확인 후 fetch.
+- 통합 tree와 검증한 작업 branch의 내용 일치, 충돌/강제 push/기존 이력 재작성 없음.
+- 결과 기록 문서를 docs/ih-002-results에서 정리. Foundation 완료 태그 v0.1.0 생성 대상으로 판단하며 코드 변경 없이 최종 문서 commit을 포함한다. 실제 ref/원격 SHA 확인은 완료 보고와 Git 이력에 남긴다.
+- CUA 화면 서비스 실패는 사용자 정상 표시 확인으로 보완. Python API TLS는 시스템 CA 사용으로 해결. 엔진 오류는 발견되지 않음.
+- 게임플레이/Windows/export/제품 릴리스는 미구현 또는 미검증. 다음 Codex 작업은 IH-101 구현 명세 또는 IH-004 CI.

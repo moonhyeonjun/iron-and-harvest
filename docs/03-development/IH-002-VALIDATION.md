@@ -53,4 +53,10 @@ IH-001과 IH-002의 구조·관리·버전·Import/Headless/GUI 검증을 충족
 
 ## Git 반영
 
-작업 브랜치 feature/godot-environment. 커밋·통합·태그의 실제 결과는 후속 주간 기록 및 최종 보고에 추가한다.
+- 구현/검증 커밋: `5cadb74de45c2c3d1f8faeb8e3c5be00b69d2ec7` — chore(toolchain): pin and validate Godot 4.7.2.
+- [PR #1](https://github.com/moonhyeonjun/iron-and-harvest/pull/1): feature/godot-environment → develop 병합, `87b6a19bce9c61225bdc1eb15044618645694cab`.
+- [PR #2](https://github.com/moonhyeonjun/iron-and-harvest/pull/2): develop → main 병합, `fd376d22b2e5a1566d9e97ef3caa231394eb6977`.
+- 원격 병합 commit을 fetch하고 로컬 브랜치를 fast-forward. 검증한 작업 브랜치와 통합 tree 동일성을 git diff --exit-code로 확인했다.
+- 이 결과 기록은 docs/ih-002-results에서 문서만 변경한 뒤 develop/main에 fast-forward 반영한다. 코드/테스트는 바뀌지 않는다.
+- Foundation 기준 태그는 `v0.1.0`이며 이 최종 결과 기록 커밋을 대상으로 생성한다. 태그 원격 SHA/peeled commit과 main/develop의 일치는 최종 push 후 확인한다. 제품 릴리스는 생성하지 않는다.
+- GitHub API 조회 시 Python 기본 CA가 인증서를 찾지 못했으나 시스템 `/etc/ssl/cert.pem`의 검증 컨텍스트로 해결했다. TLS 검증을 끄지 않았고 자격 증명을 저장소/출력에 기록하지 않았다.

@@ -27,7 +27,7 @@
 - ADR-010으로 Git/GitHub 자율 운영 정책 수락, 기존 안전 규칙 유지.
 - 정책·원격 동기화 결과는 GIT_BOOTSTRAP과 WEEKLY_LOG에서 관리.
 
-## v0.1.0 Foundation 준비 — 2026-10-31
+## v0.1.0 Foundation — 2026-10-31
 
 - IH-002 완료: Godot4.7.2 Standard / GDScript / Compatibility 검증.
 - .godot-version과 버전 검증 실행 도구, 기반 GDScript smoke, Python 실행기 회귀 검사 추가.
