@@ -17,3 +17,5 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 - [ADR-010 Git/GitHub 자율 운영](ADR-010-autonomous-git.md) — Accepted. ADR-009의 Git 승인 대기 부분을 대체한다.
 
 - [ADR-011 검증된 Godot 개발 기준](ADR-011-validated-godot-toolchain.md) — Accepted, IH-002 완료.
+
+- [ADR-012 생활 이동의 최소 구현 경계](ADR-012-player-movement.md) — Proposed, IH-101 상세 명세; 구현/조작 검증 대기.

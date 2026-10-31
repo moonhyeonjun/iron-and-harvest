@@ -23,6 +23,8 @@ Godot 루트는 game/이며 res://는 이 디렉터리다. 루트 data/design은
 
 실행은 `python3 tools/godot.py`를 사용하고 엔진 버전을 임의 변경하지 않는다.
 
+IH-101 착수 시 [인수인계](docs/03-development/IH-101-HANDOFF.md), [이동 명세](docs/02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](docs/03-development/IH-101-ACCEPTANCE.md)를 읽는다. ready는 명세 준비 상태이며 구현 완료가 아니다. 수치는 검증용 제안이다.
+
 ## 작업 절차
 
 1. 현재 경로·Git 상태·현재 브랜치·기존 변경을 확인한다.
