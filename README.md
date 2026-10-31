@@ -26,7 +26,7 @@
 ## 디렉터리
 
 ```text
-.github/             Issue/PR 템플릿, CI 도입 대기
+.github/             Issue/PR 템플릿, 고정 엔진 CI
 .claude/rules/       아키텍처·코딩·Git·테스트 규칙
 docs/00-overview/    개요·비전·로드맵
 docs/01-game-design/ 시스템 기획
@@ -59,4 +59,4 @@ Codex는 설계/기술 기반 검증, Claude Code는 이후 게임 기능 구현
 
 ## 다음 작업
 
-Claude Code: IH-101 통합 후 IH-102 상호작용 명세를 받아 구현. Codex: 구현 결과 기술 검토 또는 IH-004 CI 설계/구축. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.
+Claude Code: IH-101 통합 후 IH-102 상호작용 명세를 받아 구현. Codex: IH-004 CI 완료 후 IH-102 상호작용 상세 설계. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.

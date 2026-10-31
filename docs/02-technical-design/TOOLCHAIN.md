@@ -52,3 +52,7 @@ macOS의 빈 Foundation 씬과 GDScript smoke만 확인했다. Windows 실행, e
 - [macOS 배포와 서명 안내](https://godotengine.org/download/macos/)
 - [시스템 요구사항](https://docs.godotengine.org/en/stable/about/system_requirements.html)
 - [명령행 옵션](https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html)
+
+## IH-004 CI 환경 검증 후속
+
+Ubuntu24.04 x86_64 / Python3.12.15 / Godot4.7.2 Standard의 원격 headless Import·Foundation·IH-101 물리 검사를 통과했다. Linux 배포/GUI 지원 검증과 구분한다. 재현/업데이트/로그는 [CI 운영](CI.md), 실제 run은 [IH-004 기록](../03-development/IH-004-VALIDATION.md)을 따른다.

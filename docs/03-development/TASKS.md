@@ -13,7 +13,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 | IH-001 | 기반·문서·관리 체계 | documentation | priority:high | status:done | 없음 |
 | IH-002 | Godot 환경 고정과 빈 프로젝트 실행 | tech-debt | priority:critical | status:done | 없음 |
 | IH-003 | 라이선스·권리 정책 결정 | design | priority:high | status:backlog | 없음 |
-| IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:in-progress | IH-002 |
+| IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:done | IH-002 |
 | IH-005 | 실제 개발 일정 재산정 | design | priority:medium | status:backlog | 없음 |
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
@@ -76,7 +76,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: .github/workflows.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 로컬 재현·권한·실패 차단.
-- 현재 증거/미확정: CI workflow/검사 실행기 구축 중. 로컬 검사와 원격 PR 성공·실패 차단을 확인한 뒤 done 판정. [CI 운영](../02-technical-design/CI.md) 참조.
+- 현재 증거/미확정: 547b117, PR #6 merge e50a8a2. 로컬/PR/통합 push 성공, 실패 PR #7 blocked 후미병합closed, 두브랜치 required CI 보호 확인. [CI 검증](IH-004-VALIDATION.md), [운영](../02-technical-design/CI.md), ADR-013 Accepted.
 
 ## IH-005 — 실제 개발 일정 재산정
 

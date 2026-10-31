@@ -119,3 +119,13 @@
 - 문서만 수정: 검증보고/주간기록과 LIFE_SYSTEM/CLAUDE/ADR-012의 현재 상태. 게임 기능/밸런스/ADR 상태 변경 없음.
 - IH-101 done 유지. 다음 Codex 설계 후보는 IH-102; IH-004 CI도 후속. main/v0.1.0 유지, 새 태그/릴리스 없음.
 - 검토 기록은 docs/ih-101-technical-review에서 커밋하고 검증 후 develop에 통합한다. 기록 커밋 해시와 원격 결과는 Git 이력/완료 보고를 따른다.
+
+## 2026-10-31 — IH-004 CI 완료
+
+- 시작 develop cd06f94 clean. feature/ci-foundation commit547b117, PR #6 merge e50a8a283310b54be6eeaa81cd25da1b8c033a86. 게임 코드 변경 없음.
+- 구현: 공식 Action SHA·엔진 ZIP SHA-256 고정, 읽기 전용 CI checks, 공통 실행기/오류·timeout 판정, 실패 로그7일보존.
+- 로컬9단계/Python17개/경제설계7개/물리360개 통과. 원격 PR run41210930155와 통합 push run41211192044 success.
+- 실패 검증: 별도 PR #7 run41210992257은 의도한 unittest1개 실패, artifact 확인. required CI 적용 후 mergeable_state=blocked. PR은 미병합closed. 실험 이력 보존.
+- develop/main 보호: CI checks(GitHub Actions app15368), strict/admins 적용, force/deletion 금지 확인. 기본 main 파일/태그는 미변경, 수동 workflow_dispatch는 다음 main 승격 후 사용.
+- IH-004 done, ADR-013 Accepted. 상세 [검증 기록](IH-004-VALIDATION.md). 기존 GUI/Windows/Export/Steam 범위는 그대로 별도.
+- 순서: CI 완료를 확인했으므로 이후 IH-102 상호작용 명세를 Codex가 작성한다. 구현은 Claude Code 담당.

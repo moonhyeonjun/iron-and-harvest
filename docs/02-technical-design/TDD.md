@@ -27,4 +27,4 @@
 
 ## TBD
 
-플러그인·전체 테스트 프레임워크·CI 이미지·JSON/Resource 선택·저장 형식·타깃 OS와 최소 사양. 엔진 패치 버전은4.7.2로 고정. [ADR](../04-decisions/ADR/README.md)을 통해 승인/검증한다.
+플러그인·전체 테스트 프레임워크·JSON/Resource 선택·저장 형식·타깃 OS와 최소 사양. 엔진 패치 버전은4.7.2로 고정. [ADR](../04-decisions/ADR/README.md)을 통해 승인/검증한다.
