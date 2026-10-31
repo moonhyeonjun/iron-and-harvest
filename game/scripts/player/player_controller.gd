@@ -106,4 +106,7 @@ func _halt() -> void:
 
 func _set_locomotion(value: Locomotion) -> void:
 	_locomotion = value
-	_visual.set_presentation(_locomotion, _facing)
+	# On macOS the application focus notifications can arrive before the node enters
+	# the tree; the state is kept and _ready presents it once Visual exists.
+	if is_node_ready():
+		_visual.set_presentation(_locomotion, _facing)

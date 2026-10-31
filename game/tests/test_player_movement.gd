@@ -37,9 +37,33 @@ var _player: PlayerController
 var _solids: Array[Rect2] = []
 var _pass_metrics: Array[Dictionary] = []
 var _metrics: Dictionary = {}
+var _engine_errors: EngineErrorLog = EngineErrorLog.new()
+
+
+## Script runtime errors only abort the failing call, so they are collected here and
+## fail the run instead of passing silently. The runner's own "FAIL" reports are skipped.
+class EngineErrorLog extends Logger:
+	var _mutex: Mutex = Mutex.new()
+	var _entries: PackedStringArray = []
+
+	func _log_error(_function: String, file: String, line: int, code: String, rationale: String,
+			_editor_notify: bool, _error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		var text: String = rationale if not rationale.is_empty() else code
+		if text.begins_with("FAIL "):
+			return
+		_mutex.lock()
+		_entries.append("%s:%d %s" % [file, line, text])
+		_mutex.unlock()
+
+	func entries() -> PackedStringArray:
+		_mutex.lock()
+		var copy: PackedStringArray = _entries.duplicate()
+		_mutex.unlock()
+		return copy
 
 
 func _initialize() -> void:
+	OS.add_logger(_engine_errors)
 	_run()
 
 
@@ -61,6 +85,10 @@ func _run() -> void:
 	_check("AC-11", orphans == 0, "orphan nodes after both passes: %d" % orphans)
 	if "--inject-failure" in OS.get_cmdline_user_args():
 		_check("AC-11", false, "deliberate failure requested by --inject-failure")
+	var errors: PackedStringArray = _engine_errors.entries()
+	OS.remove_logger(_engine_errors)
+	_check("AC-12", errors.is_empty(), "engine/script errors during the run: %s" % "; ".join(errors))
+	_log("AC-12", "engine/script errors logged during the run: %d" % errors.size())
 	_finish()
 
 
@@ -439,6 +467,29 @@ func _ac08_control_gate() -> bool:
 
 
 func _ac09_focus_notifications() -> bool:
+	# Observed on macOS 4.7.2 GUI start: FOCUS_IN then FOCUS_OUT reach the player before
+	# it enters the tree (BUG-001). Replay that order on a fresh instance.
+	var early: PlayerController = (load(PLAYER_SCENE) as PackedScene).instantiate() as PlayerController
+	early.position = Vector2(400, 600)
+	early.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	early.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	_map.add_child(early)
+	await physics_frame
+	var early_state: bool = early.get_locomotion() == PlayerController.Locomotion.IDLE \
+		and early.get_facing() == PlayerController.Facing.DOWN and not early.is_control_effective()
+	early.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	await physics_frame
+	var early_start: Vector2 = early.global_position
+	_press([KEY_D])
+	for i: int in 10:
+		await physics_frame
+	var early_moved: float = early.global_position.x - early_start.x
+	_release_all()
+	early.queue_free()
+	await physics_frame
+	_check("AC-09", early_state, "focus notifications before ready keep idle/down and block control")
+	_check("AC-09", absf(early_moved - 16.0) <= TOL, "moves after the later FOCUS_IN (%.4f)" % early_moved)
+	_log("AC-09", "pre-tree FOCUS_IN/OUT replay: state_ok=%s moved_after_focus_in=%.4f" % [early_state, early_moved])
 	# Automated part only: the real app switch on a desktop is a manual GUI check.
 	await _drive(OPEN_START, [KEY_D], 10, false)
 	_player.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
@@ -663,7 +714,7 @@ func _finish() -> void:
 	for ac: String in keys:
 		var counts: Array = _ac_checks[ac]
 		print("  %s %s (%d checks, %d failed)" % [ac, "PASS" if counts[1] == 0 else "FAIL", counts[0], counts[1]])
-	print("  Not covered here: AC-09 real app switch, AC-10 window resize/visual smoothness, AC-12 review.")
+	print("  Not covered here: AC-09 real app switch, AC-10 window resize/visual smoothness, AC-12 code/doc review.")
 	if _failures.is_empty():
 		print("RESULT: PASS")
 		quit(0)
