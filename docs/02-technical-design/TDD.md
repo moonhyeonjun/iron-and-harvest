@@ -17,6 +17,7 @@
 - [저장 시스템](SAVE_SYSTEM.md): 버전·복구·migration.
 - [성능](PERFORMANCE.md): 처리 주기·측정·최적화 관문.
 - [환경](TOOLCHAIN.md): 실제 발견 도구와 미확인 항목.
+- [CI](CI.md): 공통 검사·고정 의존성·PR 병합 관문.
 - [IH-101 이동 명세](PLAYER_MOVEMENT.md): Proposed 씬/입력/물리/카메라/확장 계약. Claude Code 구현과 AC-01~12 검증 완료([검증 기록](../03-development/IH-101-VALIDATION.md)), [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop 통합, done.
 - [IH-101 수락 검사](../03-development/IH-101-ACCEPTANCE.md)와 [Claude 인수인계](../03-development/IH-101-HANDOFF.md): 검사12항목·작업 순서·전달 프롬프트.
 
