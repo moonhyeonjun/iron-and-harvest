@@ -6,7 +6,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 우선순위: priority:critical/high/medium/low.
 상태: status:backlog → ready → in-progress → review → done, 진행 불가 시 blocked와 원인 기록. ready는 의존 작업 완료와 인수 조건이 준비되었을 때만 사용한다. blocked가 일정 지연을 숨기는 상태가 되어서는 안 된다.
 
-현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 명세 준비ready이며 구현은 미완료다.
+현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 Claude Code가 구현하고 AC-01~12를 검증했다(review). develop 통합·원격 확인 후 done으로 바꾼다.
 
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
@@ -17,7 +17,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 | IH-005 | 실제 개발 일정 재산정 | design | priority:medium | status:backlog | 없음 |
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
-| IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:ready | IH-002 |
+| IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:review | IH-002 |
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:backlog | IH-101 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:backlog | IH-110 |
@@ -102,11 +102,11 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 
 - 목적: 생활 조작의 기반인 자유 이동과 장애물 회피를 검증한다.
 - 요구사항: CharacterBody2D 이동·4개입력·대각선 속도·조작 게이트·카메라·idle/walk·임시 충돌 맵.
-- 관련 문서: [상세 명세](../02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](IH-101-ACCEPTANCE.md), [인수인계](IH-101-HANDOFF.md).
-- 예상 영향 범위: game/scenes/player·scenes/tests·scripts/player·tests 및 project.godot. 현재 문서 작업에서는 변경 없음.
+- 관련 문서: [상세 명세](../02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](IH-101-ACCEPTANCE.md), [인수인계](IH-101-HANDOFF.md), [검증 기록](IH-101-VALIDATION.md).
+- 영향 범위: game/scenes/player·scenes/tests·scripts/player·tests 및 project.godot(입력·화면·물리·레이어).
 - 완료 조건: AC-01~12 실제pass, 코드 리뷰/문서 갱신/검증된 develop 통합. 명세만으로done 금지.
 - 테스트 항목: 실제 물리 이동 거리·대각선·반대키·30/60/120fps·벽/통로·게이트·포커스·표현·카메라·회귀.
-- 현재 증거/미확정: Codex 상세 설계/테스트 계획/전달 프롬프트 완료, Claude Code 구현 준비ready. 모든 기능 검사는 미실행. 속도/아트/조작 정책은 검증용 Proposed 기준안(ADR-012).
+- 현재 증거/미확정: feature/player-movement에서 구현(e9a0e03, 7cd97c1, 571c1e9). 자동 runner 4변형 PASS·실패 주입 종료1, GUI 수동 항목 사용자 확인. BUG-001 수정. develop 통합 확인 전이라 review. 속도/아트/조작 정책은 검증용 Proposed 기준안(ADR-012).
 
 ## IH-102 — 상호작용 대상·프롬프트
 

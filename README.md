@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-2026-10-31: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 게임 플레이 기능은 아직 없다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 상세 설계는 준비되었으며 기능 구현은 미착수다.
+2026-10-31: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 게임 플레이 기능은 아직 없다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 플레이어 이동·충돌은 Claude Code가 구현하고 AC-01~12를 검증했다([검증 기록](docs/03-development/IH-101-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/movement_test.tscn`으로 실행하며 기본 진입점은 Foundation 그대로다. 상호작용·채집·저장 등 다른 게임플레이는 아직 없다.
 
 최초 Foundation 커밋 `957dd3b`를 생성하고 `main`·`develop` 기준점을 구성했다. Git/GitHub는 사용자 요청 범위와 검증 조건에 따라 자율 운영한다. 원격 동기화와 실제 반영 기록은 [Git 구축 기록](docs/03-development/GIT_BOOTSTRAP.md)을 따른다. 최초 보고서는 당시 상태를 보존한 기록이다.
 
@@ -59,4 +59,4 @@ Codex는 설계/기술 기반 검증, Claude Code는 이후 게임 기능 구현
 
 ## 다음 작업
 
-Claude Code: [IH-101 인수인계](docs/03-development/IH-101-HANDOFF.md)에 따라 이후 이동/충돌 구현과 AC-01~12 검증. Codex: 구현 결과 기술 검토 또는 IH-004 CI 설계/구축. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.
+Claude Code: IH-101 통합 후 IH-102 상호작용 명세를 받아 구현. Codex: 구현 결과 기술 검토 또는 IH-004 CI 설계/구축. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.

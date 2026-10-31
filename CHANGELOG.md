@@ -4,6 +4,17 @@
 
 ## Unreleased — 2026-10-31
 
+### IH-101 플레이어 이동·충돌 (Claude Code)
+
+- CharacterBody2D floating Player: 8방향 키보드 이동(속도96 임시값), 4방향 facing·idle/walk, 조작 게이트·포커스 neutral 정책, 임시 Visual, 비활성 기본 Camera2D.
+- 1280×720 테스트 맵 `scenes/tests/movement_test.tscn`(외곽·Block·폭20 통로, 카메라 limit). 기본 진입점은 Foundation 유지.
+- project.godot: 이동 4액션(WASD physical·화살표 keycode), 물리60Hz, 640×360 viewport/keep/integer, 충돌 레이어 이름.
+- `tests/test_player_movement.gd`: 실제 물리·입력 기반 AC-01~12 자동 검사, 2회 반복 비교, 엔진 오류 수집, `--inject-failure`.
+- Fixed BUG-001: macOS 시작 시 트리 진입 전 포커스 알림의 null Visual 호출.
+- 수치·도형은 검증용 임시값이며 최종 밸런스/아트가 아니다. 상호작용·채집·가방·전투·저장·NPC·UI는 미구현. v0.2.0 태그 없음.
+
+### Foundation 확인·IH-101 명세 (Codex)
+
 - Foundation 재검증 완료, 기존 annotated v0.1.0 → d176bd7 및 원격 일치 확인; 태그 유지.
 - IH-101 이동/입력/카메라/충돌/표현 상세 명세, AC-01~12 검사 계획, Claude Code 전달 프롬프트 추가.
 - ADR-012 Proposed 기록, IH-101은 ready(기능 미구현·검사 미실행). 게임플레이 파일 변경 없음.

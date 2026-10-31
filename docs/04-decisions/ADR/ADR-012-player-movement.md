@@ -29,3 +29,9 @@ CharacterBody2D + 물리 틱 이동,8방향 정규화된 최대 속도,4방향 �
 ## 영향·검증
 
 [IH-101 수락 검사](../../03-development/IH-101-ACCEPTANCE.md)의 실제 결과를 근거로 상태를 재검토한다. main_scene은 Foundation 유지,테스트 맵 명시 실행으로 기존 smoke의 의미를 보존한다. 구현은 Claude Code 담당, Codex는 이번에 문서만 작성한다. 기존 ADR을 삭제하거나 엔진 선택을 다시 열지 않는다.
+
+## 구현 검증 결과 (2026-10-31)
+
+Claude Code가 이 제안대로 구현했고 AC-01~12 자동/수동 검사를 통과했다([검증 기록](../../03-development/IH-101-VALIDATION.md)). 상태는 **Proposed 유지**다. 구조(CharacterBody2D floating, controller/Visual 분리, 게이트+neutral 정책)가 고정 엔진에서 동작함을 확인했지만 Accepted 전환과 수치 확정은 별도 결정이다.
+
+검토 항목: ① floating 벽 미끄러짐이 투영 속도가 아닌 거의 전체 속도(약96 u/s)로 진행된다. ② macOS 시작 시 포커스 알림이 `_ready` 이전에 온다(BUG-001에서 처리). ③ 사용자 GUI 확인에서 즉시 출발·정지와 대각 facing 가로 우선에 대한 문제 보고는 없었다. 조작감 평가는 단일 사용자의 짧은 확인이며 플레이테스트 표본이 아니다.
