@@ -11,7 +11,7 @@
 | game/scenes | 월드/오브젝트 씬 |
 | game/ui | UI 씬/스크립트, 읽기 모델과 입력 |
 | game/data | 런타임 정의/시작 시나리오 |
-| game/tests | 향후 엔진 내부 검증, 현재 실행기 없음 |
+| game/tests | smoke_engine.gd로 엔진/씬 smoke 검증, 게임 테스트는 기능별 추가 |
 | tests | Python 저장소 검증기 회귀 테스트 |
 | data/design | 기존 수치 가정 자료, 런타임 사용 금지 |
 
