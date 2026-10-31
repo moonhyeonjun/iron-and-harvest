@@ -4,6 +4,8 @@
 
 ## Unreleased — 2026-10-31
 
+- IH-004 완료 후 IH-102 상호작용 상세 명세·수락12항목·Claude 인수인계 작성. ADR-014 Proposed, 기능 미구현/검사 미실행.
+
 - IH-004: 고정 Action/엔진 체크섬 기반 CI, 공통 검사 실행기와 실패 판정 회귀 추가. 원격 PR/통합 push 성공·실패 PR 차단 검증 완료, ADR-013 Accepted.
 
 ### IH-101 플레이어 이동·충돌 (Claude Code)

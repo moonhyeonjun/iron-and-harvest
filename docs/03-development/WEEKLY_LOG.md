@@ -129,3 +129,12 @@
 - develop/main 보호: CI checks(GitHub Actions app15368), strict/admins 적용, force/deletion 금지 확인. 기본 main 파일/태그는 미변경, 수동 workflow_dispatch는 다음 main 승격 후 사용.
 - IH-004 done, ADR-013 Accepted. 상세 [검증 기록](IH-004-VALIDATION.md). 기존 GUI/Windows/Export/Steam 범위는 그대로 별도.
 - 순서: CI 완료를 확인했으므로 이후 IH-102 상호작용 명세를 Codex가 작성한다. 구현은 Claude Code 담당.
+
+## 2026-10-31 — IH-102 상세 설계
+
+- IH-004의 PR/실패 차단/develop push 성공 확인 후 시작. 구현 순서는 사용자 요청을 따른다.
+- 산출물: INTERACTION.md, IH-102-ACCEPTANCE/HANDOFF, ADR-014 Proposed, TDD/아키텍처/생활/작업 진입점 갱신.
+- 설계: 대상 후보/정면각/가시선/동률, 입력 큐와 실행 시 재검증, 프롬프트/살펴보기, 취소·수명·이동 게이트, 향후 보상 도메인 경계.
+- IH-102 ready. AC-I01~12는 모두미실행. 게임플레이 코드/씬/InputMap 미변경, 기존 IH-101 보존.
+- 문서 링크·구조·diff 검사를 수행하고 필수 CI를 거쳐 PR로 통합한다. 신규 기능 테스트 통과로 기록하지 않는다.
+- 다음: Claude Code가 인수인계 프롬프트에 따라 IH-102 구현·자동/GUI검증. v0.2.0 태그는 구현 완료 후 별도 판정.
