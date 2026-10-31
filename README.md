@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-2026-10-31: Foundation 기반·문서·관리 체계 준비. **게임 플레이 기능은 아직 없다.** Godot 4 계열 빈 설정/씬을 만들었지만 엔진을 발견하지 못해 실제 import/실행은 미검증이다. 버전은 Unreleased이며 v0.1.0 태그도 없다.
+2026-10-31: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 게임 플레이 기능은 아직 없다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 실제 태그/통합 결과는 [검증 기록](docs/03-development/IH-002-VALIDATION.md)에 남긴다.
 
 최초 Foundation 커밋 `957dd3b`를 생성하고 `main`·`develop` 기준점을 구성했다. Git/GitHub는 사용자 요청 범위와 검증 조건에 따라 자율 운영한다. 원격 동기화와 실제 반영 기록은 [Git 구축 기록](docs/03-development/GIT_BOOTSTRAP.md)을 따른다. 최초 보고서는 당시 상태를 보존한 기록이다.
 
@@ -49,10 +49,14 @@ data/design/        이전 경제 가정 실험, 런타임 아님
 python3 tools/validate_foundation.py
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tools/check_economy.py
+python3 tools/godot.py --headless --import
+python3 tools/godot.py --headless --script res://tests/smoke_engine.gd
 ```
 
-엔진 확보/버전 기록 후 Godot에서 `game/project.godot`을 가져온다. 저장소 루트에 두 번째 project.godot을 만들지 않는다. 명령행은 `godot --headless --path game --editor --quit`, 빈 씬 확인은 `godot --headless --path game --quit-after 2`다. 지금의 정적 검사는 엔진 파싱/실행을 대신하지 않는다. Godot의 res://는 project.godot 위치를 기준으로 한다. [공식 파일 시스템 안내](https://docs.godotengine.org/en/stable/tutorials/scripting/filesystem.html)
+Godot 실행은 `python3 tools/godot.py --editor`, 빈 프로젝트 실행은 `python3 tools/godot.py`다. 도구가 `.godot-version`을 확인하고 `game/`을 프로젝트 루트로 지정한다. 설치 위치와 전체 검증 명령은 [TOOLCHAIN](docs/02-technical-design/TOOLCHAIN.md)을 따른다. 다른 설치는 GODOT_BIN으로 명시한다.
+
+Codex는 설계/기술 기반 검증, Claude Code는 이후 게임 기능 구현을 맡는다. 이번 smoke 테스트는 게임 기능이 아니다.
 
 ## 다음 작업
 
-IH-002: 엔진 경로/버전 확인과 빈 프로젝트 검증. 이후 IH-101: 작은 임시 맵의 플레이어 이동·충돌. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.
+Codex: IH-101 이동/충돌 구현 명세와 테스트 수락 조건을 정리해 Claude Code에 전달. Claude Code: 그 명세에 따라 이후 구현. CI 기반 검증(IH-004)도 다음 기술 작업 후보다. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.

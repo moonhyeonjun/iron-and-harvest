@@ -1,6 +1,6 @@
 # 기술 설계 개요
 
-상태: 기반 경로는 현재 구성, 게임 시스템/알고리즘은 Proposed, 정확한 Godot 버전은 TBD.
+상태: Godot4.7.2 Standard/GDScript/Compatibility 검증 완료(ADR-011). 게임 시스템/알고리즘은 Proposed.
 
 ## 목적
 
@@ -8,7 +8,7 @@
 
 ## 현재 구현
 
-`game/project.godot`과 스크립트 없는 `game/scenes/foundation.tscn`만 있다. Node 하나의 빈 씬으로 입력·이동·경제·저장·UI 기능이 없다. Compatibility 렌더러는 기반 실험 설정이며 목표 성능/최종 렌더러를 확정한 것은 아니다. 엔진 실행은 미검증이다.
+게임 실행 진입점은 `game/project.godot`과 스크립트 없는 `game/scenes/foundation.tscn`이다. Node 하나의 빈 씬으로 입력·이동·경제·저장·UI 기능이 없다. Compatibility는 현재 개발 렌더러로 채택했다. game/tests/smoke_engine.gd는 타입 있는 GDScript/씬 로드의 기반 검사이며 게임플레이는 아니다. Import·Headless·GUI 실행과 사용자 육안 확인을 완료했다. 목표 게임 성능은 별도 검증이다.
 
 ## 설계 문서
 
@@ -20,8 +20,8 @@
 
 ## 우선순위와 완료
 
-먼저 엔진 확인·빈 프로젝트 import/실행, 다음 Player/Interaction. Inventory/Calendar/Production이 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. 현재 Foundation의 엔진 호환성은 blocked다.
+먼저 엔진 확인·빈 프로젝트 import/실행, 다음 Player/Interaction. Inventory/Calendar/Production이 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 Claude Code가 이후 Player/Interaction을 구현한다.
 
 ## TBD
 
-엔진 패치 버전·플러그인·테스트 프레임워크·CI 이미지·JSON/Resource 선택·저장 형식·타깃 OS와 최소 사양. [ADR](../04-decisions/ADR/README.md)을 통해 승인/검증한다.
+플러그인·전체 테스트 프레임워크·CI 이미지·JSON/Resource 선택·저장 형식·타깃 OS와 최소 사양. 엔진 패치 버전은4.7.2로 고정. [ADR](../04-decisions/ADR/README.md)을 통해 승인/검증한다.
