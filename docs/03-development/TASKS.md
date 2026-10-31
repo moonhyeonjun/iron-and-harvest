@@ -16,7 +16,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 | IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:blocked | IH-002 |
 | IH-005 | 실제 개발 일정 재산정 | design | priority:medium | status:backlog | 없음 |
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
-| IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:in-progress | IH-001 |
+| IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
 | IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:backlog | IH-002 |
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:backlog | IH-101 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
@@ -306,4 +306,4 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: Git refs·운영 규칙·개발 기록. 게임 기능 변경 없음.
 - 완료 조건: 테스트 통과, 기존 이력 보존, 원격 SHA와 로컬 비교, 실제 해시/결과 기록.
 - 테스트 항목: 정적 구조, 기존 unittest/경제 가정, diff, ref 일치, 작업 트리.
-- 현재 증거: 최초 커밋957dd3b, 초기 ls-remote refs0개, 원격 반영 진행 중.
+- 현재 증거: 최초 커밋957dd3b·정책 커밋8ce8d1d, main/develop/작업 브랜치 push 성공·원격 SHA 일치. 상세는 GIT_BOOTSTRAP.

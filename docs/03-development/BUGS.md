@@ -5,7 +5,7 @@
 | ID | 분류 | 상태 | 재현/관찰 | 영향·다음 조치 |
 |---|---|---|---|---|
 | ENV-001 | 환경 | open | PATH/일반 설치 경로에서 Godot 없음 | 엔진 실행 미검증, IH-002로 바이너리 식별/설치 후 검증 |
-| ENV-002 | Git 초기 상태 | resolved-local | 최초 커밋 957dd3b와 main/develop ref 생성 | 원격 결과는 GIT_BOOTSTRAP에 기록 |
+| ENV-002 | Git 초기 상태 | resolved | 최초 커밋 957dd3b와 main/develop ref 생성, push 성공 | 원격 SHA 일치와 기본 main 확인, GIT_BOOTSTRAP 참조 |
 | DEBT-001 | 문서 | documented | 이전 초안의 루트 경로/수치와 새 체계 공존 | 이전 문서는 참고 전용으로 분리, 새 문서만 현재 기준 |
 | DEC-001 | 결정 대기 | open | LICENSE에 확정 조건 없음 | IH-003에서 사용자 결정 필요, 임의 라이선스 금지 |
 

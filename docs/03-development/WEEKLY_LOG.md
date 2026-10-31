@@ -39,3 +39,12 @@
 - IH-001 문서/관리 리뷰 완료; IH-002 엔진 검증 blocked 유지.
 - 정책 문서 수정 중 작업 표 행 손상을 정적 검사가 검출하여 커밋 전에 수정했다. 최종 재검사 결과로 통합 여부를 판단한다.
 - 원격 반영 결과는 GIT_BOOTSTRAP과 후속 기록으로 남긴다.
+
+### 원격 동기화 확인
+
+- 정책 커밋: 8ce8d1d50518d7d229eb25b51a1ffd135453de20 — chore(git): adopt autonomous repository workflow.
+- feature/project-foundation → develop → main fast-forward 통합, 충돌 없음.
+- main/develop/feature/project-foundation atomic 비강제 push 성공, 세 upstream 설정.
+- ls-remote 재조회: 원격 HEAD=main, 세 브랜치 SHA=8ce8d1d50518d7d229eb25b51a1ffd135453de20, 로컬과 일치.
+- IH-007 완료. 원격 초기 이력이 없어 PR은 생략. 태그/릴리스 없음; 엔진 미검증 상태 유지.
+- 최종 검증 결과를 문서 커밋으로 별도 기록하고 원격에 반영한다. 이 문서 기록 커밋의 해시는 작업 완료 보고와 Git 이력에서 확인한다.
