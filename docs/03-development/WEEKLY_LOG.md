@@ -90,3 +90,15 @@
 - 통합 tree는 검증한 명세 커밋과 동일. game/tools/tests/.godot-version은 v0.1.0과 변경 없음.
 - v0.1.0 객체7488fc9/대상d176bd7 원격 재확인, 태그 변경 없음. 새 태그/제품 릴리스 없음.
 - 결과 기록은 docs/ih-101-results의 별도 문서 커밋으로 통합한다. 해당 기록 커밋 자체의 최종 SHA는 Git 이력과 완료 보고에서 확인한다.
+
+## 2026-10-31 — IH-101 플레이어 이동·충돌 구현 (Claude Code)
+
+- 시작: develop clean, origin/develop=64928e5. `feature/player-movement` 신규 분기(로컬/원격 기존 브랜치 없음). 사용자 변경 없음.
+- 환경: macOS 13.4 / M1, Godot 4.7.2.stable.official.ed1daf0bf Standard, Compatibility(OpenGL 4.1 Metal).
+- 구현: Player(controller·Visual·Camera2D), 테스트 맵, InputMap/화면/물리/레이어 설정, 물리 수락 runner. 빈 매니저·Autoload·외부 의존 없음.
+- 커밋: e9a0e03 feat, 7cd97c1 test, 571c1e9 fix(BUG-001).
+- 자동: runner 기본/`--max-fps` 30/60/120 모두 종료0(각 330검사, 약2분), `-- --inject-failure` 종료1, 수정 전 controller에 대한 runner 종료1. 5개 프로세스 물리 측정 동일, 한 실행 2회 차이0.
+- 회귀: import·smoke·`--quit-after 10`·테스트 맵 headless·validate_foundation·unittest11·check_economy7·`git diff --check` 모두 종료0, 로그 오류/경고0.
+- 수동 GUI: 사용자가 실제 창·키보드로 키 입력/충돌/포커스 전환/카메라·리사이즈를 확인하고 "1~4 모두 정상"으로 응답(7cd97c1 빌드). Claude는 화면 기록·보조 접근 권한이 없어(ENV-003) 엔진 viewport 캡처로 렌더링만 보조 확인.
+- 관찰: floating 벽 미끄러짐 약96 u/s(투영67.9 아님), macOS 포커스 알림이 `_ready` 전에 도착(BUG-001), headless는 입력을 Viewport로 전달하지 않음. 측정 중 runner 자체 오류 2건(투영 속도 가정, process 프레임 시점 입력)을 발견해 판정 기준을 넓히지 않고 측정 시점·구간을 바로잡음.
+- 결과: AC-01~12 pass, IH-101 review. 상세: [IH-101 검증](IH-101-VALIDATION.md). develop PR 통합·원격 확인은 후속 기록. v0.2.0 태그/릴리스 없음.

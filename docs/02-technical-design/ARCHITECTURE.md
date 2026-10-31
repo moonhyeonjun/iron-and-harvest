@@ -36,7 +36,7 @@
 
 ## IH-101의 최소 분리 제안
 
-[Player 상세 명세](PLAYER_MOVEMENT.md)에 controller/Visual/맵의 책임과 향후 Interaction·Inventory·Combat 연결 경계를 정의했다. 현재는 문서만 있으며 새 매니저/Autoload/게임플레이 파일을 생성하지 않았다. 물리 위치는 Player, 카메라 경계는 맵, 표현은 Visual이 소유하도록 제안한다. 수락 검증 전에는 Proposed를 유지한다.
+[Player 상세 명세](PLAYER_MOVEMENT.md)에 controller/Visual/맵의 책임과 향후 Interaction·Inventory·Combat 연결 경계를 정의했다. IH-101에서 game/scripts/player(controller·Visual), game/scenes/player, game/scenes/tests로 구현했다. 새 매니저/Autoload는 만들지 않았다. 물리 위치는 Player, 카메라 경계는 맵, 표현은 Visual이 소유한다. AC 검증은 통과했고 ADR-012는 Proposed를 유지한다.
 
 ## 시간·이벤트 제안
 

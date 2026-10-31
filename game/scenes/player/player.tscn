@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
+[ext_resource type="Script" path="res://scripts/player/player_visual.gd" id="2_visual"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_feet"]
+radius = 6.0
+
+[node name="Player" type="CharacterBody2D"]
+process_mode = 1
+collision_layer = 2
+collision_mask = 1
+motion_mode = 1
+platform_floor_layers = 0
+script = ExtResource("1_controller")
+
+[node name="BodyCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_feet")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_visual")
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+position = Vector2(0, -10)
+color = Color(0.32, 0.42, 0.68, 1)
+polygon = PackedVector2Array(-8, -12, 8, -12, 8, 12, -8, 12)
+
+[node name="FacingMarker" type="Polygon2D" parent="Visual"]
+position = Vector2(0, 6)
+rotation = 1.5707964
+color = Color(0.98, 0.86, 0.32, 1)
+polygon = PackedVector2Array(-3, -4, 4, 0, -3, 4)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = false
+process_callback = 0

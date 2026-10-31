@@ -1,0 +1,194 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BoundaryTop"]
+size = Vector2(1280, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BoundaryBottom"]
+size = Vector2(1280, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BoundaryLeft"]
+size = Vector2(16, 688)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_BoundaryRight"]
+size = Vector2(16, 688)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_Block"]
+size = Vector2(64, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_CorridorTop"]
+size = Vector2(160, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_CorridorBottom"]
+size = Vector2(160, 32)
+
+[node name="MovementTest" type="Node2D"]
+
+[node name="Ground" type="Polygon2D" parent="."]
+color = Color(0.34, 0.5, 0.3, 1)
+polygon = PackedVector2Array(0, 0, 1280, 0, 1280, 720, 0, 720)
+
+[node name="GroundMarks" type="Node2D" parent="."]
+
+[node name="Mark1" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(160, 120)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark2" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(400, 120)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark3" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(760, 120)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark4" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(1120, 120)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark5" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(160, 360)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark6" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(400, 360)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark7" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(760, 360)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark8" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(1120, 360)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark9" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(160, 600)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark10" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(400, 600)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark11" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(760, 600)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="Mark12" type="Polygon2D" parent="GroundMarks"]
+position = Vector2(1120, 600)
+color = Color(0.42, 0.6, 0.36, 1)
+polygon = PackedVector2Array(0, -6, 6, 0, 0, 6, -6, 0)
+
+[node name="WorldCollision" type="Node2D" parent="."]
+
+[node name="BoundaryTop" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(640, 8)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/BoundaryTop"]
+shape = SubResource("RectangleShape2D_BoundaryTop")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/BoundaryTop"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-640, -8, 640, -8, 640, 8, -640, 8)
+
+[node name="BoundaryBottom" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(640, 712)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/BoundaryBottom"]
+shape = SubResource("RectangleShape2D_BoundaryBottom")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/BoundaryBottom"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-640, -8, 640, -8, 640, 8, -640, 8)
+
+[node name="BoundaryLeft" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(8, 360)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/BoundaryLeft"]
+shape = SubResource("RectangleShape2D_BoundaryLeft")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/BoundaryLeft"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-8, -344, 8, -344, 8, 344, -8, 344)
+
+[node name="BoundaryRight" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(1272, 360)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/BoundaryRight"]
+shape = SubResource("RectangleShape2D_BoundaryRight")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/BoundaryRight"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-8, -344, 8, -344, 8, 344, -8, 344)
+
+[node name="Block" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(632, 360)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/Block"]
+shape = SubResource("RectangleShape2D_Block")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/Block"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-32, -80, 32, -80, 32, 80, -32, 80)
+
+[node name="CorridorTop" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(980, 216)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/CorridorTop"]
+shape = SubResource("RectangleShape2D_CorridorTop")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/CorridorTop"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-80, -16, 80, -16, 80, 16, -80, 16)
+
+[node name="CorridorBottom" type="StaticBody2D" parent="WorldCollision"]
+position = Vector2(980, 268)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision/CorridorBottom"]
+shape = SubResource("RectangleShape2D_CorridorBottom")
+
+[node name="Polygon2D" type="Polygon2D" parent="WorldCollision/CorridorBottom"]
+color = Color(0.36, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-80, -16, 80, -16, 80, 16, -80, 16)
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(128, 360)
+
+[node name="Camera2D" parent="Player" index="2"]
+enabled = true
+limit_left = 0
+limit_top = 0
+limit_right = 1280
+limit_bottom = 720
+
+[node name="Instructions" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="Instructions"]
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 632.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 10
+text = "IH-101 movement test - WASD / Arrow keys to move. Placeholder shapes, provisional numbers."
+
+[editable path="Player"]
