@@ -4,6 +4,8 @@
 
 ## Unreleased — 2026-10-31
 
+- IH-004: 고정 Action/엔진 체크섬 기반 CI, 공통 검사 실행기와 실패 판정 회귀 추가. 원격 성공·병합 관문 검증 중.
+
 ### IH-101 플레이어 이동·충돌 (Claude Code)
 
 - CharacterBody2D floating Player: 8방향 키보드 이동(속도96 임시값), 4방향 facing·idle/walk, 조작 게이트·포커스 neutral 정책, 임시 Visual, 비활성 기본 Camera2D.

@@ -19,3 +19,5 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 - [ADR-011 검증된 Godot 개발 기준](ADR-011-validated-godot-toolchain.md) — Accepted, IH-002 완료.
 
 - [ADR-012 생활 이동의 최소 구현 경계](ADR-012-player-movement.md) — Proposed, IH-101 상세 명세; 구현/조작 검증 대기.
+
+- [ADR-013 CI 관문](ADR-013-continuous-integration.md) — Proposed, IH-004 원격 검증 중.

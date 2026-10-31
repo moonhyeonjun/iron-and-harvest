@@ -45,3 +45,7 @@ git diff --check
 고정 엔진 실행기로 `python3 tools/godot.py --headless --import`, `python3 tools/godot.py --headless --script res://tests/smoke_engine.gd`, `python3 tools/godot.py --headless --quit-after 10`을 실행한다. 현재 빈 기반 씬은 게임 플레이가 아니다. UI/기능 구현 시 실제 창의 수동 검증을 추가한다. 프로젝트 루트와 `res://` 루트를 혼동하지 않는다.
 
 완료 보고는 목적, 구현/변경, 파일, 설계, 실제 테스트 결과, 미해결 문제, 문서 갱신, 실제 커밋 해시와 push/merge/태그/릴리스 결과, 다음 작업을 포함한다. 미실행 테스트는 통과로 기록하지 않는다.
+
+## CI 공통 실행
+
+커밋된 깨끗한 작업 트리에서 `python3 tools/run_ci.py`를 실행한다. 기존 수정은 삭제하지 않으며 마지막 청결 검사가 실패하면 변경을 검토한다. PR의 CI checks 성공과 코드/설계 리뷰를 확인한 뒤 통합한다. 자세한 로그·실패·보호 규칙은 [CI 운영](docs/02-technical-design/CI.md)을 따른다.
