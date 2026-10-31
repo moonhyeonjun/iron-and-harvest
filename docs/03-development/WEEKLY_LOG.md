@@ -81,3 +81,12 @@
 - 버그/기술 부채: 새 결함 없음. ENV-003 자동 화면 도구 문제는 기존 documented, Windows/Export/게임 성능은 미검증.
 - 다음: Claude Code IH-101 구현·실제 물리/GUI 검사. Codex IH-004 CI 또는 구현 리뷰.
 - Git commit/통합·원격 검증은 후속 기록으로 남긴다.
+
+### IH-101 명세 통합 결과
+
+- 설계 커밋: e4b6f3144cc1f33feebad3e764a5e2caab273cea — docs(player): specify IH-101 and verify foundation baseline.
+- [PR #3](https://github.com/moonhyeonjun/iron-and-harvest/pull/3): docs/ih-101-player-design → develop, merge1043f9e0e3a4834118fa4b66aebe684433794e14. GitHub API merged=true 확인.
+- main은 검증된 develop로 fast-forward 반영 후 push. ls-remote에서 두 브랜치1043f9e 일치 확인.
+- 통합 tree는 검증한 명세 커밋과 동일. game/tools/tests/.godot-version은 v0.1.0과 변경 없음.
+- v0.1.0 객체7488fc9/대상d176bd7 원격 재확인, 태그 변경 없음. 새 태그/제품 릴리스 없음.
+- 결과 기록은 docs/ih-101-results의 별도 문서 커밋으로 통합한다. 해당 기록 커밋 자체의 최종 SHA는 Git 이력과 완료 보고에서 확인한다.

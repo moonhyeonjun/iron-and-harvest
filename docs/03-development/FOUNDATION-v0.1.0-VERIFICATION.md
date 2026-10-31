@@ -46,3 +46,7 @@ GUI는 이번 문서 작업에서 다시 열지 않았다. IH-002의 macOS 그�
 IH-101 명세는 문서만 작성한다. 구현 준비 상태ready이며 AC-01~12는 아직 미실행이다. v0.2.0/게임 출시를 완료로 취급하지 않는다. Windows/Export/Steam/성능/권리 정책은 기존 후속 작업이다. 새 Foundation 결함은 발견되지 않았다.
 
 이번 문서 변경의 commit/통합·원격 결과는 WEEKLY_LOG 후속 기록과 Git 이력에서 확인한다.
+
+## 후속 문서 원격 통합 확인
+
+설계 커밋e4b6f3144cc1f33feebad3e764a5e2caab273cea를 [PR #3](https://github.com/moonhyeonjun/iron-and-harvest/pull/3)으로 develop에 통합했다(merge1043f9e0e3a4834118fa4b66aebe684433794e14). main도 fast-forward/push 후 원격 두 브랜치1043f9e 일치를 확인했다. 기존 태그 객체/대상은 변하지 않았다. 통합 결과 기록은 별도 문서 커밋이며 게임 소스는 태그와 동일하다.
