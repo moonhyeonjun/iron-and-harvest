@@ -69,3 +69,15 @@
 - 결과 기록 문서를 docs/ih-002-results에서 정리. Foundation 완료 태그 v0.1.0 생성 대상으로 판단하며 코드 변경 없이 최종 문서 commit을 포함한다. 실제 ref/원격 SHA 확인은 완료 보고와 Git 이력에 남긴다.
 - CUA 화면 서비스 실패는 사용자 정상 표시 확인으로 보완. Python API TLS는 시스템 CA 사용으로 해결. 엔진 오류는 발견되지 않음.
 - 게임플레이/Windows/export/제품 릴리스는 미구현 또는 미검증. 다음 Codex 작업은 IH-101 구현 명세 또는 IH-004 CI.
+
+## 2026-10-31 — Foundation 확정 및 IH-101 설계
+
+- 시작: develop clean, origin fetch, main/develop 모두d176bd7094db783c2aaf43b2ee227936a5137758.
+- Foundation: 기존 annotated v0.1.0 객체7488fc92e681e1695d9cad0fb793e33afebd6a27, peeled target=d176bd7, ls-remote 일치. 중복 생성/이동 없음.
+- 브랜치: docs/ih-101-player-design. Codex는 문서만 변경, 게임플레이·project.godot 변경 없음.
+- 재실행: 정적42파일 검사, unittest11개, 경제 설계7개, Godot4.7.2 version/import/headless/smoke 모두종료0. GUI는 재실행하지 않고 IH-002 사용자 확인 증거 유지.
+- 산출물: Player 씬/모듈/키/8방향 이동·4방향표현/물리/게이트/카메라/충돌 fixture/확장 명세, 수락12항목, Claude 인수인계, ADR-012 Proposed.
+- 상태: IH-001/002 done 유지, IH-101 ready(설계 준비·미구현). AC-01~12 모두미실행. IH-102는 backlog 유지.
+- 버그/기술 부채: 새 결함 없음. ENV-003 자동 화면 도구 문제는 기존 documented, Windows/Export/게임 성능은 미검증.
+- 다음: Claude Code IH-101 구현·실제 물리/GUI 검사. Codex IH-004 CI 또는 구현 리뷰.
+- Git commit/통합·원격 검증은 후속 기록으로 남긴다.
