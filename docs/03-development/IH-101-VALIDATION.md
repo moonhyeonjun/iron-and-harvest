@@ -17,7 +17,7 @@ IH-101 상태는 **done**이다. [PR #4](https://github.com/moonhyeonjun/iron-an
 | 명령 | 종료 | 결과 |
 |---|---:|---|
 | `python3 tools/godot.py --headless --import` | 0 | 오류/경고0, project.godot 재작성 없음, `.gd.uid` 3개 생성 |
-| `python3 tools/godot.py --headless --script res://tests/test_player_movement.gd` | 0 | AC-01~12 자동 330검사 PASS, 약2분5초 |
+| `python3 tools/godot.py --headless --script res://tests/test_player_movement.gd` | 0 | AC-01~12 자동 360검사 PASS, 약2분5초 |
 | 같은 명령 + `--max-fps 30` / `60` / `120` | 0 / 0 / 0 | 모두 PASS, 측정값 동일 |
 | 같은 명령 + `-- --inject-failure` | 1 | 의도한 AC-11 실패1건만 보고(실패 경로 확인) |
 | BUG-001 수정 전 controller로 같은 runner | 1 | AC-12 엔진 오류2건 검출(회귀 검사 유효성 확인) |
@@ -71,3 +71,14 @@ IH-101 상태는 **done**이다. [PR #4](https://github.com/moonhyeonjun/iron-an
 - [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4): feature/player-movement(f7d2104) → develop, merge `6575a17636bf1449620e880813c0eaa99d1e904c`. GitHub API에서 merged=true, mergeable_state=clean, CI check 0개(IH-004 미도입) 확인.
 - fetch 후 로컬 develop fast-forward, `git diff --exit-code f7d2104 6575a17` 동일 → 검증한 tree가 그대로 통합됨. 같은 tree라 물리 runner는 재실행하지 않았다.
 - main은 변경하지 않았다(안정화 판단은 별도). v0.1.0 태그 유지, 새 태그/릴리스 없음.
+
+## Codex 기술 재검토 — 2026-10-31
+
+- 검토 대상: develop `48aee7e4184898adf613404d612563568ff40243`. 작업 시작 clean. fetch 후 origin/develop 일치, 통합된 game/은 feature 최종 f7d2104와 동일.
+- controller/Visual/씬/InputMap/물리 runner와 AC 계약을 검토했다. 이번 범위에서 기능 수정을 요구할 결함은 발견하지 못했다. 게임 코드 변경 없음.
+- 재실행(전부 종료0): `python3 tools/validate_foundation.py`, `python3 -m unittest discover -s tests -p 'test_*.py'`(11개), `python3 tools/godot.py --headless --import`, `python3 tools/godot.py --headless --script res://tests/smoke_engine.gd`, `python3 tools/godot.py --headless --script res://tests/test_player_movement.gd`.
+- 물리 runner: AC별 집계 합계 **360개**, 실패0, 엔진/스크립트 오류0. 이전 보고의330개는 현재 runner 출력 합계에 맞춰 위 표에서360개로 정정했다. 반복2회·측정17종 차이0. 직선거리192.0007/191.9999, 대각거리192.0012, 관통0, 카메라 지연0.
+- 기본 runner 내부 cap30/60/120 비교가 통과했다. CLI별 별도4변형·실패 주입·경제 검사는 이번 리뷰에서 반복하지 않았고 기존 실행 기록을 참고했다.
+- GUI는 이번 리뷰에서 열거나 직접 조작하지 않았다. 수동 증거는 위 사용자 확인 기록이며 수정 전7cd97c1에서 확인됐다는 한계도 유지한다. 이후 수정571c1e9의 ready 이전 알림 경로는 이번 자동 회귀가 통과했다.
+- 문서 정합성: LIFE_SYSTEM/CLAUDE/ADR-012 상단의 구현 전 표현을 실제 상태에 맞게 정정. ADR-012는 Proposed 유지, 속도·벽 미끄러짐 감각·아트 규격을 제품 최종값으로 확정하지 않았다.
+- 판정: IH-101 done 유지. 다음 기능 준비는 IH-102 상호작용 대상 선택·프롬프트·행동 요청 명세다. CI 부재는 IH-004 후속 범위다. main 승격·새 태그/릴리스는 이번 리뷰 범위에서 수행하지 않는다.

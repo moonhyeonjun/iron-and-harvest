@@ -109,3 +109,13 @@
 - 로컬 develop fast-forward, 통합 tree = 검증 커밋 f7d2104 tree. IH-101 done, AC-12 원격 반영 확인.
 - 앱 PR 추적 연결은 `gh` CLI 부재로 실패(기능 영향 없음). main 미변경, v0.1.0 유지, v0.2.0 태그/릴리스 없음.
 - 다음: Codex의 IH-102 상호작용 명세 또는 IH-004 CI. ADR-012 Accepted 여부와 벽 미끄러짐 속도는 설계 검토 항목.
+
+## 2026-10-31 — IH-101 Codex 기술 재검토
+
+- 대상 develop48aee7e, clean/원격 일치. 구현 branch f7d2104와 game/ 동일.
+- 코드/씬/AC 검사 후 기능 수정을 요구할 결함 없음. 정적검사·Python11개·Godot Import·Foundation smoke·물리 runner 재실행 모두종료0.
+- runner 출력은360검사/실패0/엔진오류0, 반복2회 측정17종 차이0. 앞선 Claude 기록330개와 달라 검증 보고서의 집계를 정정했다.
+- GUI 재실행 없음. 사용자 확인은 기존7cd97c1 빌드의 기록으로 구분. ready 이전 포커스 수정은 자동 회귀 통과.
+- 문서만 수정: 검증보고/주간기록과 LIFE_SYSTEM/CLAUDE/ADR-012의 현재 상태. 게임 기능/밸런스/ADR 상태 변경 없음.
+- IH-101 done 유지. 다음 Codex 설계 후보는 IH-102; IH-004 CI도 후속. main/v0.1.0 유지, 새 태그/릴리스 없음.
+- 검토 기록은 docs/ih-101-technical-review에서 커밋하고 검증 후 develop에 통합한다. 기록 커밋 해시와 원격 결과는 Git 이력/완료 보고를 따른다.

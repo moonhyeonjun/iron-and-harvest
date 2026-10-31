@@ -18,7 +18,7 @@ v0.2 이동/상호작용 → v0.3 수집/가방 → v0.4 농사. 벽 관통 없�
 
 ## 첫 구현 준비
 
-IH-101의 이동·충돌·카메라와 임시 조작 기준은 [구현 명세](../02-technical-design/PLAYER_MOVEMENT.md)에 있다. Codex 설계만 완료했으며 Claude Code 구현과 실제 조작 검증은 후속이다. 임시 속도/키/화면 값은 최종 제품 결정을 대신하지 않는다.
+IH-101의 이동·충돌·카메라와 임시 조작 기준은 [구현 명세](../02-technical-design/PLAYER_MOVEMENT.md)에 있다. Claude Code가 구현·수락 검증을 완료하고 develop에 통합했다. 결과는 [IH-101 검증 기록](../03-development/IH-101-VALIDATION.md)을 따른다. 임시 속도/키/화면 값은 최종 제품 결정을 대신하지 않는다.
 
 ## TBD
 
