@@ -26,15 +26,17 @@ Godot 루트는 game/이며 res://는 이 디렉터리다. 루트 data/design은
 5. 테스트 작성/실행과 실제 실행을 수행한다. 불가능하면 이유와 미실행 범위를 기록한다.
 6. 코드 변경·문서 일치·저장 영향·git diff를 검토한다. untracked는 별도 확인한다.
 7. TASKS/WEEKLY_LOG/BUGS와 필요한 ADR을 갱신한다.
-8. 결과·추천 커밋 메시지를 제시하고 Git 이력 변경은 승인 대기한다.
+8. 검증된 변경을 작은 Conventional Commit으로 기록하고 필요한 push/PR/merge를 자율 수행한다. 원격 반영을 확인하고 커밋 해시·결과·남은 작업을 기록한다.
 
 ## Git 필수 규칙
 
 작업 전 `git status --short --branch`, `git branch --show-current`, `git diff`, `git diff --cached`. 작업 후 `git diff --check`와 변경 내용 검토. 초기 커밋 전 파일은 일반 diff에 안 나오므로 파일 내용과 manifest를 확인한다.
 
-main=안정, develop=통합, feature/fix/refactor/docs/experiment 브랜치로 작업한다. 현재 feature/project-foundation은 unborn이며 main/develop 실체는 최초 커밋 승인 후 만든다. 기존 원격/브랜치를 무조건 다시 만들지 않는다.
+main=안정, develop=통합, feature/fix/refactor/docs/experiment 브랜치로 작업한다. 최초 기준점은 생성되었다. 기존 원격/브랜치를 먼저 확인하고 일반 작업은 develop에서 분기해 검증 후 통합한다. 안정화된 변경만 main으로 반영한다.
 
-**사용자 명시 승인 없이 commit, push, merge, tag, release, 원격 저장소 변경 금지.** force push, git reset --hard, git clean -fd, 사용자 작업 삭제/덮어쓰기 금지. 기존 변경을 임의로 stash/amend/rebase하지 않는다. 커밋은 Conventional Commits로 한 논리적 변경 단위를 다룬다.
+**Git/GitHub 작업은 별도 승인 없이 자율 실행한다.** stage/commit, 브랜치 생성·전환·병합·삭제, fetch/pull/push, Issue/PR 생성·종료·병합, 원격 설정 변경, 검증된 태그/릴리스가 포함된다. 작업 규모에 필요한 단계만 수행하고 원격 결과를 검증한다.
+
+reset --hard, clean -fd, force/force-with-lease push, 임의 이력 재작성, 사용자 변경 삭제/덮어쓰기는 기본적으로 실행하지 않는다. 복구 가능한 백업·병합 대안을 우선하며 안전한 대안이 없거나 충돌 의도가 불명확하면 확인한다. Git 권한을 Steam 게시·결제·라이선스 결정 권한으로 확대하지 않는다.
 
 ## 완료 보고
 
@@ -45,7 +47,7 @@ main=안정, develop=통합, feature/fix/refactor/docs/experiment 브랜치로 �
 5. 실제 테스트 명령·결과·미실행
 6. 미해결 문제
 7. 문서 갱신
-8. 추천 커밋 메시지
+8. 실제 커밋 해시·push/merge·태그/릴리스 결과
 9. 다음 작업
 
 현재 검증 명령은 CONTRIBUTING.md를 따른다. headless import를 실제 플레이 테스트로 보고하지 않는다. 엔진이 없으면 설치된 것처럼 가정하지 않는다. 사용자 요청이 아키텍처와 충돌하면 문제와 대안을 먼저 설명한다.

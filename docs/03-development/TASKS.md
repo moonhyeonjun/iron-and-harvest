@@ -1,21 +1,22 @@
 # 작업 목록
 
-GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관리 기준이다. 실제 커밋/PR 번호는 없으며 만들지 않은 링크를 기록하지 않는다.
+GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관리 기준이다. 최초 커밋 957dd3b가 생성되었고 이후 Git 기록은 GIT_BOOTSTRAP/WEEKLY_LOG를 따른다. 원격 PR 번호는 만들지 않은 링크로 기록하지 않는다.
 
 유형: feature, bug, refactor, tech-debt, design, balance, art, documentation.
 우선순위: priority:critical/high/medium/low.
 상태: status:backlog → ready → in-progress → review → done, 진행 불가 시 blocked와 원인 기록. ready는 의존 작업 완료와 인수 조건이 준비되었을 때만 사용한다. blocked가 일정 지연을 숨기는 상태가 되어서는 안 된다.
 
-현재 IH-001은 파일/정적검사 리뷰, IH-002는 환경 검증 blocked. v0.1.0 전체 완료가 아니다.
+현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002는 환경 검증 blocked. v0.1.0 전체 완료가 아니다.
 
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
-| IH-001 | 기반·문서·관리 체계 | documentation | priority:high | status:review | 없음 |
+| IH-001 | 기반·문서·관리 체계 | documentation | priority:high | status:done | 없음 |
 | IH-002 | Godot 환경 고정과 빈 프로젝트 실행 | tech-debt | priority:critical | status:blocked | 없음 |
 | IH-003 | 라이선스·권리 정책 결정 | design | priority:high | status:backlog | 없음 |
 | IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:blocked | IH-002 |
 | IH-005 | 실제 개발 일정 재산정 | design | priority:medium | status:backlog | 없음 |
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
+| IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:in-progress | IH-001 |
 | IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:backlog | IH-002 |
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:backlog | IH-101 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
@@ -45,7 +46,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: 문서/설정/도구.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 정적 검사·보존 비교·Git 검토.
-- 현재 증거/미확정: 파일 구축/정적 검증 결과 리뷰; 엔진 검증은 IH-002로 분리.
+- 현재 증거/미확정: 파일 구축/정적 검사·테스트·보존·diff 리뷰 완료, 최초 커밋957dd3b; 엔진 검증은 IH-002로 분리.
 
 ## IH-002 — Godot 환경 고정과 빈 프로젝트 실행
 
@@ -285,7 +286,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: 스토어/빌드/권리.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 설치/실행·심사 자료·최종 QA.
-- 현재 증거/미확정: 원격 게시·결제·릴리스 승인 별도.
+- 현재 증거/미확정: Steam 게시/결제 권한은 별도. GitHub 릴리스는 검증 후 자율 실행.
 
 ## IH-200 — 전투·탐험 출시 범위 판단
 
@@ -296,3 +297,13 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 비용·재미·보급 연결 검토.
 - 현재 증거/미확정: 기능 구현 의존에 선행시키지 않음.
+
+## IH-007 — Git 자율 운영 정책·최초 동기화
+
+- 목적: 새 운영 권한을 지침에 반영하고 Foundation 이력을 안전하게 원격에 보존.
+- 요구사항: 기존80파일 검증, 지정 메시지 최초 commit, main/develop 구성, 원격 확인/동기화.
+- 관련 문서: [ADR-010](../04-decisions/ADR/ADR-010-autonomous-git.md), [Git 기록](GIT_BOOTSTRAP.md).
+- 예상 영향 범위: Git refs·운영 규칙·개발 기록. 게임 기능 변경 없음.
+- 완료 조건: 테스트 통과, 기존 이력 보존, 원격 SHA와 로컬 비교, 실제 해시/결과 기록.
+- 테스트 항목: 정적 구조, 기존 unittest/경제 가정, diff, ref 일치, 작업 트리.
+- 현재 증거: 최초 커밋957dd3b, 초기 ls-remote refs0개, 원격 반영 진행 중.

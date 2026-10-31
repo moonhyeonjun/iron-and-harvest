@@ -6,7 +6,7 @@
 
 2026-10-31: Foundation 기반·문서·관리 체계 준비. **게임 플레이 기능은 아직 없다.** Godot 4 계열 빈 설정/씬을 만들었지만 엔진을 발견하지 못해 실제 import/실행은 미검증이다. 버전은 Unreleased이며 v0.1.0 태그도 없다.
 
-기존 Git은 최초 커밋 전이었다. 현재 HEAD는 `feature/project-foundation`을 가리키며 커밋이 없는 unborn 상태다. main/develop은 정책상 이름이며 실제 ref는 최초 커밋 승인 이후 구성한다. 기존 origin 설정은 보존했다. commit/push/merge/tag/release/remote 변경은 하지 않았다.
+최초 Foundation 커밋 `957dd3b`를 생성하고 `main`·`develop` 기준점을 구성했다. Git/GitHub는 사용자 요청 범위와 검증 조건에 따라 자율 운영한다. 원격 동기화와 실제 반영 기록은 [Git 구축 기록](docs/03-development/GIT_BOOTSTRAP.md)을 따른다. 최초 보고서는 당시 상태를 보존한 기록이다.
 
 ## 문서 진입점
 
@@ -55,4 +55,4 @@ python3 tools/check_economy.py
 
 ## 다음 작업
 
-IH-002: 엔진 경로/버전 확인과 빈 프로젝트 검증. 이후 IH-101: 작은 임시 맵의 플레이어 이동·충돌. LICENSE의 배포 조건은 소유자 결정 대기다. 사용자 승인 없이 Git 이력/원격을 변경하지 않는다.
+IH-002: 엔진 경로/버전 확인과 빈 프로젝트 검증. 이후 IH-101: 작은 임시 맵의 플레이어 이동·충돌. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.

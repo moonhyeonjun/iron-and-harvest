@@ -1,12 +1,15 @@
-# Git 규칙
+# Git 자율 운영 규칙
 
-- 시작: `git status --short --branch`, `git branch --show-current`, `git diff`, `git diff --cached` 확인.
-- untracked 파일도 보존한다. 기존 브랜치/원격/사용자 수정은 확인 없이 재생성·교체하지 않는다.
-- main은 안정, develop은 통합, 작업은 feature/fix/refactor/docs/experiment 브랜치. 최초 커밋 전에는 실제 브랜치 ref가 없을 수 있다.
-- 현재 foundation 브랜치는 feature/project-foundation이며 최초 커밋 승인 전이다. main/develop 기준점 생성 절차는 CONTRIBUTING.md를 따른다.
-- Conventional Commits: `type(scope): description`; 한 논리적 변경 단위로 나눈다.
-- 종료: 테스트·문서·diff/whitespace 확인 후 로컬 PR 초안과 추천 커밋 메시지 제시.
-- **명시 승인 전 commit, push, merge, tag, release, remote 변경 금지.**
-- force push, `git reset --hard`, `git clean -fd`, 사용자 수정 삭제/덮어쓰기 금지.
-- 임의 amend/rebase/stash로 변경을 숨기지 않는다. 충돌은 영향과 대안을 보고하고 현재 작업을 보존한다.
-- 승인은 지정된 작업/변경에만 적용한다. 로컬 준비 권한을 원격 게시 승인으로 확대하지 않는다.
+2026-10-31 사용자 최신 지시에 따라 이전 승인 대기 정책을 대체한다. ADR-010이 현재 기준이다.
+
+- 시작: git status/현재 브랜치/기존 diff·staged·untracked와 원격 상태 확인.
+- 작업 목적과 완료 조건에 맞는 stage/commit, 브랜치 생성·전환·병합·삭제, fetch/pull/push, Issue/PR 생성·종료·병합, 원격 설정 변경, 검증된 태그/릴리스는 별도 사용자 승인 없이 수행한다.
+- develop에서 작업 브랜치 분기 → 작은 기능/검증 → Conventional Commit → 필요한 push/PR/merge → develop 통합 → 안정화 후 main 반영.
+- 모든 단계는 항상 필요한 것이 아니다. 초기 빈 저장소의 기준점은 로컬 검증과 초기 push로 구성한다.
+- 관련 Issue가 있으면 연결한다. 원격 ref·PR 상태·태그·릴리스의 실제 반영을 확인한다.
+- untracked도 사용자 작업이다. 기존 변경/브랜치/원격 이력을 임의 삭제·교체하지 않는다.
+- reset --hard, clean -fd, force/force-with-lease push, 임의 이력 재작성은 기본적으로 하지 않는다. 백업·복구 가능한 병합 대안을 먼저 적용한다.
+- 안전한 대안이 없거나 충돌의 파일별 의도를 판단할 수 없으면 사용자에게 확인한다.
+- 커밋 해시·변경·검증·push/merge 결과를 문서에 기록한다. 미실행·실패를 성공으로 기록하지 않는다.
+- 기능 완료 조건을 충족한 버전만 태그/릴리스한다. 엔진 검증 미완료 Foundation은 v0.1.0으로 표시하지 않는다.
+- 이 권한은 Git/GitHub 개발 라이프사이클 범위다. Steam 출시·결제·라이선스 결정은 별도 범위다.

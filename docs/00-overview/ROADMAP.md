@@ -14,7 +14,7 @@ Foundation → Character → Gathering → Farming → Building → Estate → P
 
 ## 출시 관문
 
-저장 안전·새 게임부터 자립까지 완주·성능/지원 환경·콘텐츠 권리·Steam 심사를 충족해야 한다. 실제 태그/릴리스/게시에는 사용자 승인이 필요하다. Steam 절차의 참고 출처는 [기존 공식 자료](../design/sources.md)이며 제출 시 재확인한다.
+저장 안전·새 게임부터 자립까지 완주·성능/지원 환경·콘텐츠 권리·Steam 심사를 충족해야 한다. GitHub 태그/릴리스는 검증 조건 충족 시 자율 생성한다. Steam 게시/출시 권한은 이번 Git 정책에 포함되지 않는다. Steam 절차의 참고 출처는 [기존 공식 자료](../design/sources.md)이며 제출 시 재확인한다.
 
 ## 확장
 

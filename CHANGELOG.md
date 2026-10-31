@@ -1,6 +1,6 @@
 # 변경 이력
 
-완료 조건과 승인 없이 버전 태그를 만들지 않는다. 현재 릴리스/태그는 없다.
+완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. 현재 엔진 검증이 남아 있어 버전 태그/릴리스는 없다.
 
 ## Unreleased — 2026-10-31
 
@@ -19,4 +19,10 @@
 ### Not implemented
 
 - 캐릭터 이동·상호작용·채집·경제·저장 등 게임 플레이 기능.
-- Godot 실제 import/실행 검증, 원격 Issue/PR, commit/push/merge/tag/release.
+- Godot 실제 import/실행 검증. 최초 구축 당시 Git 실행 여부는 FOUNDATION_REPORT의 역사 기록을 따른다.
+
+## Git 운영 후속 — 2026-10-31
+
+- 최초 Foundation 커밋 957dd3b 생성, main/develop 기준점 구성.
+- ADR-010으로 Git/GitHub 자율 운영 정책 수락, 기존 안전 규칙 유지.
+- 정책·원격 동기화 결과는 GIT_BOOTSTRAP과 WEEKLY_LOG에서 관리.

@@ -1,5 +1,7 @@
 # Foundation 초기 구축 보고 — 2026-10-31
 
+> 최초 구축 당시 상태를 보존한 역사 기록이다. 이후 Git 정책·커밋·원격 상태는 [GIT_BOOTSTRAP](GIT_BOOTSTRAP.md)과 ADR-010을 따른다.
+
 ## 1. 환경 분석 결과
 
 작업 경로는 `/Users/munhyeonjun/Desktop/Project/iron-and-harvest`. 기존14파일과 Git 저장소가 있었다. Git 2.39.3 (Apple Git-145), Python 3.9.6을 확인했다. 최초 상태는 커밋 없는 main이며 origin URL이 이미 설정되어 있었다. 기존 파일은 모두 untracked였다.

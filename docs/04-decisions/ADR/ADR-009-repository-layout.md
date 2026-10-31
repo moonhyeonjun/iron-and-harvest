@@ -33,3 +33,7 @@ game/을 Godot 루트로 구성. main/develop 정책과 승인 기반 Git 작업
 도구는 --path game 사용. 기존 문서는 보존하고 신규 문서가 현재 기준.
 
 변경 시 이 문서를 삭제하지 않고 후속 ADR로 대체 관계를 기록한다.
+
+## 후속 결정
+
+2026-10-31 [ADR-010](ADR-010-autonomous-git.md)이 이 문서의 승인 대기 Git 정책을 대체한다. game/ 경로와 main/develop 역할은 유지한다. 본문은 당시 결정의 기록이다.

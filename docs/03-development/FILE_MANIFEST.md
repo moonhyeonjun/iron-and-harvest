@@ -1,5 +1,7 @@
 # Foundation 파일 변경 목록
 
+> 최초 구축 당시 상태를 보존한 역사 기록이다. 이후 Git 정책·커밋·원격 상태는 [GIT_BOOTSTRAP](GIT_BOOTSTRAP.md)과 ADR-010을 따른다.
+
 기준: 작업 시작 당시 로컬14파일과 비교. Git은 최초 커밋 전이라 아래 파일은 모두 Git 관점에서 untracked다. 생성/수정 구분은 로컬 snapshot 대비다. 캐시/무시 파일 제외.
 
 - 신규 66파일

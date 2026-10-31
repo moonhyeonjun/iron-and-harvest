@@ -13,3 +13,5 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 - [ADR-009 저장소·Git 운영](ADR-009-repository-layout.md) — Accepted
 
 기존 docs/design/decisions.md는 초기 제안 원문으로 보존한다. 신규 결정은 여기서 추적한다.
+
+- [ADR-010 Git/GitHub 자율 운영](ADR-010-autonomous-git.md) — Accepted. ADR-009의 Git 승인 대기 부분을 대체한다.

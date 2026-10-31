@@ -29,3 +29,13 @@
 - 엔진 실행/게임 플레이/성능: 미실행, IH-002 blocked.
 - IH-001: review 유지. v0.1.0 전체는 엔진 검증 전이며 done/tag 처리하지 않음.
 - 상세 결과와 전체 파일 목록: [구축 보고](FOUNDATION_REPORT.md), [manifest](FILE_MANIFEST.md).
+
+## 2026-10-31 — Git 자율 운영 후속
+
+- IH-007: 최신 사용자 정책으로 Git/GitHub 작업의 반복 승인 절차 제거, 안전 규칙 유지.
+- 기존80파일 목록 일치, 정적 검사/6개 회귀/7개 경제 가정 검사 통과.
+- 최초 커밋: 957dd3bbdf564c04636b7be082d800f89a458524 — chore(foundation): establish project structure and development workflow.
+- 최초 원격 refs0개, fetch 성공. main/develop 기준점 로컬 생성.
+- IH-001 문서/관리 리뷰 완료; IH-002 엔진 검증 blocked 유지.
+- 정책 문서 수정 중 작업 표 행 손상을 정적 검사가 검출하여 커밋 전에 수정했다. 최종 재검사 결과로 통합 여부를 판단한다.
+- 원격 반영 결과는 GIT_BOOTSTRAP과 후속 기록으로 남긴다.
