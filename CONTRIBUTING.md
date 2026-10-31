@@ -42,6 +42,6 @@ python3 tools/check_economy.py
 git diff --check
 ```
 
-엔진 설치/버전 확정 후 `godot --headless --path game --editor --quit`, `godot --headless --path game --quit-after 2`를 실행한다. 현재 빈 기반 씬은 게임 플레이가 아니다. UI/기능 구현 시 실제 창의 수동 검증을 추가한다. 프로젝트 루트와 `res://` 루트를 혼동하지 않는다.
+고정 엔진 실행기로 `python3 tools/godot.py --headless --import`, `python3 tools/godot.py --headless --script res://tests/smoke_engine.gd`, `python3 tools/godot.py --headless --quit-after 10`을 실행한다. 현재 빈 기반 씬은 게임 플레이가 아니다. UI/기능 구현 시 실제 창의 수동 검증을 추가한다. 프로젝트 루트와 `res://` 루트를 혼동하지 않는다.
 
 완료 보고는 목적, 구현/변경, 파일, 설계, 실제 테스트 결과, 미해결 문제, 문서 갱신, 실제 커밋 해시와 push/merge/태그/릴리스 결과, 다음 작업을 포함한다. 미실행 테스트는 통과로 기록하지 않는다.

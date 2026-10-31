@@ -6,14 +6,14 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 우선순위: priority:critical/high/medium/low.
 상태: status:backlog → ready → in-progress → review → done, 진행 불가 시 blocked와 원인 기록. ready는 의존 작업 완료와 인수 조건이 준비되었을 때만 사용한다. blocked가 일정 지연을 숨기는 상태가 되어서는 안 된다.
 
-현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002는 환경 검증 blocked. v0.1.0 전체 완료가 아니다.
+현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. 통합/태그의 실제 결과는 IH-002-VALIDATION에 기록한다.
 
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
 | IH-001 | 기반·문서·관리 체계 | documentation | priority:high | status:done | 없음 |
-| IH-002 | Godot 환경 고정과 빈 프로젝트 실행 | tech-debt | priority:critical | status:blocked | 없음 |
+| IH-002 | Godot 환경 고정과 빈 프로젝트 실행 | tech-debt | priority:critical | status:done | 없음 |
 | IH-003 | 라이선스·권리 정책 결정 | design | priority:high | status:backlog | 없음 |
-| IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:blocked | IH-002 |
+| IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:ready | IH-002 |
 | IH-005 | 실제 개발 일정 재산정 | design | priority:medium | status:backlog | 없음 |
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
@@ -56,7 +56,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: 엔진/game/ADR.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: --version·headless import·빈 씬·실제 창.
-- 현재 증거/미확정: 일반 설치 경로/PATH에서 엔진 미발견; IH-001 파일은 준비.
+- 현재 증거/미확정: Downloads에서4.7.2를 발견해 버전별 사용자 Applications에 설치. 모든 실행 검사0, GUI 사용자 확인, ADR-011 수락. IH-002-VALIDATION 참조.
 
 ## IH-003 — 라이선스·권리 정책 결정
 
@@ -76,7 +76,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: .github/workflows.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 로컬 재현·권한·실패 차단.
-- 현재 증거/미확정: 활성 workflow 없음; 엔진 검증 의존.
+- 현재 증거/미확정: 활성 workflow 없음. Godot4.7.2/smoke 검증 완료로 착수 가능; Codex 기술 작업.
 
 ## IH-005 — 실제 개발 일정 재산정
 
@@ -106,7 +106,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: Player/scene/input.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 대각선 속도·경계·프레임 독립·실제 창.
-- 현재 증거/미확정: 다음 첫 기능 제안, 이번에는 미구현.
+- 현재 증거/미확정: Claude Code의 향후 첫 기능. Codex가 먼저 입력/충돌/카메라/파일/테스트 명세를 준비하며 이번에는 미구현.
 
 ## IH-102 — 상호작용 대상·프롬프트
 

@@ -48,3 +48,14 @@
 - ls-remote 재조회: 원격 HEAD=main, 세 브랜치 SHA=8ce8d1d50518d7d229eb25b51a1ffd135453de20, 로컬과 일치.
 - IH-007 완료. 원격 초기 이력이 없어 PR은 생략. 태그/릴리스 없음; 엔진 미검증 상태 유지.
 - 최종 검증 결과를 문서 커밋으로 별도 기록하고 원격에 반영한다. 이 문서 기록 커밋의 해시는 작업 완료 보고와 Git 이력에서 확인한다.
+
+## 2026-10-31 — IH-002 엔진 환경 검증
+
+- 목표/범위: 엔진 버전·Import·Headless·GUI 검증, 게임플레이 제외.
+- 설치: Downloads의4.7.2 서명/버전 확인 후 ~/Applications/Godot-4.7.2.app에 복사, 기존4.4.1/4.7.2 보존.
+- 결과: 4.7.2.stable.official.ed1daf0bf, Compatibility/Apple M1, Import/Headless/GDScript smoke/GUI editor+project 모두0.
+- GUI: CUA 도구 서비스 오류. 사용자가 “두 창 모두 정상 표시됨” 확인. 자동 스크린샷 검증은 없음.
+- 기반: 고정 버전 실행기·타입 GDScript smoke·.uid 추가. Python11개 통과, 문서/정적 검사 통과.
+- IH-002 done, ENV-001 resolved, IH-004 ready. Codex 설계/기술·Claude Code 기능 구현 역할 명시.
+- 다음: Claude Code 인수인계용 IH-101 명세, 또는 IH-004 CI. Windows/export/성능은 미검증.
+- 상세 명령/증거: [IH-002 검증](IH-002-VALIDATION.md). Git 반영은 후속 기록.

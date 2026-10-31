@@ -33,3 +33,7 @@ Godot을 우선 검토하고 game/에 최소 프로젝트만 구성. 정확한 �
 IH-002에서 실제 import/실행 후 수락 여부 기록.
 
 변경 시 이 문서를 삭제하지 않고 후속 ADR로 대체 관계를 기록한다.
+
+## 후속 확정
+
+[ADR-011](ADR-011-validated-godot-toolchain.md)이 Godot4.7.2 Standard/GDScript/Compatibility를 실제 검증하여 채택했다. 위 Proposed 본문은 당시 검토 기록이다.

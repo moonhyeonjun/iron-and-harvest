@@ -1,6 +1,6 @@
 # 변경 이력
 
-완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. 현재 엔진 검증이 남아 있어 버전 태그/릴리스는 없다.
+완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
 ## Unreleased — 2026-10-31
 
@@ -26,3 +26,11 @@
 - 최초 Foundation 커밋 957dd3b 생성, main/develop 기준점 구성.
 - ADR-010으로 Git/GitHub 자율 운영 정책 수락, 기존 안전 규칙 유지.
 - 정책·원격 동기화 결과는 GIT_BOOTSTRAP과 WEEKLY_LOG에서 관리.
+
+## v0.1.0 Foundation 준비 — 2026-10-31
+
+- IH-002 완료: Godot4.7.2 Standard / GDScript / Compatibility 검증.
+- .godot-version과 버전 검증 실행 도구, 기반 GDScript smoke, Python 실행기 회귀 검사 추가.
+- Import/Headless/GUI 종료0 및 사용자 GUI 정상 표시 확인. 엔진 자동 project.godot 포맷 변경 검토.
+- Codex 설계·기술/Claude Code 구현 역할을 명시하고 TDD/ADR/작업 상태 갱신.
+- 게임플레이는 미구현. Windows/export/성능/Steam 검증은 포함하지 않음.
