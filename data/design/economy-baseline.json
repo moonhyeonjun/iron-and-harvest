@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "purpose": "Design-only baseline; not runtime game content",
+  "population": 24,
+  "households": 6,
+  "labor_pool": 12,
+  "season_days": 14,
+  "food_per_person": 1,
+  "normal_tax_per_household": 2,
+  "full_upkeep": {
+    "keep": 1, "farm_1": 1, "farm_2": 1, "logging_camp": 1,
+    "quarry": 1, "mill": 1, "bakery": 1, "warehouse": 0,
+    "market": 2, "smithy": 1, "barracks": 2
+  },
+  "workers": {"farm": 4, "logging": 2, "mill": 2, "bakery": 2, "quarry": 1, "smithy": 1},
+  "raw_yields": {"wheat_normal": 8, "wheat_winter": 2, "wood": 6},
+  "recipes": [
+    {"id": "flour", "worker_key": "mill", "batches_per_worker": 2, "inputs": {"wheat": 8}, "outputs": {"flour": 8}},
+    {"id": "bread", "worker_key": "bakery", "batches_per_worker": 2, "inputs": {"flour": 8, "wood": 1}, "outputs": {"bread": 10}}
+  ],
+  "winter_start_bread": 240,
+  "warehouse_capacity": 900
+}

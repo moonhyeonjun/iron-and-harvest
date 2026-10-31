@@ -1,0 +1,25 @@
+# Godot generated cache (source resources and .uid sidecars remain tracked)
+.godot/
+
+# Exported builds
+build/
+dist/
+exports/
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+__pycache__/
+*.py[cod]
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+
+# Credentials
+.env
+.env.*
+!.env.example
+export_credentials.cfg

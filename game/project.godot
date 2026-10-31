@@ -1,0 +1,10 @@
+; Foundation configuration only. Exact Godot 4.x version is pending validation.
+config_version=5
+
+[application]
+config/name="Iron & Harvest"
+run/main_scene="res://scenes/foundation.tscn"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
