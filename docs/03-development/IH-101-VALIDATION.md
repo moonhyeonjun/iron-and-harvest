@@ -4,7 +4,7 @@
 
 Claude Code가 [명세](../02-technical-design/PLAYER_MOVEMENT.md)대로 구현했고 AC-01~12 자동/수동 항목을 모두 실제 실행했다. 자동 runner는 4개 실행 변형에서 모두 PASS(종료0)였고, 실패 주입 시 종료1을 확인했다. GUI 수동 항목은 사용자가 실제 창과 키보드로 확인했다. 실행 중 발견한 macOS 시작 시 SCRIPT ERROR(BUG-001)는 수정했고 회귀 검사를 추가했다.
 
-IH-101 상태는 **review**다. develop 통합과 원격 반영을 확인한 뒤 done으로 바꾼다. 속도96·물리60Hz·640×360·반지름6 등은 검증용 임시값이며 최종 밸런스·아트·해상도 결정이 아니다(ADR-012 Proposed 유지).
+IH-101 상태는 **done**이다. [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop에 통합하고 원격 반영을 확인했다(아래 통합 기록). 속도96·물리60Hz·640×360·반지름6 등은 검증용 임시값이며 최종 밸런스·아트·해상도 결정이 아니다(ADR-012 Proposed 유지).
 
 ## 환경·대상
 
@@ -47,7 +47,7 @@ IH-101 상태는 **review**다. develop 통합과 원격 반영을 확인한 뒤
 | AC-09 | pass | 자동: 알림 경로에서 포커스 아웃 이동0, 키 유지 복귀 이동0, 새 입력 16.0. 트리 진입 전 FOCUS_IN→OUT 순서 재현(BUG-001) 통과. 수동: 실제 Cmd+Tab 전환/복귀 정상 | 자동 + 사용자 GUI |
 | AC-10 | pass | 논리 viewport 640×360. 내부 (400,360)에서 화면 중심=발 위치, 이동 중 틱별 차이0. 네 모서리·가장자리에서 view가 0..1280/0..720 안. 수동: 비16:9 리사이즈 시 왜곡 없이 여백만 생기고 깜빡임/떨림 문제 없음 | 자동 + 사용자 GUI |
 | AC-11 | pass | 한 실행에서 새 맵 인스턴스로 suite 2회, 측정 17종 차이 0.000000. 고아 노드0, 이동 액션 잔류 없음. 새 프로세스 5개(기본·cap30/60/120·실패 주입)의 물리 측정 행이 모두 같다(렌더 의존인 process 프레임 수·흔들림 값 제외). 실패 주입 시 종료1. 중단된 case list는 실패로 집계 | 자동 |
-| AC-12 | pass(통합 전) | 기존 검사 전부 통과, 외부 의존·채집·가방·저장·전투·NPC·UI 미추가. runner가 엔진/스크립트 오류를 Logger로 수집해 0건. 코드·문서 diff 검토 완료. develop 원격 반영 확인은 통합 후 기록 | 자동 + Claude 리뷰 |
+| AC-12 | pass | 기존 검사 전부 통과, 외부 의존·채집·가방·저장·전투·NPC·UI 미추가. runner가 엔진/스크립트 오류를 Logger로 수집해 0건. 코드·문서 diff 검토 완료. develop 원격 반영 확인 완료(통합 기록) | 자동 + Claude 리뷰 |
 
 ## 수동 GUI 확인
 
@@ -65,3 +65,9 @@ IH-101 상태는 **review**다. develop 통합과 원격 반영을 확인한 뒤
 4. **맵 중심**: (640,360)은 Block 내부이고 물리 엔진이 벽 밖으로 밀어낸다. 카메라 중심 추적 검사는 빈 바닥 (400,360)을 사용한다.
 5. **AC-06 x≤594 범위**: 평평한 옆면(y≥280)에만 적용한다. y 274~280에서는 원형 발이 모서리를 돌며 x≈600까지 갈 수 있고, 이 구간은 관통 검사로 확인한다.
 6. **카메라 지연**: Camera2D가 Player의 자식이고 physics callback을 쓰므로 같은 틱에 갱신된다. 측정 지연은 0이었다.
+
+## 통합 기록
+
+- [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4): feature/player-movement(f7d2104) → develop, merge `6575a17636bf1449620e880813c0eaa99d1e904c`. GitHub API에서 merged=true, mergeable_state=clean, CI check 0개(IH-004 미도입) 확인.
+- fetch 후 로컬 develop fast-forward, `git diff --exit-code f7d2104 6575a17` 동일 → 검증한 tree가 그대로 통합됨. 같은 tree라 물리 runner는 재실행하지 않았다.
+- main은 변경하지 않았다(안정화 판단은 별도). v0.1.0 태그 유지, 새 태그/릴리스 없음.

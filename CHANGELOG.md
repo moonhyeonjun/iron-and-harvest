@@ -11,6 +11,7 @@
 - project.godot: 이동 4액션(WASD physical·화살표 keycode), 물리60Hz, 640×360 viewport/keep/integer, 충돌 레이어 이름.
 - `tests/test_player_movement.gd`: 실제 물리·입력 기반 AC-01~12 자동 검사, 2회 반복 비교, 엔진 오류 수집, `--inject-failure`.
 - Fixed BUG-001: macOS 시작 시 트리 진입 전 포커스 알림의 null Visual 호출.
+- [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop 통합(merge 6575a17). main 미반영.
 - 수치·도형은 검증용 임시값이며 최종 밸런스/아트가 아니다. 상호작용·채집·가방·전투·저장·NPC·UI는 미구현. v0.2.0 태그 없음.
 
 ### Foundation 확인·IH-101 명세 (Codex)

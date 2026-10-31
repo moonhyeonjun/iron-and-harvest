@@ -1,6 +1,6 @@
 # IH-101 플레이어 이동·충돌 구현 명세
 
-상태: **Proposed 명세, IH-101 구현·검증 완료(review)**, 2026-10-31. Codex 설계 → Claude Code 구현. 결과와 엔진 관찰은 이 문서 끝과 [검증 기록](../03-development/IH-101-VALIDATION.md)에 있다. 확정 기술은 ADR-011의 Godot4.7.2 Standard/GDScript/Compatibility다. 아래 수치와 조작 정책은 재현 가능한 검증용 기준안이며 최종 게임 밸런스·아트 규격으로 확정하지 않는다. 변경 시 수락 조건도 함께 갱신한다.
+상태: **Proposed 명세, IH-101 구현·검증·develop 통합 완료**, 2026-10-31. Codex 설계 → Claude Code 구현. 결과와 엔진 관찰은 이 문서 끝과 [검증 기록](../03-development/IH-101-VALIDATION.md)에 있다. 확정 기술은 ADR-011의 Godot4.7.2 Standard/GDScript/Compatibility다. 아래 수치와 조작 정책은 재현 가능한 검증용 기준안이며 최종 게임 밸런스·아트 규격으로 확정하지 않는다. 변경 시 수락 조건도 함께 갱신한다.
 
 관련: [생활 시스템](../01-game-design/LIFE_SYSTEM.md), [아키텍처](ARCHITECTURE.md), [ADR-012](../04-decisions/ADR/ADR-012-player-movement.md), [수락 검사](../03-development/IH-101-ACCEPTANCE.md), [Claude 인수인계](../03-development/IH-101-HANDOFF.md).
 

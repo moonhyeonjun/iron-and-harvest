@@ -102,3 +102,10 @@
 - 수동 GUI: 사용자가 실제 창·키보드로 키 입력/충돌/포커스 전환/카메라·리사이즈를 확인하고 "1~4 모두 정상"으로 응답(7cd97c1 빌드). Claude는 화면 기록·보조 접근 권한이 없어(ENV-003) 엔진 viewport 캡처로 렌더링만 보조 확인.
 - 관찰: floating 벽 미끄러짐 약96 u/s(투영67.9 아님), macOS 포커스 알림이 `_ready` 전에 도착(BUG-001), headless는 입력을 Viewport로 전달하지 않음. 측정 중 runner 자체 오류 2건(투영 속도 가정, process 프레임 시점 입력)을 발견해 판정 기준을 넓히지 않고 측정 시점·구간을 바로잡음.
 - 결과: AC-01~12 pass, IH-101 review. 상세: [IH-101 검증](IH-101-VALIDATION.md). develop PR 통합·원격 확인은 후속 기록. v0.2.0 태그/릴리스 없음.
+
+### IH-101 통합 결과
+
+- [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4) feature/player-movement → develop, merge 6575a17636bf1449620e880813c0eaa99d1e904c. API merged=true, CI check 없음(IH-004 미도입).
+- 로컬 develop fast-forward, 통합 tree = 검증 커밋 f7d2104 tree. IH-101 done, AC-12 원격 반영 확인.
+- 앱 PR 추적 연결은 `gh` CLI 부재로 실패(기능 영향 없음). main 미변경, v0.1.0 유지, v0.2.0 태그/릴리스 없음.
+- 다음: Codex의 IH-102 상호작용 명세 또는 IH-004 CI. ADR-012 Accepted 여부와 벽 미끄러짐 속도는 설계 검토 항목.
