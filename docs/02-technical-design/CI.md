@@ -1,10 +1,10 @@
 # IH-004 지속적 통합
 
-상태: 구축·원격 검증 중. 2026-10-31. 게임 코드 변경 없이 기존 검사를 GitHub Actions로 연결한다. 기준은 [ADR-013](../04-decisions/ADR/ADR-013-continuous-integration.md)이다.
+상태: 구축·원격 검증 완료. 2026-10-31. 게임 코드 변경 없이 기존 검사를 GitHub Actions로 연결한다. 기준은 [ADR-013](../04-decisions/ADR/ADR-013-continuous-integration.md)이다.
 
 ## 실행 계약
 
-`.github/workflows/ci.yml`은 develop/main 대상 pull_request와 두 브랜치의 push, workflow_dispatch에서 실행한다. 경로 필터가 없으므로 문서 PR에도 실행한다. PR은 기본 checkout 동작으로 합성 merge commit을 검사한다. push는 해당 branch commit을 검사한다. 같은 PR/ref의 이전 실행은 취소한다.
+`.github/workflows/ci.yml`은 develop/main 대상 pull_request와 두 브랜치의 push, workflow_dispatch에서 실행한다. 경로 필터가 없으므로 문서 PR에도 실행한다. PR은 기본 checkout 동작으로 합성 merge commit을 검사한다. push는 해당 branch commit을 검사한다. 같은 PR/ref의 이전 실행은 취소한다. 현재 workflow는 develop에 통합되었으며 기본브랜치 main의 파일은 유지했다. workflow_dispatch는 workflow가 기본브랜치에 있어야 하므로 다음 main 승격 후 사용한다. 현재 검증한 실행은 PR 및 develop push다.
 
 단일 고정 이름 **CI checks**를 병합 관문으로 사용한다. Ubuntu24.04 x86_64, Python3.12, Godot4.7.2 stable official Standard. CI의 Linux headless 검증은 Linux 게임 배포 지원 선언이 아니다. macOS GUI 검증은 별도로 유지한다.
 
@@ -26,7 +26,7 @@ build/ci/의 단계별 .log와 results.json은 실패 시에도 artifact로7일 
 
 ## 의존성과 권한
 
-- checkout v7.0.1, setup-python v7.1.0, upload-artifact v7.0.2: GitHub actions 공식 저장소의 commit SHA로 고정. 실행 시 latest 태그를 따라가지 않는다. 각 Action의 라이선스는 해당 고정 commit의 LICENSE를 따르며 런타임 게임에 포함하지 않는다.
+- checkout v7.0.1, setup-python v7.1.0, upload-artifact v7.0.2: GitHub actions 공식 저장소의 commit SHA로 고정. 실행 시 latest 태그를 따라가지 않는다. 세 Action의 고정 commit 라이선스는 MIT로 확인했으며 런타임 게임에 포함하지 않는다. 교체 영향은 workflow의 checkout/Python 설정/artifact 단계에 한정되며 게임 코드는 의존하지 않는다.
 - 엔진 ZIP은 godotengine/godot-builds의4.7.2-stable 릴리스에서 받고 공식 API asset digest의 SHA-256을 tools/ci/godot-linux.sha256에 고정했다. 압축 해제 전 해시, 실행 전 tools/godot.py의 정확한 버전을 검사한다.
 - contents:read만 부여, checkout 자격증명 저장 비활성화. 개인 토큰·저장소 secrets·배포 권한을 사용하지 않는다. pull_request_target으로 외부 코드를 실행하지 않는다.
 - 캐시는 처음에는 사용하지 않는다. 오래된 .godot import 상태가 결함을 숨기지 않도록 매 실행 새로 Import한다. 엔진 다운로드도 현재는 캐시하지 않는다.
@@ -34,7 +34,7 @@ build/ci/의 단계별 .log와 results.json은 실패 시에도 artifact로7일 
 
 ## 병합 관문
 
-원격 성공 확인 후 develop/main의 required status check에 CI checks를 등록하는 것을 목표로 한다. 최신 base 반영(strict)·관리자 포함 검사, force push/브랜치 삭제 금지를 적용한다. 기존 규칙이 발견되면 보존한다. 실제 보호 적용 및 실패 PR의 blocked 상태를 확인하기 전에는 '병합 차단 완료'로 보고하지 않는다.
+develop/main의 required status check에 CI checks(app_id15368)를 등록했다. 최신 base 반영(strict)·관리자 포함 검사, force push/브랜치 삭제 금지를 적용한다. 기존 규칙이 발견되면 보존한다. 실제 보호 GET 결과와 실패 PR #7의 blocked 상태를 확인했다. 검증 증거는 [IH-004 기록](../03-development/IH-004-VALIDATION.md)에 있다.
 
 단일 개발이므로 사람 승인 수를 추가하지 않는다. CI 통과는 기능/설계 리뷰를 대신하지 않는다. 보호 적용 후에는 문서 변경도 작업 브랜치 PR로 검증·통합한다. 실패/미완료 상태를 강제 우회하지 않는다.
 

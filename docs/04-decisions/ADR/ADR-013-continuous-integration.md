@@ -2,7 +2,7 @@
 
 ## 상태·날짜
 
-Proposed, 2026-10-31. IH-004 원격 성공/실패·병합 관문 확인 후 확정한다.
+Accepted, 2026-10-31. IH-004 정상 PR/통합 push 성공, 실패 PR 차단, 보호 GET 확인을 근거로 확정한다. [검증 기록](../../03-development/IH-004-VALIDATION.md) 참조.
 
 ## 배경
 
@@ -12,7 +12,7 @@ IH-101은 로컬 자동/수동 검증으로 통합되었다. 다음 기능부터
 
 로컬 전용 검사는 협업 시 누락 가능성이 있다. 여러OS/모든fps 조합은 아직 배포 대상이 확정되지 않았고 첫 CI에 중복 비용이 크다. 외부 Godot 설치 Action은 추가 의존성이다. .godot 캐시는 초기 규모에서 절약보다 상태 오염 위험이 크다.
 
-## 결정안
+## 결정
 
 공식 GitHub Actions와 Godot Linux ZIP만 사용하고 Action SHA/엔진 체크섬을 고정한다. 단일 Ubuntu job CI checks에서 Python 저장소 검사와 기존 headless 물리 검사를 실행한다. 저장소의 tools/run_ci.py를 로컬/원격 공통 진입점으로 두며 오류 로그·timeout·완료 마커까지 판정한다.
 
