@@ -35,10 +35,13 @@ func _ready() -> void:
 	if not save_root.begins_with(TEST_ROOT_PREFIX) or save_root.contains(".."):
 		setup_error = "save root must be under %s" % TEST_ROOT_PREFIX
 		save_root = DEFAULT_ROOT
-	get_window().title = "IH-112 save/load test"
+	# The fixture is named in the title and the panel so manual windows can be told apart.
+	get_window().title = "IH-112 save/load test%s" % (" (corrupt-latest)" if fixture == "corrupt-latest" else "")
 	store = SaveStore.new(save_root, GatheringMap.save_manifest())
+	var fixture_note: String = ""
 	if fixture == "corrupt-latest":
-		print("IH-112 fixture: ", corrupt_latest_bank())
+		fixture_note = corrupt_latest_bank()
+		print("IH-112 fixture: ", fixture_note)
 	var world: Node = WORLD_SCENE.instantiate()
 	world.set("owns_window_title", false)
 	host.add_child(world)
@@ -46,7 +49,8 @@ func _ready() -> void:
 	ui.save_requested.connect(func(epoch: int) -> void: coordinator.request_save(epoch))
 	ui.load_requested.connect(func(epoch: int, source: StringName) -> void: coordinator.request_load(epoch, source))
 	coordinator.operation_finished.connect(_on_finished)
-	ui.show_root("시험 저장 루트: %s%s" % [save_root, " (" + setup_error + ")" if not setup_error.is_empty() else ""])
+	ui.show_root("시험 저장 루트: %s%s%s" % [save_root, " (" + setup_error + ")" if not setup_error.is_empty() else "",
+		"\n시험 fixture: " + fixture_note if not fixture_note.is_empty() else ""])
 	refresh_slot()
 
 
