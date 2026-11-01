@@ -9,6 +9,7 @@
 - Fixed BUG-003: 실행 직전·활성 세션에서도 후보 중 중복 ID를 재검증한다(선택과 같은 정책). 활성 대상의 ID 변경도 취소한다.
 - Fixed BUG-004: try_begin 중 비활성화·포커스 상실·트리 이탈이 일어난 요청은 ACTIVE가 되지 않는다. end/rejected를 각각 1회 보고하고 게이트를 소유하지 않는다.
 - test_interaction에 회귀 12종 추가(333검사), probe target `on_begin` 훅.
+- [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 develop 통합(merge e5d7730), PR/develop CI success. IH-102 done. main 미반영.
 
 
 ### IH-102 Codex 후속 검토

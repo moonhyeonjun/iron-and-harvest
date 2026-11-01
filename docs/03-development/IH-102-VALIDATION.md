@@ -2,7 +2,7 @@
 
 ## 현재 판정 — Codex 후속 검토
 
-2026-11-01, `29b2ed3` 추가 검사에서 BUG-003/004가 재현되어 IH-102를 **review로 재개**했다. 아래는 Claude Code 구현 당시의 검증 이력이며, 기존 299검사 PASS가 두 경계의 안전성을 입증하지는 않는다. 재현·수정 기준·전달 프롬프트는 [Codex 검토](IH-102-REVIEW.md)를 따른다.
+2026-11-01, `29b2ed3` 추가 검사에서 BUG-003/004가 재현되어 IH-102를 review로 재개했다. 이후 아래 수정 검증과 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 통합으로 **done**에 복귀했다. 아래는 Claude Code 구현 당시의 검증 이력이며, 기존 299검사 PASS가 두 경계의 안전성을 입증하지는 않는다. 재현·수정 기준·전달 프롬프트는 [Codex 검토](IH-102-REVIEW.md)를 따른다.
 
 ## BUG-003/004 수정 검증 (2026-11-01, Claude Code)
 
@@ -36,7 +36,7 @@
 
 GUI: **사용자**가 빌드 `0332b5a`에서 시작 프롬프트/오른쪽 상자, E 패널과 클릭·Enter·Escape 닫기, 패널 중 E 연타, 걸으며 E와 neutral, 패널 중 Cmd+Tab 복귀, 비16:9 리사이즈를 확인하고 "1~5 모두 정상"으로 응답했다. 이전 `3d99d36` 창은 종료한 뒤 새로 실행했으며 GUI 로그 오류는 0이다. 런타임 중복 ID·try_begin 재진입은 정상 화면 조작으로 만들 수 없어 자동 검사로만 확인했다.
 
-판정: 수정·로컬 검증 완료. IH-102는 필수 PR CI와 develop 통합을 확인한 뒤 done으로 바꾼다.
+판정: **done**. [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12): `3225882` → develop, merge `e5d7730f1b858b22a5ba9ead1880fe1fd73a8641`(병합 전 mergeable_state=clean, base `dc2a185`, 보호 우회 없음). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269323346/job/124738634090) success: Ubuntu에서 10단계 PASS, 새 회귀 12종 결과가 로컬과 같다. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269551599/job/124739307741) success. 통합 tree는 `3225882`와 동일하다. main `64928e5`·v0.1.0은 변경하지 않았다.
 
 ## 구현 당시 결론
 
