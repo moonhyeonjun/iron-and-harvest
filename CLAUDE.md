@@ -69,3 +69,7 @@ reset --hard, clean -fd, force/force-with-lease push, 임의 이력 재작성, �
 9. 다음 작업
 
 현재 검증 명령은 CONTRIBUTING.md를 따른다. headless import를 실제 플레이 테스트로 보고하지 않는다. 엔진이 없으면 설치된 것처럼 가정하지 않는다. 사용자 요청이 아키텍처와 충돌하면 문제와 대안을 먼저 설명한다.
+
+## 현재 구현 준비: IH-120
+
+[CALENDAR](docs/02-technical-design/CALENDAR.md)·[AC-C01~16](docs/03-development/IH-120-ACCEPTANCE.md)·[인수인계 프롬프트](docs/03-development/IH-120-HANDOFF.md)를 따른다. IH-120은 상세 설계 ready/구현 전, ADR-018 Proposed다. 기존 저장 schema1에서 schema2로 확장하는 작업이며 진짜0/1 fixture·파일/수량/세션 보존 회귀가 필요하다. 현재 코드의 schema2 지원이나 신규 runner/GUI 통과를 가정하지 않는다. 구현은 Claude Code, 후속 기술 검토는 Codex가 맡는다. main/v0.3.0 태그를 변경하거나 농사/생산까지 범위를 늘리지 않는다.

@@ -166,3 +166,7 @@ rename 직전까지 실패하면 두 기존 은행 바이트가 동일해야 한
 - **키 요청 정책**: F5/F9는 장면이 받는 실제 입력이므로 coordinator의 현재 epoch를 쓴다. SaveUI가 없어도 동작하며 결과 표시만 생략한다. coordinator가 없으면 무시한다. 버튼 의도는 UI의 epoch를 쓰므로, 이전 epoch 버튼 의도는 계속 STALE_SESSION이다.
 - **보고 중 BUSY**: 완료와 시작 전 거부 모두, 결과를 보고하는 동안의 새 save/load는 BUSY다.
 - **세션 정지 경계**: process_mode는 직접 호출과 call_deferred를 막지 않는다. 그래서 조율자가 로드 동안 `set_session_suspended`로 세션을 표시하고, InventoryController의 open/view/전송 진입이 이를 확인한다. 후보는 publish 전까지 정지 상태다. 강제 닫기, 게이트 소유자 추가, 전역 잠금은 없다.
+
+## IH-120 후속 schema2 설계 (미구현)
+
+현재 Accepted IH-112 계약/코드는 schema1·시험0이다. [CALENDAR](CALENDAR.md#6-저장-schema2와-구버전-이관)는 schema2 필수 calendar·0→1→2 검증 이관·기존 파일 보존·미래3+ 분리를 제안한다. 규칙 프로필/content1·새 컨텍스트/실패 복귀·선택적 clock blocker와 기존 fixture의 보존을 함께 검증해야 한다. 이 절은 현재 schema2 지원 완료를 뜻하지 않으며 실제 구현 차이/검증 후 지원 상태를 갱신한다.

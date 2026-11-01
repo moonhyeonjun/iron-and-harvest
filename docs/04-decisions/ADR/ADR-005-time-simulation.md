@@ -33,3 +33,7 @@ Proposed
 IH-120과 Simulation 마일스톤에서 경계 검증.
 
 변경 시 이 문서를 삭제하지 않고 후속 ADR로 대체 관계를 기록한다.
+
+## IH-120 구체화 (2026-11-01)
+
+[ADR-018](ADR-018-calendar-day-boundary.md)이 초기 달력·새벽 경계·정지/저장 이관을 Proposed로 구체화한다. 이 장기 방향 ADR은 삭제/Accepted 전환하지 않는다. 월간/노화/전체 경제 결산은 후속이다.

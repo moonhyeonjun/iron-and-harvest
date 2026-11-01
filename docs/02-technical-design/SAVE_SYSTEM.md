@@ -37,3 +37,7 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 ## IH-112 현재 검토
 
 초기 파일 저장·복원은 구현됐고 수정 후 자동13단계·저장529검사를 통과했다. [BUG-009~011](../03-development/IH-112-REVIEW.md)은 Codex 독립 재검증으로 resolved다. AC-S16 사용자 GUI 확인과 최종 검토를 완료해 IH-112 done·ADR-017 Accepted다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.
+
+## IH-120 달력 확장 제안 (미구현)
+
+[CALENDAR](CALENDAR.md)의 schema2 필수 calendar와0→1→2 이관을 따른다. 원본 schema1/시험0 검증·파일/세대/수량 보존, load 이벤트0, 새 서비스로 전체 세션 publish를 제안한다. content1은 유지하며 규칙 프로필은 manifest와 대조한다. 이후 수동 저장만 schema2로 쓴다. 현재 구현은 schema1이다. 장기 NPC/전체 세계·Cloud·전원 차단 내구성을 함께 구현하는 작업이 아니다.
