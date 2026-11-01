@@ -254,3 +254,13 @@
 - 다음: Claude Code의 두 결함 수정·실패 회귀 편입·GUI 확인·필수 CI. 이후 Codex 재검증 및 IH-111 상세 설계 판단.
 
 - 리뷰 문서 변경을 별도 worktree에 반영해 정적 검사 PASS(필수42파일/링크/경로/작업/ignore)를 확인했고 diff --check도 통과했다. 원래 사용자 트리 검사는 AGENTS.md의 기존 링크4개 때문에 종료1이며 해당 파일을 변경하지 않았다.
+
+## 2026-11-01 — IH-110 BUG-005/006 수정 (Claude Code)
+
+- 시작: develop clean(65cda09, origin 일치), 사용자 untracked AGENTS.md 보존·미커밋. `fix/inventory-lifecycle-and-id-validation` 분기.
+- 재현: Codex 진단 종료1(위반3). 회귀 추가(5004419) 후 runner는 free_ui에서 signal 11 충돌, free_ui를 임시로 빼면 25실패.
+- 수정 fb5cd0c: 조율자의 UI/서비스 수명 재검사(열기 콜백 뒤·틱마다·전환/요청 전), 죽은 UI 호출 방지. ID는 문자 단위 전체 검사.
+- 검사 보완 a714c5a/8dfe8bb: 변이 m2/m3가 통과해 OPEN 사례의 경로 공백을 발견하고 보완. 변이 파싱 오류 시 Godot 종료0을 확인(공통 CI는 마커·로그로 실패 처리), 변이 판정에 마커 확인 추가.
+- 검증: 재현 종료0, runner 521검사 PASS, 실패 주입 종료1, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS(360/333/521).
+- GUI: 사용자, 빌드 8dfe8bb, "1~4 모두 정상", 로그 오류0. UI 삭제·서비스 종료·개행 ID는 자동 검사로만 확인.
+- 다음: PR 필수 CI·develop 통합 후 IH-110 done 기록. main/태그/릴리스 미변경.

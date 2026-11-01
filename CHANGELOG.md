@@ -6,6 +6,12 @@
 
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
+## Unreleased — IH-110 리뷰 수정 (Claude Code, 2026-11-01)
+
+- Fixed BUG-005: 가방 열기 콜백 뒤·OPEN 중 UI/서비스 수명을 재검사한다. 거부 또는 1회 닫힘으로 게이트·interaction을 복구하고, 죽은 UI 호출과 늦은 재고 변경이 없다.
+- Fixed BUG-006: ID 검사가 끝 개행 포함 문자열 전체를 확인한다(자동 보정 없음).
+- test_inventory 회귀 추가(521검사).
+
 ## Unreleased — IH-110 구현 (Claude Code, 2026-11-01)
 
 - ItemDef/ItemCatalog(.tres 7종 + 명시 catalog, 스칼라 복사 격리), InventoryState, InventoryService(고정 슬롯, 원자 add/remove/transfer, expected revision, 거래당 1회 변경 신호, 재진입 BUSY, 엄격 snapshot).

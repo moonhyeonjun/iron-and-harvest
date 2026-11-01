@@ -2,6 +2,41 @@
 
 **후속 판정(2026-11-01): Codex가 14302e5에서 기존 전체 CI 통과를 확인했으나 BUG-005/006을 추가 재현하여 IH-110을 review로 재개했다. [검토·수정 프롬프트](IH-110-REVIEW.md)를 따른다. 아래 Claude의 최초 검증·통합 기록은 당시 증거로 보존한다.**
 
+## BUG-005/006 수정 검증 (2026-11-01, Claude Code)
+
+브랜치 `fix/inventory-lifecycle-and-id-validation` ← develop `65cda09`. 커밋: `5004419` 실패 회귀, `fb5cd0c` 수정, `a714c5a`·`8dfe8bb` 검사 보완. 환경은 macOS 13.4 / M1, Godot 4.7.2 Standard. 로그는 `build/ih-110-fix/`(Git 무시)에 있다.
+
+수정 내용:
+- **BUG-005** (`inventory_controller.gd`): `_dependency_lost()`가 조율자·Player·UI(유효·트리 안·삭제 예약 아님)와 서비스(close·카탈로그)를 확인한다. 이 확인은 열기 콜백 직후(`_still_openable`), OPEN 중 매 물리 틱, 보기 전환 전, 이동 요청 전에 수행한다. 열기는 1회 거부(REMOVED/SERVICE_UNAVAILABLE)되고, 열린 가방은 1회 닫히며 자기 게이트 해제와 interaction 복구가 1회씩 일어난다. notice·결과·화면 갱신은 살아 있는 UI에만 보낸다. 닫을 때 트리에서 분리만 된 UI는 초기화하고, 해제/삭제 예약된 UI는 호출하지 않는다.
+- **BUG-006** (`item_catalog.gd`): `is_valid_id`가 정규식 `$` 대신 모든 문자를 검사한다. trim·소문자화 없음. 카탈로그 정의, 재고/소유자 등록, add/count/remove/transfer 인자, snapshot ID에 같은 규칙이 적용된다.
+
+| 명령 | 빌드 | 종료 | 결과 |
+|---|---|---:|---|
+| Codex 재현 진단(IH-110-REVIEW의 gdscript 블록) | `65cda09` | 1 | 위반 3(수명 2, ID 1) |
+| 같은 재현 | `fb5cd0c` | 0 | 위반 0. 열기 결과 REMOVED / SERVICE_UNAVAILABLE, state CLOSED, 게이트 미소유, 이동 가능 |
+| `test_inventory.gd` | `5004419`(회귀만 추가) | 250 | `free_ui` 열기 사례에서 signal 11 충돌 |
+| 같은 runner(`free_ui` 임시 제외, 미커밋) | `5004419` | 1 | 25검사 실패: ID 사례(N01/02/09)와 수명 사례 6종(N12), 트리 밖 UI 엔진 오류 |
+| 같은 runner | `8dfe8bb` | 0 | 521검사 PASS(N01 98, N02 156, N09 64, N12 40 등), 2회 측정54종 차이0, 고아0, 엔진 오류0 |
+| 같은 runner `-- --inject-failure` (`run_step`) | `8dfe8bb` | 1 | nonzero exit, engine error in log, missing completion marker |
+| 표적 변이 5종 | `8dfe8bb` 변형 | 모두 비0 | 열기 재검사 제거→충돌(250), 틱 검사를 Player만→N12, 이동 요청 수명 검사 제거→N12, 유효하기만 한 UI에 notice→N13(엔진 오류), 정규식 `$` 복귀→N01/02/09 |
+| `python3 tools/run_ci.py` (깨끗한 worktree) | `8dfe8bb` | 0 | 11단계 PASS. 이동 360(123.9초), 상호작용 333(29.6초), 인벤토리 521(9.8초), 각 엔진 오류0 |
+
+새 회귀:
+
+| AC | 사례 | 결과 |
+|---|---|---|
+| AC-N01 | 정의 item_id 16종(LF, CRLF, 중간·앞 개행, 앞/뒤/중간 공백, 탭, 비ASCII, 한글, 대문자, 숫자/밑줄 시작, 하이픈, 빈 값, 65자) | 모두 is_valid_id=false, 카탈로그 전체 거부. 1자·64자·`seed_wheat`·`a0_9`는 유효 |
+| AC-N02 | 같은 ID로 재고·소유자 등록, add, count | 모두 INVALID_ARGUMENT, 기존 재고·이벤트 불변. `bag\n` 조회도 INVALID_ARGUMENT로 다른 ID와 섞이지 않음 |
+| AC-N09 | snapshot의 inventory_id/owner_id/item_id에 개행·공백·비ASCII | INVALID_SNAPSHOT, 활성 재고 불변 |
+| AC-N12 | 열기 콜백 중 UI queue_free/remove_child/free, service.close | 거부 1회, opened 0, CLOSED, 게이트 미소유, interaction 복구, Player 이동 가능, 재고·이벤트 불변 |
+| AC-N12 | 보관함 OPEN 중 같은 4종 + 같은 프레임 늦은 이동 요청 → 물리 틱 → 보기 전환 | 틱 검사로 1회 닫힘(REMOVED/SERVICE_UNAVAILABLE), 늦은 요청 재고 변경 0, 보기 전환 거부, 게이트 해제 |
+
+검사 보완 기록: 처음에는 OPEN 사례가 가방 보기에서 실행돼, 늦은 요청이 수명 검사보다 먼저 WRONG_VIEW로 막혔다. 또 같은 프레임 보기 전환이 먼저 닫아 버려 틱 검사가 따로 검증되지 않았다. 변이 m2/m3가 통과한 것으로 이를 발견했고, 보관함 보기와 틱 뒤 전환 순서로 고쳤다(`a714c5a`, `8dfe8bb`). 이 과정에서 하나 더 확인했다. 변이로 runner의 의존 스크립트에 파싱 오류가 나면 Godot이 runner를 불러오지 못하고 **종료 0**으로 끝난다. 공통 CI는 `Parse Error`/`ERROR:` 로그와 `RESULT: PASS` 마커 누락으로 이를 실패 처리하므로 CI 판정에는 영향이 없다. 변이 실행 판정에는 마커 확인을 추가했다. 기존 IH-110 변이 10종은 모두 AC 실패와 함께 종료 1이었으므로 이 문제의 영향을 받지 않았다.
+
+GUI: **사용자**가 빌드 `8dfe8bb`, macOS 13.4에서 ① 가방 I 열기/닫기·한글·첫 칸 포커스·닫은 뒤 이동, ② 보관함 1개/스택 양방향 이동·합계 목재 15, ③ 살펴보기 중 I 거부·가방 중 E 무반응·닫은 뒤 E 정상, ④ 포커스된 버튼에서 I/Escape·Cmd+Tab 왕복·이동 키 유지 닫기를 확인하고 "1~4 모두 정상"으로 응답했다. 응답 시점까지 GUI 로그 오류는 0이었다. UI 삭제·서비스 종료·끝 개행 ID는 정상 화면 조작으로 만들 수 없어 자동 검사로만 확인했다.
+
+판정: 수정·로컬 검증 완료. IH-110은 PR 필수 CI와 develop 통합을 확인한 뒤 done으로 복귀한다.
+
 ## 결론
 
 Claude Code가 [INVENTORY 명세](../02-technical-design/INVENTORY.md)에 따라 아이템 정의·카탈로그·고정 슬롯 재고·원자 명령·revision·snapshot과 가방/보관함 UI·조율자·유한 시험 맵을 구현했다. AC-N01~13 자동 검사는 375검사 PASS다. 기존 이동 360검사와 상호작용 333검사 회귀도 같은 로컬 CI에서 통과했다. AC-N14 GUI는 사용자가 실제 창에서 확인했다. 변이 10종과 엔진 오류 전용 변이도 모두 검출됐다.

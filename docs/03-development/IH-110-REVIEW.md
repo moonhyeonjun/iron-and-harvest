@@ -132,3 +132,7 @@ Conventional Commits, push, 필수 PR CI checks 성공 후 develop에 통합하�
 main/태그/릴리스는 변경하지 않는다. 미검증이면 done으로 기록하지 않는다.
 완료 보고에 수정 파일·AC 결과·미검증·커밋/PR/CI 링크를 포함한다.
 ```
+
+## Claude Code 수정 결과 (2026-11-01)
+
+`5004419`에서 위 재현을 기존 runner의 AC-N01/02/09/12 회귀로 편입했다. 수정 전에는 `free_ui` 충돌(signal 11)과 25검사 실패를 확인했다. `fb5cd0c`에서 수정한 뒤 재현 진단 종료 0, runner 521검사 PASS, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS를 확인했다. 사용자 GUI 응답은 "1~4 모두 정상"(`8dfe8bb`)이다. 범위는 두 결함과 회귀·문서로 한정했고, 채집·저장·장비·범용 잠금은 추가하지 않았다. 세부 사항은 [검증 기록](IH-110-VALIDATION.md)에 있다. 완료 판정은 PR 필수 CI와 develop 통합 뒤에 한다.
