@@ -264,3 +264,8 @@
 - 검증: 재현 종료0, runner 521검사 PASS, 실패 주입 종료1, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS(360/333/521).
 - GUI: 사용자, 빌드 8dfe8bb, "1~4 모두 정상", 로그 오류0. UI 삭제·서비스 종료·개행 ID는 자동 검사로만 확인.
 - 다음: PR 필수 CI·develop 통합 후 IH-110 done 기록. main/태그/릴리스 미변경.
+
+### BUG-005/006 통합 결과
+
+- [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 5f8bb51 → develop, merge cbb836b40f37a0f29173e541005529229ff037e4(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41278706636/job/124766026102) success(11단계, 새 회귀 로컬과 동일). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41278935113/job/124766685853) success.
+- 통합 tree = 5f8bb51. BUG-005/006 resolved, IH-110 done 복귀. ADR-015 Proposed 유지. main·태그·릴리스 미변경.
