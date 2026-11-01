@@ -15,6 +15,10 @@ const ITEM_ORDER: Array = [&"wood", &"stone", &"iron", &"wheat", &"berry", &"see
 const S := preload("res://systems/inventory/inventory_service.gd")
 const IC := preload("res://scripts/inventory/inventory_controller.gd")
 const SEED: int = 1101
+## BUG-006: every character must match; no trimming or case folding merges IDs.
+const BAD_IDS: Array = ["wood\n", "wood\r\n", "wo\nod", "\nwood", "wood ", " wood", "wo od", "wood\t", "wöod", "목재",
+	"Wood", "1wood", "_wood", "wood-1", ""]
+const GOOD_IDS: Array = ["a", "wood", "seed_wheat", "a0_9"]
 const SEQUENCE_LENGTH: int = 400
 
 var _ac_checks: Dictionary = {}
@@ -69,7 +73,7 @@ func _run() -> void:
 			["AC-N01", _n01_definitions], ["AC-N02", _n02_registration], ["AC-N03", _n03_add],
 			["AC-N04", _n04_add_failures], ["AC-N05", _n05_remove], ["AC-N06", _n06_transfer],
 			["AC-N07", _n07_transfer_failures], ["AC-N08", _n08_stale_and_reentry], ["AC-N09", _n09_snapshot],
-			["AC-N13", _n13_sequence], ["AC-N10", _n10_panel], ["AC-N11", _n11_exclusive], ["AC-N12", _n12_lifecycle],
+			["AC-N13", _n13_sequence], ["AC-N10", _n10_panel], ["AC-N11", _n11_exclusive], ["AC-N12", _n12_lifecycle], ["AC-N12", _n12_ui_service_lifecycle],
 		]
 		for step: Array in steps:
 			# A script error aborts the coroutine and yields null instead of true.
@@ -149,6 +153,21 @@ func _n01_definitions() -> bool:
 			"%s: ok %s errors %s blocked %s" % [case[0], result.ok, result.errors, blocked])
 	_check("AC-N01", InventoryService.new(null).register_inventory("bag", "player_01", 1).code == S.INVALID_CATALOG, "null catalog blocks")
 	_log("AC-N01", "invalid catalogs rejected as a whole: %d cases" % cases.size())
+	var id_rejections: int = 0
+	for bad_id: String in BAD_IDS + ["a".repeat(65)]:
+		var rejected: bool = not ItemCatalog.is_valid_id(bad_id) and not ItemCatalog.is_valid_id(StringName(bad_id))
+		var bad: ItemCatalog = ItemCatalog.new()
+		bad.definitions.assign([_def("stone"), _def(bad_id)])
+		var result: Dictionary = bad.compile()
+		_check("AC-N01", rejected and not result.ok and (result.records as Dictionary).is_empty(),
+			"item_id %s must be rejected (is_valid %s, compile ok %s)" % [bad_id.c_escape(), not rejected, result.ok])
+		id_rejections += 1 if rejected and not result.ok else 0
+	for good_id: String in GOOD_IDS + ["a".repeat(64)]:
+		var good: ItemCatalog = ItemCatalog.new()
+		good.definitions.assign([_def(good_id)])
+		_check("AC-N01", ItemCatalog.is_valid_id(good_id) and good.compile().ok, "item_id %s stays valid" % good_id)
+	_metrics["AC-N01 id rejections"] = id_rejections
+	_log("AC-N01", "ID boundary: %d malformed IDs (LF/CRLF/inner newline/space/tab/non-ASCII/case/65 chars) rejected; 1- and 64-char IDs valid" % id_rejections)
 	return true
 
 
@@ -231,6 +250,22 @@ func _n02_registration() -> bool:
 	_check("AC-N02", _slots(other, "player_bag").count("-") == 12 and _slots(service, "player_bag").slice(0, 2) == ["wood10", "wood8"],
 		"services and inventories are independent")
 	_metrics["AC-N02 after mutation"] = str(after_mutation)
+	var id_service: InventoryService = _new_service()
+	_register(id_service, "keep", ["wood3", "-"])
+	var kept: Dictionary = id_service.snapshot("keep").value
+	var events_before: int = _events.size()
+	for bad_id: String in BAD_IDS + ["a".repeat(65)]:
+		var inventory_code: StringName = id_service.register_inventory(bad_id, "player_01", 2).code
+		var owner_code: StringName = id_service.register_inventory("other_bag", bad_id, 2).code
+		var add_code: StringName = id_service.add("keep", bad_id, 1, 0).code
+		var count_code: StringName = id_service.count("keep", bad_id).code
+		_check("AC-N02", [inventory_code, owner_code, add_code, count_code] == [S.INVALID_ARGUMENT, S.INVALID_ARGUMENT, S.INVALID_ARGUMENT, S.INVALID_ARGUMENT],
+			"ID %s: register %s owner %s add %s count %s" % [bad_id.c_escape(), inventory_code, owner_code, add_code, count_code])
+	_check("AC-N02", id_service.snapshot("keep").value == kept and id_service.snapshot("other_bag").code == S.INVENTORY_NOT_FOUND
+		and _events.size() == events_before, "malformed IDs left inventories and events unchanged")
+	_check("AC-N02", id_service.register_inventory("a".repeat(64), "a", 1).ok and id_service.snapshot("bag\n").code == S.INVALID_ARGUMENT,
+		"64-char and 1-char IDs register; lookups with a trailing newline do not alias")
+	_log("AC-N02", "malformed inventory/owner/item IDs -> INVALID_ARGUMENT on register/add/count, state unchanged")
 	_log("AC-N02", "duplicate/invalid capacity rejected; snapshot edits isolated; shared ItemDef edit (limit 99) ignored -> %s" % [after_mutation.slice(0, 3)])
 	return true
 
@@ -465,6 +500,19 @@ func _n09_snapshot() -> bool:
 	var kept: Dictionary = holder.snapshot("bag").value
 	_check("AC-N09", holder.register_snapshot(original).code == S.DUPLICATE_INVENTORY and holder.snapshot("bag").value == kept,
 		"a valid snapshot never overwrites a live inventory")
+	for field: String in ["inventory_id", "owner_id", "item_id"]:
+		for bad_id: String in ["bag\n", "bag\r\n", "b ag", "bäg"]:
+			var data: Dictionary = original.duplicate(true)
+			if field == "item_id":
+				data.slots[0] = {"item_id": bad_id.replace("bag", "wood"), "quantity": 1}
+			else:
+				data[field] = bad_id
+			var target: InventoryService = _new_service()
+			_register(target, "keep", ["stone3", "-"])
+			var before_keep: Dictionary = target.snapshot("keep").value
+			_check("AC-N09", target.register_snapshot(data).code == S.INVALID_SNAPSHOT and target.snapshot("keep").value == before_keep,
+				"snapshot %s %s rejected" % [field, bad_id.c_escape()])
+	_log("AC-N09", "snapshot inventory_id/owner_id/item_id with newline/space/non-ASCII rejected")
 	_log("AC-N09", "round trip equal (revision %d); %d corruptions rejected; duplicate ID not overwritten" % [round_trip.get("revision", -1), corruptions.size()])
 	return true
 
@@ -857,6 +905,91 @@ func _n12_lifecycle() -> bool:
 	_check("AC-N12", _ui.is_open(), "bag open before freeing the map")
 	await _unload_map()
 	return true
+
+
+## BUG-005: the panel UI or the service goes away inside the opening callback or while the
+## bag is open. Opening must be refused once, an open bag must close once, and the gate,
+## interaction and inventories must recover; nothing may call into a removed UI.
+func _n12_ui_service_lifecycle() -> bool:
+	var actions: Array = ["queue_free_ui", "remove_ui", "free_ui", "close_service"]
+	for action: String in actions:
+		await _load_map()
+		var ui: InventoryUI = _ui
+		var service: InventoryService = _service
+		var before: Array = [service.snapshot("player_bag").value, service.snapshot("test_store").value]
+		var events_before: int = _events.size()
+		var fired: Array = [false]
+		var during: Callable = func(_id: StringName, _a: String, _d: String) -> void:
+			if fired[0]:
+				return
+			fired[0] = true
+			_break(action, ui, service)
+		_interaction.target_changed.connect(during)
+		var had_prompt: bool = not _interaction.get_selected_target_id().is_empty()
+		var mark: int = _rec.size()
+		var result: StringName = _controller.request_open(IC.View.BAG)
+		if _interaction.target_changed.is_connected(during):
+			_interaction.target_changed.disconnect(during)
+		await _ticks(2)
+		var refused: Array = _since(mark, "rejected")
+		var ok: bool = had_prompt and fired[0] and result != IC.OK and refused.size() == 1 and _since(mark, "opened").is_empty() \
+			and _controller.get_state() == IC.State.CLOSED and not _controller.owns_movement_gate() \
+			and _interaction.is_interaction_enabled() and _player.is_control_effective() and _events.size() == events_before
+		if action != "close_service":
+			ok = ok and [service.snapshot("player_bag").value, service.snapshot("test_store").value] == before
+		_check("AC-N12", ok, "%s while opening: result %s refused %s state %s gate %s interaction %s player %s" % [action, result,
+			refused, _controller.get_state(), _controller.owns_movement_gate(), _interaction.is_interaction_enabled(), _player.is_control_effective()])
+		_metrics["AC-N12 opening %s" % action] = String(result)
+		_log("AC-N12", "%s while opening: result=%s refused=%d opened=0 gate_owned=%s interaction_restored=%s" % [
+			action, result, refused.size(), _controller.owns_movement_gate(), _interaction.is_interaction_enabled()])
+		if is_instance_valid(ui) and not ui.is_inside_tree():
+			ui.free()
+		await _unload_map()
+	for action: String in actions:
+		await _load_map()
+		var ui: InventoryUI = _ui
+		var service: InventoryService = _service
+		await _tap(KEY_I)
+		var open_session: int = _controller.get_session_id()
+		var before: Array = [service.snapshot("player_bag").value, service.snapshot("test_store").value]
+		var events_before: int = _events.size()
+		var mark: int = _rec.size()
+		_break(action, ui, service)
+		# Same frame: a view switch and a late intent must not reach the dead UI or the stock.
+		var switched: StringName = _controller.request_open(IC.View.STORE)
+		if is_instance_valid(ui):
+			ui.transfer_requested.emit(open_session, &"player_bag", 0, &"wood", 1, 0, 0)
+		await _ticks(2)
+		var closed: Array = _since(mark, "closed")
+		var expected: StringName = IC.SERVICE_UNAVAILABLE if action == "close_service" else IC.REMOVED
+		var ok: bool = closed.size() == 1 and closed[0].reason == expected and switched != IC.OK \
+			and _controller.get_state() == IC.State.CLOSED and not _controller.owns_movement_gate() \
+			and _interaction.is_interaction_enabled() and _player.is_control_effective() and _events.size() == events_before
+		if action != "close_service":
+			ok = ok and [service.snapshot("player_bag").value, service.snapshot("test_store").value] == before
+		if action == "remove_ui":
+			ok = ok and not ui.is_open()
+		_check("AC-N12", ok, "%s while open: closed %s switch %s state %s gate %s" % [action, closed, switched,
+			_controller.get_state(), _controller.owns_movement_gate()])
+		_metrics["AC-N12 open %s" % action] = String(closed[0].reason) if closed.size() > 0 else "-"
+		_log("AC-N12", "%s while open: closed=%s view_switch=%s late_intent_events=%d gate_released=%s" % [action,
+			closed[0].reason if closed.size() > 0 else "-", switched, _events.size() - events_before, not _controller.owns_movement_gate()])
+		if is_instance_valid(ui) and not ui.is_inside_tree():
+			ui.free()
+		await _unload_map()
+	return true
+
+
+func _break(action: String, ui: InventoryUI, service: InventoryService) -> void:
+	match action:
+		"queue_free_ui":
+			ui.queue_free()
+		"remove_ui":
+			ui.get_parent().remove_child(ui)
+		"free_ui":
+			ui.free()
+		"close_service":
+			service.close()
 
 
 # --- harness ---------------------------------------------------------------------
