@@ -1,5 +1,10 @@
 # 변경 이력
 
+## Unreleased — IH-112 Codex 기술 검토
+
+- 기존 CI13단계·저장425검사 통과를 독립 확인하고 BUG-009(UI 제거 뒤 키 입력 충돌)·010(거부 보고 재진입 저장)·011(suspend 중 지연 모달 명령)을 추가 재현했다.
+- IH-112 review 유지, [Claude 수정 프롬프트](docs/03-development/IH-112-REVIEW.md)와 회귀 수락 조건 작성. 부분 GUI 기록 보존, 게임 코드 변경 없음.
+
 ## Unreleased — IH-112 초기 저장·복원 (Claude Code, 2026-11-01)
 
 - SaveCodec(envelope+payload 문자열 SHA-256, 숫자 정규화, manifest 대조, schema1/시험 v0 이관), SaveStore(A/B 두 세대, pending 검증 뒤 rename, 상태표·명시 복구), SaveFileAdapter.

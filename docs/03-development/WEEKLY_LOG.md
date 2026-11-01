@@ -421,3 +421,14 @@
   - IH-112 review 해소: AC-S16 절차 6 확인 방법 결정(사용자 GUI 중단 지시 반영).
   - Codex 기술 검토.
   - v0.3.0 판정은 별도로 한다.
+
+## 2026-11-01 — IH-112 Codex 기술 검토
+
+- 대상 develop/origin b13292b, 원격 CI41303127354 success, 미추적 AGENTS.md 보존. docs/ih-112-technical-review에서 문서만 변경한다.
+- clean detached worktree 공통 CI 종료0/13단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집347·저장425. 저장 반복15종 차이0·고아0·엔진 오류0. INF fixture 예정 경고4건은 기존 정책대로 별도 계수.
+- 추가 진단: SaveUI free/queue_free 뒤 F5 signal11/exit250(BUG-009). 거부 보고 중 nested save OK·A1 생성(exit1, BUG-010). STAGING의 지연 request_open 뒤 FOCUS_LOST 복귀 시 OPEN/게이트 소유(exit1, BUG-011). 후자 엔진 오류0.
+- 진단/로그 build/ih-112-codex-review/. 고유 시험 루트만 접근, 제품 saves/사용자 GUI 파일 미접근. 새 GUI/변이는 미실행이며 기존 사용자 부분 확인과 구분한다. 추가 사용자 테스트 중단 기록을 존중한다.
+- 세 결함 open·IH-112 review·ADR-017 Proposed 유지. 리뷰·수정 프롬프트·수락/검증/작업 진입점을 갱신한다. 게임/씬/테스트/CI 설정/main/태그 변경 없음.
+- 다음: Claude Code의 실패 회귀·최소 수정·자동 검증·필수 PR CI, 이후 Codex 재검증. AC-S16 손상복구 GUI 미확인을 자동 통과로 바꾸지 않는다. v0.3.0 판정은 별도다.
+
+- 리뷰 문서14개를 별도 worktree에 반영해 정적 검사 PASS, diff --check PASS. 사용자 루트는 AGENTS.md의 기존 링크4개만 실패하며 해당 파일은 보존·미커밋한다. 필수 PR CI 후 문서만 develop에 통합하며 실제 SHA/CI/원격 결과는 PR 이력·완료 보고에 기록한다.

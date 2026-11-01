@@ -1,5 +1,9 @@
 # IH-112 초기 저장·복원 검증 — 2026-11-01
 
+## Codex 후속 판정 — review
+
+2026-11-01 `b13292b`에서 CI13단계·저장425검사 PASS를 독립 확인했다. 추가 진단으로 BUG-009(SaveUI 제거 후 키 입력 충돌), BUG-010(거부 보고 중 재진입 저장), BUG-011(suspend 중 지연 모달 명령)을 재현했다. **IH-112 review 유지, 세 결함 open**. [재현·수정 수락 조건·Claude 프롬프트](IH-112-REVIEW.md)를 따른다. 아래는 최초 구현·자동·부분 GUI 확인 기록이며 새 경계의 통과를 뜻하지 않는다. AC-S16 손상복구 GUI 미확인도 유지하고 추가 사용자 테스트를 재요청하지 않는다.
+
 ## 결론
 
 Claude Code가 [SAVE_LOAD 명세](../02-technical-design/SAVE_LOAD.md)에 따라 다음을 구현했다.
@@ -295,3 +299,12 @@ macOS APFS에서 다음을 실제 파일로 검증했다: rename 교체, 단계�
 - [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41302454648/job/124836057429): develop push(`3ab4795`) CI checks success.
 - 통합 tree는 검증한 `81214e4`와 같다(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.
 - IH-112는 AC-S16 절차 6(사용자 GUI)이 미실행이라 **review**를 유지한다. ADR-017 Proposed.
+
+## Codex 독립 기술 검토
+
+- 대상 b13292b, 동일 SHA 원격 CI41303127354 success. macOS13.4/M1, Godot4.7.2 Standard/GDScript/Compatibility, clean detached worktree.
+- `python3 tools/run_ci.py`: 종료0/13단계 PASS, Python19·경제7·360/333/521/347/425, 저장 반복15종 차이0·고아0·엔진 오류0(기존 INF 경고4건은 예정값).
+- 임시 진단4프로세스: ui_free/ui_queue는 F5에서 signal11/exit250, reject는 바깥 STALE_SESSION 뒤 nested OK·A1 생성으로 exit1, suspend는 FOCUS_LOST 복귀 뒤 같은 세계의 모달 OPEN/게이트 소유로 exit1. 후자의 엔진 오류0.
+- 로그/진단: build/ih-112-codex-review/(ci/, ui_free.log, ui_queue.log, reject.log, suspend.log, probes/). 파일은 고유 codex_probe_* 시험 루트만 사용하고 생성한 고정 이름만 정리했다. 제품 saves/사용자 GUI 파일 미접근.
+- 새 GUI·변이는 미실행. 기존438ef89 사용자 부분 확인과 구분한다. 추가 사용자 테스트 중단 기록을 존중한다.
+- BUG-009~011 open·IH-112 review·ADR-017 Proposed. 문서만 변경하며 수정 담당은 Claude Code다. main/태그/릴리스 변경 없음. 필수 PR CI 후 문서 통합, 실제 SHA/CI/merge는 PR 이력·완료 보고에 기록한다.
