@@ -1,9 +1,9 @@
 # 변경 이력
 
-## Unreleased — v0.3.0 Gathering 기능 판정 (2026-11-01)
+## v0.3.0 Gathering — 2026-11-01
 
 - IH-110/111/112 done, 수집·보관·초기 저장/복원과 실패 복구의 완료 조건 PASS. 손상복구 GUI 사용자 확인과 PR #39 CI·통합 검토로 IH-112 최종 완료, ADR-017 Accepted.
-- [마일스톤 판정](docs/03-development/GATHERING-v0.3.0-VERIFICATION.md)·관련 기술/개발 문서 갱신. main 승격/CI/태그 성공 전 발행 완료로 기록하지 않는다. 게임 코드 변경 없음.
+- [마일스톤 판정](docs/03-development/GATHERING-v0.3.0-VERIFICATION.md)·관련 기술/개발 문서 갱신. PR #40 판정 통합·PR #41 main 승격·CI 성공 후 main `6ed5f8c`에 annotated 태그를 발행하고 원격 객체/대상을 확인했다. GitHub Release·실행파일·Steam 게시 없음. 이번 판정·발행 작업에서 게임 코드는 수정하지 않았다.
 
 ## Unreleased — IH-112 AC-S16 손상복구 GUI 확인 (2026-11-01)
 
