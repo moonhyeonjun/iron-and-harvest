@@ -23,3 +23,5 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 - [ADR-013 CI 관문](ADR-013-continuous-integration.md) — Accepted, IH-004 원격 성공/실패·병합 관문 검증 완료.
 
 - [ADR-014 상호작용 경계](ADR-014-interaction-boundary.md) — Proposed, IH-102 구현·BUG-003/004 수정·수락 검증 완료. 최종 제품 결정은 후속.
+
+- [ADR-015 아이템·인벤토리 계약](ADR-015-inventory-contract.md) — Proposed. IH-110 상세 설계; Resource/JSON 비교·원자 거래·모달 검증 후 판정. ADR-003 전체를 대체하지 않음.

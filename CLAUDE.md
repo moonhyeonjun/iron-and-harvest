@@ -25,9 +25,13 @@ Godot 루트는 game/이며 res://는 이 디렉터리다. 루트 data/design은
 
 IH-101은 구현·검증·develop 통합 완료다. 후속 작업 전 [이동 명세](docs/02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](docs/03-development/IH-101-ACCEPTANCE.md), [검증 결과](docs/03-development/IH-101-VALIDATION.md)를 읽는다. [인수인계](docs/03-development/IH-101-HANDOFF.md)는 최초 구현 계약으로 보존한다. 수치는 여전히 검증용 제안이다.
 
-## 다음 기능: IH-102
+## 완료 기능: IH-102
 
 IH-004 CI 완료 후 [상호작용 인수인계](docs/03-development/IH-102-HANDOFF.md), [명세](docs/02-technical-design/INTERACTION.md), [수락 조건](docs/03-development/IH-102-ACCEPTANCE.md)를 준비했다. 2026-11-01 Claude Code가 구현하고 AC-I01~12와 로컬 CI를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop에 통합했다. 이후 Codex 추가 검토에서 BUG-003/004를 재현해 review로 재개했고, BUG-003/004를 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)(merge e5d7730)로 수정·통합하여 done으로 복귀했다([검토](docs/03-development/IH-102-REVIEW.md)). 기존 이동 회귀를 보존하며 test_interaction은 tools/run_ci.py에 등록되어 있다. main/develop은 CI checks가 필수이므로 문서도 PR로 검증한다.
+
+## 다음 기능: IH-110
+
+[인수인계](docs/03-development/IH-110-HANDOFF.md), [명세](docs/02-technical-design/INVENTORY.md), [수락 조건](docs/03-development/IH-110-ACCEPTANCE.md), [ADR-015](docs/04-decisions/ADR/ADR-015-inventory-contract.md)를 따른다. ready는 구현 준비 상태이며 아이템/가방은 아직 없다. Codex가 설계했고 Claude Code가 구현한다. 정의/수량 분리·전체 성공 거래·stale 요청·가방/살펴보기 배타성을 검증하며 실제 채집/저장은 후속이다. v0.2.0/main은 보존한다.
 
 ## 작업 절차
 
