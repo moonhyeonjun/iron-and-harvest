@@ -57,6 +57,21 @@ python3 tools/godot.py --headless --script res://tests/test_gathering.gd
 python3 tools/godot.py --headless --script res://tests/test_gathering.gd -- --inject-failure
 ```
 
+## test_save_load.gd — IH-112 저장·복원
+
+실제 파일을 사용한다. 실행마다 고유한 시험 전용 루트(`user://tests/ih112/runner_<pid>_<usec>/`)를 쓰고, 끝나면 자신이 만든 고정 이름 파일과 빈 폴더만 지운다. 제품 `user://saves`와 GUI 시험 루트(`user://tests/ih112/gui`)는 건드리지 않는다.
+- codec 사례: 파일 전체 바이트를 decode한다.
+- store 사례: 실제 SaveFileAdapter를 쓰거나, 같은 실제 파일에 읽기/쓰기/flush/rename 실패와 짧은 쓰기를 주입하는 하위 클래스를 쓴다.
+- 장면 사례: SaveLoadTest에서 실제 F5/F9/E/I/이동 입력을 넣는다.
+- AC-S13: `support/save_child.gd`로 별도 Godot 프로세스를 실행한다. 저장→종료→다른 프로세스 불러오기와, 저장 단계별 SIGKILL을 검증한다.
+
+`fixtures/save/`는 정상 v1, 시험 v0, 미래 schema, content 2 파일이다. 약25초.
+
+```sh
+python3 tools/godot.py --headless --script res://tests/test_save_load.gd
+python3 tools/godot.py --headless --script res://tests/test_save_load.gd -- --inject-failure
+```
+
 ## 테스트 맵 수동 실행
 
 ```sh
@@ -66,6 +81,8 @@ python3 tools/godot.py res://scenes/tests/inventory_test.tscn
 python3 tools/godot.py res://scenes/tests/inventory_test.tscn -- --fixture=full
 python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=full
 python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=rebind
+python3 tools/godot.py res://scenes/tests/save_load_test.tscn
+python3 tools/godot.py res://scenes/tests/save_load_test.tscn -- --fixture=corrupt-latest
 ```
 
 테스트 맵은 명시 경로로만 실행한다. export에서 tests 리소스를 제외하는 정책은 배포 단계에서 검증한다.
