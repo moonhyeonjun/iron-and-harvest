@@ -143,6 +143,11 @@ IH-112에는 PointBinding과 숨은 stock을 포함한 Inventory snapshot을 넘
 ## 구현 결과·차이 (2026-11-01)
 
 - 측정 결과, 엔진은 타입 있는 int 필드에 `.tres`의 `2.5`/`true`/`"3"`을 오류 없이 정수화한다. 그래서 GatherCatalog가 원본 텍스트의 `initial_quantity` 정수 리터럴을 확인한다. 명시 목록용 `gather_catalog.gd`를 추가했다.
+- **원본 정책(BUG-008 수정, 2026-11-01)**: 지원 정의 형식은 외부 `.tres`뿐이다.
+  - 다른 Resource에 내장된 정의(경로에 `::`)는 원본 리터럴을 확인할 수 없어 값과 무관하게 거부한다.
+  - 경로 없는 정의(코드 생성)는 catalog의 코드 전용 `allow_unsourced_definitions`를 켰을 때만 허용한다(테스트용, 출하 false).
+  - 어느 경우든 실패하면 build가 INVALID_SETUP을 반환하고 세션을 만들지 않는다. ItemDef의 같은 제한(DEBT-004)은 별도다.
+- **표시 수명(BUG-007 수정)**: 시험 맵은 HUD가 해제·트리 밖·삭제 예약이면 표시만 생략한다. 거래 결과와 rebind는 영향받지 않는다. HUD 지점 줄은 `[normal]`/`[full]`/`[rebind]`로 fixture를 표시한다.
 - `GatherService.build(...)`는 정의·결속·bag/store/stock 등록을 모두 성공할 때만 서비스를 반환한다(실패 시 INVALID_SETUP). `GatherCommand.commit/cancel`은 서비스의 `execute/release`로 위임한다. 캡처 값은 서비스가 보관하고, 명령은 서비스를 WeakRef로 참조한다. stock에 다른 품목이나 초기보다 많은 수량이 있으면 INVALID_STOCK이다.
 - Interaction은 EXECUTING 상태와 `instant_completed`를 추가했다. 실행·보고 중 E는 조용히 소비한다. RESOLVING 중 Escape는 취소이며 INSPECT에도 적용된다. 콜백으로 트리에서 빠지면 그 틱의 선택 갱신을 생략한다.
 - GatherTarget은 `_process`에서 잔량을 조회해 표시만 갱신한다. 지점 뷰는 `scenes/gathering/gathering_points.tscn`로 분리했다(좌표: 나뭇가지 (250,360), 돌 (250,470), 산열매 (360,300)). HUD 합계는 가방+보관함+지점이다.

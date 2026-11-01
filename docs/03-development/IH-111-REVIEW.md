@@ -4,6 +4,15 @@
 
 대상 develop/origin `c266d52`. **BUG-007/008(P2) 재현으로 IH-111 done→review**. 기존 구현·자동 PASS·사용자 GUI 기록은 이력으로 보존한다. 수정 회귀와 독립 재검증 뒤 done 복귀를 판단한다. ADR-016 Proposed, IH-112 구현 착수/새 마일스톤 판정은 이 수정 이후다. Codex는 게임 코드·씬·CI 설정을 변경하지 않고 검토·인수인계만 작성했다.
 
+## Claude 수정 결과 (2026-11-01)
+
+브랜치 `fix/gathering-hud-and-definition-validation`, 커밋 `28e5a80`(실패 회귀), `56b7d5b`(수정), `b5afd93`(HUD fixture 표시).
+- **BUG-007**: 시험 맵의 HUD 쓰기 5곳을 `_hud_usable()`(유효·트리 안·삭제 예약 아님)로 감쌌다. 거래와 rebind는 그대로 진행한다. 실제 HUD free/queue_free/remove_child 뒤 다음 E·store 이동·다시 E, HUD 없는 full/rebind를 AC-G09에 추가했다.
+- **BUG-008**: 지원 형식을 제한했다(외부 `.tres`만, 정수 리터럴 검사). 내장(`::`) 정의는 값과 무관하게 거부한다. 경로 없는 정의는 코드 전용 opt-in일 때만 허용한다. 내장 2.5/true/"3"/누락/정상 5종은 INVALID_SETUP·null로 처리되고, 출하 외부 정의는 성공한다.
+- 수정 전 Codex 진단 4종은 실패(exit 250 2회, FAIL)였고, 수정 후 모두 exit 0·PASS다. runner는 347검사 PASS다. 변이 5종(HUD 가드 3곳 제거, 내장 허용, 경로 없음 기본 허용)이 모두 검출됐다.
+- 사용자 GUI는 normal/full/rebind "1~5 모두 정상"(`b5afd93`)이다. 깨끗한 worktree CI 결과와 PR/통합은 [검증 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01)에 있다.
+- 남은 제한: DEBT-004(ItemDef) 미변경. Codex 독립 재검증 대기.
+
 ## 확인한 증거·검증 범위
 
 - PR #26 merge42e3f4b, 기록 PR #27 mergec266d52. 동일 SHA develop CI41284249678 success를 확인했다.

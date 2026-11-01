@@ -80,7 +80,7 @@ func _run() -> void:
 			["AC-G01", _g01_definitions], ["AC-G02", _g02_bindings], ["AC-G03", _g03_success], ["AC-G04", _g04_space],
 			["AC-G05", _g05_depletion], ["AC-G06", _g06_commands], ["AC-G13", _g13_sequence],
 			["AC-G02", _g02_scene_audit], ["AC-G07", _g07_revalidation], ["AC-G08", _g08_cancel_before_commit],
-			["AC-G09", _g09_after_commit], ["AC-G10", _g10_reentry], ["AC-G11", _g11_ui_and_movement], ["AC-G12", _g12_rebind],
+			["AC-G09", _g09_after_commit], ["AC-G09", _g09_hud_lifecycle], ["AC-G10", _g10_reentry], ["AC-G11", _g11_ui_and_movement], ["AC-G12", _g12_rebind],
 		]
 		for step: Array in steps:
 			var completed: Variant = await (step[1] as Callable).call()
@@ -115,18 +115,20 @@ func _g01_definitions() -> bool:
 		var text: String = FileAccess.get_file_as_string("res://data/gathering/%s.tres" % definition_id)
 		_check("AC-G01", text.contains("initial_quantity = "), "%s.tres states initial_quantity" % definition_id)
 	var bad_cases: Array = [
-		["unknown item", {"item_id": &"gold"}], ["quantity 0", {"initial_quantity": 0}], ["quantity -1", {"initial_quantity": -1}],
-		["over wood limit", {"initial_quantity": 11}], ["over axe limit", {"item_id": &"tool_axe", "initial_quantity": 2}],
-		["empty id", {"definition_id": &""}], ["trailing newline id", {"definition_id": &"gather_x\n"}],
-		["space id", {"definition_id": &"gather x"}], ["65 char id", {"definition_id": StringName("g".repeat(65))}],
-		["empty display", {"display_name": " "}], ["empty action", {"action_label": ""}],
+		["unknown item", {"item_id": &"gold"}, "unknown item_id"], ["quantity 0", {"initial_quantity": 0}, "outside 1..10"],
+		["quantity -1", {"initial_quantity": -1}, "outside 1..10"], ["over wood limit", {"initial_quantity": 11}, "outside 1..10"],
+		["over axe limit", {"item_id": &"tool_axe", "initial_quantity": 2}, "outside 1..1"],
+		["empty id", {"definition_id": &""}, "invalid definition_id"], ["trailing newline id", {"definition_id": &"gather_x\n"}, "invalid definition_id"],
+		["space id", {"definition_id": &"gather x"}, "invalid definition_id"], ["65 char id", {"definition_id": StringName("g".repeat(65))}, "invalid definition_id"],
+		["empty display", {"display_name": " "}, "empty display_name"], ["empty action", {"action_label": ""}, "empty display_name"],
 	]
 	for case: Array in bad_cases:
-		var catalog: GatherCatalog = _catalog_with(_def("gather_extra", case[1]))
+		# In-memory definitions need the catalog's explicit opt-in; the named rule must fail.
+		var catalog: GatherCatalog = _catalog_with(_def("gather_extra", case[1]), true)
 		var result: Dictionary = catalog.compile(items)
 		var built: GatherService.Result = GatherService.build(_item_catalog, catalog, _snapshots(), &"player_bag", BINDINGS)
-		_check("AC-G01", not result.ok and (result.records as Dictionary).is_empty() and built.code == G.INVALID_SETUP and built.value == null,
-			"%s rejected (%s)" % [case[0], result.errors])
+		_check("AC-G01", not result.ok and (result.records as Dictionary).is_empty() and "\n".join(result.errors).contains(case[2])
+			and built.code == G.INVALID_SETUP and built.value == null, "%s rejected for '%s' (%s)" % [case[0], case[2], result.errors])
 	# The engine silently turns 2.5/true/"3" into ints for a typed field; the authored text is checked.
 	var literal_errors: Dictionary = {}
 	for name: String in ["float_quantity", "bool_quantity", "string_quantity", "missing_quantity"]:
@@ -136,6 +138,31 @@ func _g01_definitions() -> bool:
 		literal_errors[name] = [loaded.initial_quantity, "\n".join(result.errors).contains("integer literal")]
 		_check("AC-G01", not result.ok and literal_errors[name][1], "%s rejected though loaded as %d" % [name, loaded.initial_quantity])
 	_log("AC-G01", "fixture values after engine load %s -> all rejected by literal check" % [literal_errors])
+	# BUG-008: definitions embedded in a catalog cannot have their authored type checked, so
+	# every embedded definition is refused, even a valid integer, with no partial session.
+	var embedded_results: Dictionary = {}
+	for name: String in ["float", "bool", "string", "missing", "valid"]:
+		var embedded: GatherCatalog = load(FIXTURES + "embedded_%s.tres" % name) as GatherCatalog
+		var loaded_value: int = embedded.definitions[0].initial_quantity
+		var result: Dictionary = embedded.compile(items)
+		var built: GatherService.Result = GatherService.build(_item_catalog, embedded, _snapshots(), &"player_bag", [BINDINGS[0]])
+		embedded_results[name] = [loaded_value, result.ok, built.code]
+		_check("AC-G01", not result.ok and "\n".join(result.errors).contains("embedded definitions are not supported") and built.code == G.INVALID_SETUP
+			and built.value == null, "embedded %s (loaded %d) must be rejected: %s %s" % [name, loaded_value, result.errors, built.code])
+	_metrics["AC-G01 embedded"] = str(embedded_results)
+	_log("AC-G01", "embedded definitions [loaded, compile ok, build] %s -> all rejected" % [embedded_results])
+	# Definitions without any source file are refused unless the catalog opts in explicitly.
+	var unsourced: GatherCatalog = _catalog_with(_def("gather_code"))
+	var unsourced_result: Dictionary = unsourced.compile(items)
+	var opted: GatherCatalog = _catalog_with(_def("gather_code"), true)
+	var opted_result: Dictionary = opted.compile(items)
+	_check("AC-G01", not unsourced_result.ok and "\n".join(unsourced_result.errors).contains("no source file")
+		and GatherService.build(_item_catalog, unsourced, _snapshots(), &"player_bag", BINDINGS).value == null,
+		"in-memory definition without opt-in rejected (%s)" % [unsourced_result.errors])
+	_check("AC-G01", opted_result.ok and (opted_result.records as Dictionary).has(&"gather_code"), "explicit opt-in accepts a valid in-memory definition")
+	_check("AC-G01", _gather_catalog.compile(items).ok and _gather_catalog.get("allow_unsourced_definitions") == false,
+		"the shipped catalog uses external files only and does not opt in")
+	_log("AC-G01", "unsourced without opt-in rejected; opt-in accepted; shipped catalog external-only")
 	# Edits to shared Resources or returned copies after build never reach live state.
 	var session: Dictionary = _session()
 	var gather: GatherService = session.gather
@@ -585,6 +612,81 @@ func _g09_after_commit() -> bool:
 	return true
 
 
+## BUG-007: the map's own GatheringHUD is freed, queue_freed or detached inside the commit
+## signal. The transfer stays applied once, display is skipped, and the next E, a store
+## move (deferred HUD refresh), a NO_SPACE rejection and the rebind fixture keep working.
+func _g09_hud_lifecycle() -> bool:
+	for action: String in ["free_hud", "queue_free_hud", "remove_hud"]:
+		await _load_map()
+		await _stand("branch_pile_01")
+		var inventory: InventoryService = _map.get("inventory")
+		var map: Node2D = _map
+		var hud: Node = map.get_node("GatheringHUD")
+		var once: Array = [false]
+		var breaker: Callable = func(_ids: Array[StringName], _revisions: Dictionary) -> void:
+			if once[0]:
+				return
+			once[0] = true
+			match action:
+				"free_hud":
+					hud.free()
+				"queue_free_hud":
+					hud.queue_free()
+				"remove_hud":
+					hud.get_parent().remove_child(hud)
+		inventory.inventories_changed.connect(breaker)
+		var mark: int = _rec.size()
+		var events_before: int = _events.size()
+		await _press_e()
+		inventory.inventories_changed.disconnect(breaker)
+		await _ticks(3)
+		var first: Array = [inventory.count("player_bag", "wood").value, inventory.snapshot("stock_branch_01").value.slots[0].quantity,
+			inventory.snapshot("player_bag").value.revision, inventory.snapshot("stock_branch_01").value.revision]
+		var reports: int = _since(mark, "gathered").size() + _since(mark, "rejected").size()
+		await _press_e()
+		var moved: InventoryService.Result = inventory.transfer("player_bag", 1, "test_store", 10,
+			inventory.snapshot("player_bag").value.revision, inventory.snapshot("test_store").value.revision)
+		await _ticks(3)
+		await _press_e()
+		var totals: Dictionary = _totals(inventory)
+		_check("AC-G09", first == [9, 5, 1, 1] and reports == 1 and moved.ok and _events.size() - events_before == 4
+			and inventory.count("player_bag", "wood").value == 11 and totals == NORMAL_TOTALS,
+			"%s: first %s reports %d events %d totals %s" % [action, first, reports, _events.size() - events_before, totals])
+		_metrics["AC-G09 hud %s" % action] = str(first)
+		_log("AC-G09", "%s in the commit signal: first gather [bag wood, stock, revs]=%s once, next E ok, store move ok, totals kept" % [action, first])
+		if is_instance_valid(hud) and not hud.is_inside_tree():
+			hud.free()
+		await _unload_map()
+	# Full bag without a HUD: the NO_SPACE path and the deferred refresh skip display only.
+	await _load_map("full")
+	(_map.get_node("GatheringHUD") as Node).queue_free()
+	await _ticks(2)
+	await _stand("branch_pile_01")
+	var inventory: InventoryService = _map.get("inventory")
+	var mark: int = _rec.size()
+	await _press_e()
+	var refused: Array = _since(mark, "rejected")
+	var moved: InventoryService.Result = inventory.transfer("player_bag", 0, "test_store", 10, 0, 0)
+	await _ticks(3)
+	await _press_e()
+	_check("AC-G09", refused.size() == 1 and refused[0].reason == G.NO_SPACE and moved.ok and _since(mark, "gathered").size() == 1
+		and inventory.count("player_bag", "wood").value == 1, "full without HUD: NO_SPACE, store move, then one gather")
+	await _unload_map()
+	# Rebind fixture without a HUD: the view swap still happens and reports equal values.
+	await _load_map("rebind")
+	(_map.get_node("GatheringHUD") as Node).queue_free()
+	await _ticks(2)
+	await _stand("branch_pile_01")
+	await _press_e()
+	await _ticks(3)
+	var report: Dictionary = _map.get("rebind_report")
+	_check("AC-G09", not report.is_empty() and report.before == report.after and report.after.branch_pile_01 == [5, 1],
+		"rebind fixture without HUD: %s" % [report])
+	_log("AC-G09", "no HUD: full NO_SPACE+store move+gather ok; rebind report %s" % [report.get("after")])
+	await _unload_map()
+	return true
+
+
 func _g10_reentry() -> bool:
 	await _load_map()
 	await _stand("branch_pile_01")
@@ -763,8 +865,10 @@ func _def(definition_id: String, overrides: Dictionary = {}) -> GatherDef:
 	return definition
 
 
-func _catalog_with(extra: GatherDef) -> GatherCatalog:
+func _catalog_with(extra: GatherDef, allow_unsourced: bool = false) -> GatherCatalog:
 	var catalog: GatherCatalog = GatherCatalog.new()
+	# set() keeps this runner loadable even where the property does not exist yet.
+	catalog.set("allow_unsourced_definitions", allow_unsourced)
 	var definitions: Array = []
 	for definition: GatherDef in _gather_catalog.definitions:
 		definitions.append(definition)

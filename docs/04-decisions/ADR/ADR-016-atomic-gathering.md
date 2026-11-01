@@ -33,3 +33,5 @@ AC-G01~14·기존 회귀·실제 GUI·필수 PR CI를 확인한 후 Accepted 전
 ## 구현 검증 결과 (2026-11-01)
 
 Claude Code가 이 제안대로 구현했다. 숨은 1슬롯 stock과 기존 transfer 재사용, 단발 명령, 최종 재검증 뒤 INSTANT 실행, commit 후 수명 변화 무롤백을 AC-G01~14와 변이 7종 검출로 확인했다([검증 기록](../../03-development/IH-111-VALIDATION.md)). 타입 있는 Resource 필드가 소수/bool을 조용히 정수화하는 엔진 동작을 측정했고, 정의 원본 리터럴 검사로 보완했다. 상태는 Proposed를 유지하며, Accepted 전환과 최종 수치는 별도 판단한다. DEBT-002는 해결되지 않았다. [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26)로 develop에 통합했다(IH-111 done).
+
+후속 BUG-008 수정(2026-11-01)으로 원본 검사가 불가능한 경로를 닫았다. GatherDef는 외부 `.tres`만 지원한다. 내장 정의는 거부하고, 경로 없는 정의는 명시 opt-in일 때만 허용한다. 원본 타입을 증명할 수 없는 정의를 조용히 받아들이지 않는다는 결정이다. BUG-007 수정은 표시 계층의 수명 가드이며 거래 경계는 바뀌지 않았다. ADR은 Proposed를 유지한다.

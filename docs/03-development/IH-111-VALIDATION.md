@@ -4,6 +4,8 @@
 
 2026-11-01 `c266d52`에서 BUG-007(채집 HUD 해제 후 호출·충돌), BUG-008(내장 정의의 비정수 수량 허용)을 추가 재현했다. **IH-111 done→review**, 두 결함 open. [재현·수정 수락 조건·Claude 프롬프트](IH-111-REVIEW.md)를 따른다. 아래는 Claude의 최초 구현/검증/통합 기록으로 보존한다. 기존 suite PASS/GUI 확인은 새 경계의 통과를 뜻하지 않는다.
 
+Claude Code가 두 결함을 수정했다([아래 BUG-007/008 수정 기록](#bug-007008-수정--claude-code-2026-11-01)). IH-111은 Codex 독립 재검증 전까지 **review**를 유지한다.
+
 ## 결론
 
 Claude Code가 [GATHERING 명세](../02-technical-design/GATHERING.md)에 따라 다음을 구현했다.
@@ -116,3 +118,101 @@ int로 타입 지정된 Resource 필드에 `.tres` 값 `2.5`, `true`, `"3"`이 �
 - [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283403152/job/124779743066): Ubuntu 24.04 / Godot 4.7.2에서 12단계 PASS. 네 gameplay suite 모두 `RESULT: PASS`, 엔진 오류 0, 종료 시 누수 경고 없음.
 - [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283663628/job/124780504085): develop push(`42e3f4b`) CI checks success.
 - 통합 tree는 검증한 `c036f90`과 동일(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.
+
+## BUG-007/008 수정 — Claude Code, 2026-11-01
+
+브랜치 `fix/gathering-hud-and-definition-validation`(develop `f51ede5`에서 분기). 실패 회귀를 먼저 커밋한 뒤 최소 수정을 했다.
+- `28e5a80`: 실패 회귀
+- `56b7d5b`: 수정
+- `b5afd93`: HUD에 fixture 이름 표시
+
+원시 로그는 `build/ih-111-fix/`(Git 무시)에 있다.
+
+### 변경
+
+- **BUG-007** `game/scripts/tests/gathering_test.gd`: `_hud_usable()`을 추가했다. 이 함수는 is_instance_valid, is_inside_tree, 삭제 예약 아님을 모두 확인한다. 다음 표시 경로는 HUD를 쓸 수 없으면 표시만 생략한다.
+  - `_on_gathered`의 토스트
+  - `_on_rejected`의 안내
+  - `_rebind_fixture`의 보고 토스트
+  - `_update_hud` 전체
+  - setup 오류 표시
+
+  거래·rebind 예약·명령 처리는 HUD와 무관하게 그대로 진행한다. 재시도나 롤백은 없다.
+- **BUG-008** `game/systems/gathering/gather_catalog.gd`: 원본 정책을 명시했다. 원본 타입을 증명할 수 있는 경로만 허용한다(지원 형식 제한).
+
+  | 정의 원본 | 처리 |
+  |---|---|
+  | 외부 `.tres` | `initial_quantity`가 정수 리터럴일 때만 허용(기존 검사) |
+  | 다른 Resource에 내장(경로에 `::`) | 값이 맞아도 항상 거부: `embedded definitions are not supported (use an external .tres)` |
+  | 경로 없음(코드에서 생성) | 기본 거부. 코드 전용 `allow_unsourced_definitions`(export 아님)를 켠 catalog만 허용. 이 경로는 타입 int 필드에 직접 대입하므로 .tres 변환 경로가 없다. 출하 catalog는 false |
+
+  실패는 compile 오류이며, build는 INVALID_SETUP과 value=null을 반환한다(부분 세션 없음). 범용 .tres 파서는 만들지 않았다. IH-110의 ItemDef 제한(DEBT-004)은 바꾸지 않았다.
+- **회귀** `game/tests/test_gathering.gd`, fixture `game/tests/fixtures/gathering/embedded_{float,bool,string,missing,valid}.tres`.
+  - AC-G01:
+    - 내장 2.5/true/"3"/누락/정상 정수 5종이 같은 오류로 거부되고 build가 INVALID_SETUP·null인지 검사한다.
+    - 경로 없는 정의는 기본 거부, opt-in 시에만 허용한다.
+    - 출하 catalog는 opt-in 없이 compile에 성공해야 한다. 이것으로 정상 외부 정의의 성공을 확인한다.
+    - 기존 잘못된 정의 사례는 opt-in catalog에서 기대 오류 문구까지 확인하도록 강화했다.
+  - AC-G09: commit 변경 신호 안에서 실제 GatheringHUD를 free, queue_free, remove_child하는 3가지 경우를 추가했다. 각 경우 다음을 확인한다.
+    - 첫 거래 bag wood9/stock5, 두 revision +1, 보고 1회
+    - 다음 E 1회 성공
+    - store 이동 1회 성공
+    - 다시 E 1회 성공(이벤트 4, wood 11, 합계 보존)
+    - HUD 없는 full fixture: NO_SPACE → store 이동 → 채집
+    - HUD 없는 rebind fixture: 보고 전후 값 일치, branch 5/rev 1
+- **fixture 표시** `gathering_test.gd`의 HUD 지점 줄 앞에 `[normal]`/`[full]`/`[rebind]`를 붙였다. 최초 GUI 재확인에서 사용자가 세 창을 구분하지 못했기 때문이다(창 제목·합계만 달랐음). 표시만 바꿨다.
+
+### 재현 전후
+
+| 재현(Codex 진단과 동일 절차) | 수정 전 | 수정 후 |
+|---|---|---|
+| 변경 신호에서 GatheringHUD.free 후 E | signal 11, exit 250 | exit 0, RESULT: PASS |
+| 변경 신호에서 queue_free 후 첫 E | bag 9/stock 5 성공, 진단 FAIL 1 | exit 0, RESULT: PASS |
+| queue_free 후 다음 E | signal 11, exit 250 | exit 0, RESULT: PASS |
+| 내장 GatherDef 2.5/true/"3" | compile=true, build OK(위반 3), exit 1 | 세 경우 모두 거부, exit 0, RESULT: PASS |
+| 신규 runner(수정 전 코드, `28e5a80`) | AC-G01 내장 float/bool/string/정상·경로 없음 실패, AC-G09 HUD 사례에서 exit 250 충돌 | 347검사 PASS |
+
+### 자동 검증
+
+- `python3 tools/godot.py --headless --script res://tests/test_gathering.gd`: exit 0, 347검사 PASS(G01 80, G02 40, G03 8, G04 12, G05 6, G06 32, G07 14, G08 22, G09 32, G10 8, G11 10, G12 12, G13 71). 기존 309 대비 +38. 2회 측정 차이 0, 고아 0, 엔진 오류 0, 누수 경고 0.
+- `--inject-failure`: exit 1(종료 코드·엔진 오류·마커 누락 모두 검출).
+- 표적 변이 5종. 모두 구문 오류는 0이고, 결함 경로가 빠지면 runner가 실패한다.
+
+| 변이 | 결과 |
+|---|---|
+| m1 `_on_gathered` HUD 가드 제거 | AC-G09 HUD 사례에서 signal 11, exit 250 |
+| m2 `_update_hud` 가드 제거 | 지연 HUD 갱신(`_update_hud`)에서 signal 11, exit 250 |
+| m3 `_on_rejected` 가드 제거 | HUD 없는 full 사례의 NO_SPACE 안내(`_on_rejected`)에서 signal 11, exit 250 |
+| m4 내장 정의 허용 | AC-G01 내장 float/bool/string 거부 실패 |
+| m5 경로 없는 정의 기본 허용 | AC-G01 opt-in 없는 거부 실패 |
+
+- 깨끗한 worktree 공통 CI:
+  - `56b7d5b`: 12단계 PASS. 이동 360(123.9초), 상호작용 333(29.8초), 인벤토리 521(10.0초), 채집 347(22.6초). 누수 경고 0.
+  - `b5afd93`: 12단계 PASS(이동 360·상호작용 333·인벤토리 521·채집 347, Python 19), 누수 경고 0. HUD 표시 변경 후 다시 실행
+
+  기존 세 suite의 검사 수와 의도는 그대로이고, 채집 309 기존 검사도 모두 유지된다.
+
+### GUI (AC-G14 재확인)
+
+- 확인 주체: **사용자**(실제 창·키보드·육안). 2026-11-01, 빌드 `b5afd93`, macOS 13.4 / M1, Godot 4.7.2 Standard.
+- 첫 시도(`56b7d5b`)에서 사용자는 "다 normal로만 3개창이 떴다"고 보고했다. Claude가 확인한 내용:
+  - 프로세스 인자 `--fixture=full`/`rebind` 전달
+  - 창 제목 (full)/(rebind)
+  - full 엔진 캡처의 합계 목재 16·석재 114
+
+  fixture는 적용되어 있었지만 화면에서 구분할 표시가 부족했다. HUD에 fixture 이름을 넣은 `b5afd93`으로 세 창을 다시 띄웠다.
+- 확인 항목:
+  1. [normal] 나뭇가지 E → 목재 +1·잔량 -1
+  2. [full] 합계 목재 16·석재 114, E → 공간 부족·보존
+  3. [full] I 보관함 이동 후 E 성공
+  4. [rebind] 재연결 안내 후 채집 정상
+  5. 이동·Esc·창 닫기 오류 없음
+- 응답: "1~5 모두 정상". 세 창 로그는 엔진 오류 0, exit 0이다.
+- HUD 강제 제거는 GUI에서 조작할 수 없어 자동 회귀(AC-G09)로만 검증했다.
+
+### 설계 차이·남은 범위
+
+- 내장·경로 없는 GatherDef는 지원 형식에서 뺐다. 테스트·도구는 opt-in을 명시해야 한다. GATHERING·ADR-016에 기록했다.
+- IH-110 ItemDef의 같은 엔진 변환 제한(DEBT-004)은 범위 밖이라 그대로 남는다.
+- HUD 가드는 시험 맵의 표시 계층에만 적용했다. 범용 UI 잠금이나 수명 프레임워크는 만들지 않았다.
+- Windows/Linux GUI는 미확인이다. IH-111 done 복귀는 Codex 독립 재검증과 develop 통합 이후 판정한다.
