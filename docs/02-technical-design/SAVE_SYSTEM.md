@@ -1,6 +1,6 @@
 # 저장·불러오기
 
-상태: 장기 방향 Proposed. IH-112 최소 저장(단일 수동 A/B 슬롯)은 2026-11-01에 구현했고 review 상태다([검증](../03-development/IH-112-VALIDATION.md)). IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01, ready). 아래 장기 대상 전체를 이번에 구현하지 않는다.
+상태: 장기 방향 Proposed. IH-112 최소 저장(단일 수동 A/B 슬롯)은 2026-11-01에 구현했고 review 상태다([검증](../03-development/IH-112-VALIDATION.md)). IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01 최초 설계 ready, 현재 review). 아래 장기 대상 전체를 이번에 구현하지 않는다.
 
 ## 포함할 상태
 
@@ -33,3 +33,7 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 ## IH-111과 IH-112 인계
 
 [채집 명세](GATHERING.md)는 PointBinding 목록과 숨은 지점 재고 snapshot을 저장 대상 후보로 지정한다. remaining/depleted를 중복 저장하지 않는다. 같은 세션 뷰 재바인딩은 파일 저장이 아니다. IH-112 복원은 초기 지급 없는 새 컨텍스트에서 정의/품목/owner/capacity/ID 참조를 검증하고 교체하는 방향이며, 실패 시 현재 상태를 보존한다. 준비 명령/뷰/WeakRef/request ID는 저장하지 않는다. 초기 포맷·schema1/시험v0 migration·후보 세션 publish는 SAVE_LOAD에서 제안했다. 실제 구현·호환 검증은 아직 없고 제품 장기 migration은 후속이다.
+
+## IH-112 현재 검토
+
+초기 파일 저장·복원은 구현됐고 자동13단계·저장425검사를 통과했다. Codex 후속 검토에서 [BUG-009~011](../03-development/IH-112-REVIEW.md)을 재현해 review다. GUI 손상복구 미확인도 별개로 유지한다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.

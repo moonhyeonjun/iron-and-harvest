@@ -174,6 +174,8 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
   - [PR #33](https://github.com/moonhyeonjun/iron-and-harvest/pull/33) 필수 CI 성공(Linux 13단계·저장 425), merge 3ab4795, develop CI 성공. AC-S16 절차 6 미실행으로 review를 유지한다.
 - 제외/TBD: 자동/종료 저장·슬롯 선택/삭제·Cloud·타 맵/달력/NPC. 수치/경로/파일 레이아웃은 Proposed, 실제4.7.2/OS 측정으로 구현 차이를 기록한다. v0.3.0 판정은 별도.
 
+- Codex 후속 검토(2026-11-01, b13292b): CI13단계·저장425검사 PASS, BUG-009~011 추가 재현으로 review 유지. [수정 프롬프트](IH-112-REVIEW.md)를 완료하고 재검증한다. GUI 손상복구 미확인과 사용자 추가 테스트 중단 기록은 별개로 유지한다.
+
 ## IH-120 — 달력·계절·하루 경계
 
 - 목적: 달력·계절·하루 경계을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.

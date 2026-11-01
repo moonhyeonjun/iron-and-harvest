@@ -54,3 +54,13 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
   - 같은 프레임 suspend/resume 뒤 선택 공백
   - 자식 PID 이중 대기
 - **관찰(미재현)**: GUI 창 3(corrupt-latest) 첫 인스턴스가 약 90초 동안 시작 fixture를 적용하지 않았다(파일 mtime·checksum 변화 없음, 로그는 엔진 헤더뿐). 같은 인자로 헤드리스·GUI를 다시 실행하면 즉시 적용된다. 원인은 확인하지 못했다. 영향은 시험 fixture 경로뿐이며, 이 관찰이 결함이라는 증거는 없다.
+
+## IH-112 Codex 후속 검토(b13292b)
+
+| ID | 분류 | 상태 | 재현·영향 | 다음 조치 |
+|---|---|---|---|---|
+| BUG-009 | IH-112 / medium (P2) | open | SaveUI free/queue_free 후 F5가 ui.get_epoch를 호출해 signal11/exit250. F9도 동일 무검사 경로 | UI 수명/키 요청 정책 및 제거 뒤 후속 입력 회귀. [리뷰](IH-112-REVIEW.md) |
+| BUG-010 | IH-112 / medium (P2) | open | IDLE에서 STALE_SESSION 거부 보고 중 listener가 정상 epoch로 request_save하면 OK·A1 생성 | 보고 중임을 요청 차단 경계에 포함하고 거부/완료 재진입 모두 회귀. [리뷰](IH-112-REVIEW.md) |
+| BUG-011 | IH-112 / medium (P2) | open | STAGING 중 이전 InventoryController.request_open.call_deferred가 실행돼 FOCUS_LOST 취소 뒤 같은 세계에 OPEN·게이트 소유가 남음 | suspend/epoch를 실제 명령 진입에 적용, 성공/실패 뒤 지연 의도 검사. [리뷰](IH-112-REVIEW.md) |
+
+최초 구현 중 미해결 제품 결함 없음 기록 이후 추가로 확인했다. 기존 자동425 PASS와 별도이며 IH-112 review를 유지한다. GUI 손상복구 미확인은 별개 조건이다.
