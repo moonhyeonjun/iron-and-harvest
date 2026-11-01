@@ -4,6 +4,18 @@
 
 대상 develop/origin `b13292b`. **BUG-009/010/011(P2) 재현, IH-112 review 유지**. 기존 구현·자동 PASS·부분 GUI 확인은 이력으로 보존한다. 수정 회귀와 독립 재검증이 필요하며, AC-S16의 손상 최신본 GUI 복구는 별도 미확인이다. ADR-017 Proposed, v0.3.0 판정/태그는 이번에 하지 않는다. Codex는 게임 코드·씬·CI를 수정하지 않고 검토·전달 문서만 작성했다.
 
+## Claude 수정 결과 (2026-11-01)
+
+브랜치 `fix/save-input-and-session-boundaries`, 커밋 `450a988`(실패 회귀), `8e18a75`(수정), `bc0d44f`(열린 패널 가드 검사).
+- **BUG-009**: F5/F9는 coordinator의 현재 epoch를 쓴다. UI가 없어도 동작하고 표시만 생략하며, coordinator가 없으면 무시한다.
+- **BUG-010**: 보고 중(`_emitting`)이면 시작 경계에서 BUSY다.
+- **BUG-011**: coordinator가 로드 동안 세션 정지를 걸고, 맵과 InventoryController가 open/view/전송 의도를 BUSY/STALE_SESSION으로 거부한다. 강제 닫기·제3 게이트·전역 잠금은 없다.
+- 결과:
+  - Codex 진단 5종: 수정 전 exit 250/250/1/1/1 → 수정 후 모두 exit 0·PASS.
+  - runner 529검사 PASS, 변이 5종 검출.
+  - 깨끗한 worktree CI 13단계 PASS(360/333/521/347/529).
+- 새 GUI는 미실행이다(사용자 테스트 중단 존중). AC-S16 손상복구 GUI도 미확인이다. Codex 독립 재검증 대기. [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01)
+
 ## 기준과 검증 범위
 
 - PR #33 merge3ab4795, 기록 PR #34 mergeb13292b. 동일 SHA develop CI41303127354 success 확인.

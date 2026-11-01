@@ -4,6 +4,8 @@
 
 2026-11-01 `b13292b`에서 CI13단계·저장425검사 PASS를 독립 확인했다. 추가 진단으로 BUG-009(SaveUI 제거 후 키 입력 충돌), BUG-010(거부 보고 중 재진입 저장), BUG-011(suspend 중 지연 모달 명령)을 재현했다. **IH-112 review 유지, 세 결함 open**. [재현·수정 수락 조건·Claude 프롬프트](IH-112-REVIEW.md)를 따른다. 아래는 최초 구현·자동·부분 GUI 확인 기록이며 새 경계의 통과를 뜻하지 않는다. AC-S16 손상복구 GUI 미확인도 유지하고 추가 사용자 테스트를 재요청하지 않는다.
 
+Claude Code가 BUG-009/010/011을 수정했다([아래 수정 기록](#bug-009011-수정--claude-code-2026-11-01)). 세 결함은 fixed이며 Codex 재검증을 기다린다. IH-112는 review를 유지한다(AC-S16 손상복구 GUI 미확인).
+
 ## 결론
 
 Claude Code가 [SAVE_LOAD 명세](../02-technical-design/SAVE_LOAD.md)에 따라 다음을 구현했다.
@@ -308,3 +310,73 @@ macOS APFS에서 다음을 실제 파일로 검증했다: rename 교체, 단계�
 - 로그/진단: build/ih-112-codex-review/(ci/, ui_free.log, ui_queue.log, reject.log, suspend.log, probes/). 파일은 고유 codex_probe_* 시험 루트만 사용하고 생성한 고정 이름만 정리했다. 제품 saves/사용자 GUI 파일 미접근.
 - 새 GUI·변이는 미실행. 기존438ef89 사용자 부분 확인과 구분한다. 추가 사용자 테스트 중단 기록을 존중한다.
 - BUG-009~011 open·IH-112 review·ADR-017 Proposed. 문서만 변경하며 수정 담당은 Claude Code다. main/태그/릴리스 변경 없음. 필수 PR CI 후 문서 통합, 실제 SHA/CI/merge는 PR 이력·완료 보고에 기록한다.
+
+## BUG-009~011 수정 — Claude Code, 2026-11-01
+
+브랜치 `fix/save-input-and-session-boundaries`(develop `f98da4d`에서 분기). 커밋: `450a988`(실패 회귀), `8e18a75`(수정), `bc0d44f`(열린 패널 가드 검사). 실패 회귀를 먼저 커밋하고 red를 확인한 뒤 최소 수정을 했다. 원시 로그는 `build/ih-112-fix/`(Git 무시)에 있다.
+
+### 변경
+
+- **BUG-009** `scripts/tests/save_load_test.gd`: 키 요청 정책을 정했다.
+  - F5/F9는 장면이 직접 받는 실제 입력이며, 패널에 표시된 의도가 아니다. 그래서 SaveUI의 epoch가 아니라 **coordinator의 현재 epoch**를 쓴다.
+  - SaveUI를 free/queue_free/remove_child해도 키 저장·불러오기는 그대로 동작하고 결과 표시만 생략한다(로그 출력은 유지).
+  - coordinator가 트리에 없으면 키는 아무것도 하지 않는다. 파일 작업이나 새 세션 생성으로 우회하지 않는다.
+  - 버튼 의도는 UI가 있을 때만 생기며, 기존대로 UI의 epoch를 쓴다.
+- **BUG-010** `scripts/save/save_coordinator.gd`: 시작 경계 `_request_blocker`가 결과 보고 중(`_emitting`)이면 BUSY를 반환한다. 시작 전 거부는 state=IDLE에서 보고되므로, 정상 완료와 거부 모두 보고 중의 새 save/load를 막는다. 중첩 거부는 다시 보고하지 않는다(기존 규칙).
+- **BUG-011** process_mode는 입력과 처리만 멈추고, 직접 호출이나 call_deferred는 막지 않는다. 그래서 세션 명령 진입에 정지 경계를 넣었다.
+  - coordinator: suspend 직후 `set_session_suspended(true)`, publish 전 실패로 이전 월드를 되돌리면 `false`. publish된 이전 월드는 정지 상태로 분리된다.
+  - 맵: 컨트롤러에 전달한다. inactive 후보는 정지 상태로 부팅하고 `activate()`에서 해제한다.
+  - InventoryController: 정지 중이면 `request_open`(view 전환 포함)은 BUSY다. 전송 의도는 닫혀 있으면 기존대로 STALE_SESSION, 열려 있으면 BUSY다.
+  - 강제 닫기, 게이트 해제, Player 제3 게이트 소유자, 전역 잠금은 만들지 않았다. Interaction은 입력이 process_mode로 멈추고, 공개 호출은 정지 상태(IDLE)에서 효과가 없다.
+
+### 재현 전후 (Codex 진단과 동일 절차)
+
+| 진단 | 수정 전(develop f98da4d) | 수정 후 |
+|---|---|---|
+| ui_free: SaveUI.free 후 F5 | signal 11, exit 250 | exit 0, 엔진 오류 0 |
+| ui_queue: SaveUI.queue_free 후 F5 | exit 250 | exit 0 |
+| reject: 이전 epoch 거부 보고 중 정상 save | 중첩 OK, A1 생성, exit 1 | 중첩 BUSY, 두 은행 없음, exit 0 |
+| suspend: STAGING 중 지연 open, FOCUS_LOST | 같은 세계, OPEN(2), 게이트 소유, exit 1 | CLOSED(0), 게이트 없음, exit 0 |
+| suspend_position: 같은 절차, INVALID_POSITION | OPEN, 게이트 소유, exit 1 | CLOSED, 게이트 없음, exit 0 |
+| 신규 runner(수정 전 코드, 450a988) | BUG-010 6건·BUG-011 7건 FAIL 뒤 BUG-009 사례에서 exit 250 | 529검사 PASS |
+
+### 회귀(신규)
+
+- **AC-S12 BUG-009**
+  - UI free/queue_free/remove_child 각각: F5 1세대 → 변경 → F9로 wood 8 복원 → F5 2세대.
+  - 저장 완료 리스너가 UI를 해제한 뒤 F9·F5 각 1회.
+  - STAGING 중 UI 해제 → 불러오기 publish → 다음 F5 2세대.
+  - UI 없이 F9 NO_SAVE(세계 유지) → F5 1세대.
+  - 모든 키에서 결과는 1회다.
+- **AC-S11 BUG-010**: 보고 중 중첩 save·load가 모두 BUSY다. 확인한 보고 5종: 이전 epoch save/load 거부, 빈 슬롯 load 실패(NO_SAVE), 가방 열림 중 save/load 거부.
+  - 각 경우 보고 1회, 파일 바이트·epoch·월드 참조·snapshot이 그대로다.
+  - 보고가 끝난 뒤 정상 저장은 1세대로 성공한다.
+- **AC-S10 BUG-011**: 로드 중 이전 세션에 지연 request_open, view 전환, 전송 의도를 보냈다. 대상은 publish 성공, 위치 실패, 포커스 out→in, 후보 제거 4경우다.
+  - 네 경우 모두 open BUSY 1회, 전송 STALE_SESSION.
+  - 실패 3경우: 같은 세계, snapshot·revision 동일, CLOSED, 게이트 없음, interaction 활성, 준비 명령 없음, 제어 가능. 이어서 실제 I로 가방이 열리고 닫힌다.
+  - 성공 경우: 새 세계는 저장본과 같고 새 가방은 CLOSED다.
+  - 열린 패널에 직접 정지를 걸면 전송 BUSY, view 전환 BUSY이고 세션·view·재고는 그대로다.
+
+### 자동 검증
+
+- `python3 tools/godot.py --headless --script res://tests/test_save_load.gd`: exit 0, **529검사**(기존 425 + 104), 2회 차이 0, 고아 0, 엔진 오류 0(INF 기대 경고 4).
+  - 내역: S01 38, S02 66, S03 54, S04 28, S05 34, S06 36, S07 22, S08 10, S09 14, S10 48, S11 28, S12 62, S13 12, S14 17, S15 60.
+- `--inject-failure`: exit 1.
+- 표적 변이 5종. 모두 검출했고 구문 오류는 0이다.
+
+| 변이 | 결과 |
+|---|---|
+| m8 키가 다시 `ui.get_epoch()` 사용 | exit 250(save_load_test `_unhandled_input`) |
+| m9 보고 중 BUSY 경계 제거 | AC-S11 FAIL 10 |
+| m10 정지 중 open 가드 제거 | AC-S10 FAIL 16 |
+| m11 정지 중 전송 가드 제거 | AC-S10 FAIL 2(열린 패널 직접 정지) |
+| m12 coordinator가 세션 정지를 걸지 않음 | AC-S10 FAIL 14 |
+
+- 깨끗한 worktree 공통 CI(`bc0d44f`): 13단계 PASS. 이동 360, 상호작용 333, 인벤토리 521, 채집 347, 저장 529, 누수 경고 0. 기존 검사 수와 의도는 그대로다.
+- 시험 파일: runner와 진단은 고유 `user://tests/ih112/runner_*`만 썼다. exit 250으로 끝난 red·m8 실행이 남긴 runner 폴더 2개(고정 이름 파일만)는 정리했다. 제품 `user://saves`는 없고 GUI 시험 파일(`gui/`)은 건드리지 않았다(mtime 20:24/20:19 유지).
+
+### GUI·남은 범위
+
+- 새 GUI는 실행하지 않았다. 사용자의 추가 사용자 테스트 중단 지시를 존중해 재요청하지 않았다. 이번 수정은 키·지연 호출 경로를 실제 Viewport 입력과 call_deferred로 자동 검증했으며, 실제 창 조작으로 확인한 것은 아니다.
+- AC-S16 절차 6(손상 최신본 → 기본 거부 → 복구본) 사용자 GUI는 **여전히 미확인**이다. IH-112는 review다.
+- 설계 차이(SAVE_LOAD 갱신): 키 요청 정책, 보고 중 BUSY, 세션 정지 경계.

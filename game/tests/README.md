@@ -65,7 +65,7 @@ python3 tools/godot.py --headless --script res://tests/test_gathering.gd -- --in
 - 장면 사례: SaveLoadTest에서 실제 F5/F9/E/I/이동 입력을 넣는다.
 - AC-S13: `support/save_child.gd`로 별도 Godot 프로세스를 실행한다. 저장→종료→다른 프로세스 불러오기와, 저장 단계별 SIGKILL을 검증한다.
 
-`fixtures/save/`는 정상 v1, 시험 v0, 미래 schema, content 2 파일이다. 약25초.
+`fixtures/save/`는 정상 v1, 시험 v0, 미래 schema, content 2 파일이다. BUG-009~011 회귀(UI 없는 키, 보고 중 재진입, 정지 중 지연 명령)를 포함해 529검사, 약 25초.
 
 ```sh
 python3 tools/godot.py --headless --script res://tests/test_save_load.gd

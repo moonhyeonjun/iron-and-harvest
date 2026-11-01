@@ -432,3 +432,25 @@
 - 다음: Claude Code의 실패 회귀·최소 수정·자동 검증·필수 PR CI, 이후 Codex 재검증. AC-S16 손상복구 GUI 미확인을 자동 통과로 바꾸지 않는다. v0.3.0 판정은 별도다.
 
 - 리뷰 문서14개를 별도 worktree에 반영해 정적 검사 PASS, diff --check PASS. 사용자 루트는 AGENTS.md의 기존 링크4개만 실패하며 해당 파일은 보존·미커밋한다. 필수 PR CI 후 문서만 develop에 통합하며 실제 SHA/CI/원격 결과는 PR 이력·완료 보고에 기록한다.
+
+## 2026-11-01 — IH-112 BUG-009~011 수정 (Claude Code)
+
+- **시작**: develop f98da4d(origin 일치), 사용자 미추적 AGENTS.md 보존·미커밋. `fix/save-input-and-session-boundaries` 분기.
+- **재현(수정 전)**: Codex 진단 5종(`build/ih-112-fix/before_*.log`).
+  - ui_free/ui_queue: exit 250
+  - reject: 중첩 OK, A1 생성
+  - suspend/suspend_position: CLOSED였던 컨트롤러가 OPEN, 게이트 소유
+- **실패 회귀 450a988**: BUG-010 6건, BUG-011 7건 FAIL. 이어 BUG-009 사례에서 runner exit 250.
+- **수정 8e18a75**:
+  - 키는 coordinator epoch를 쓰고 coordinator가 없으면 무시한다.
+  - `_request_blocker`가 `_emitting`이면 BUSY다.
+  - 세션 정지 표시(coordinator → 맵 → InventoryController)로 open/view는 BUSY, 전송은 STALE_SESSION/BUSY다.
+- **bc0d44f**: 열린 패널 직접 정지 검사를 추가하고, BUG-010 가방 사례가 중립 틱을 기다리게 했다.
+- **검증**
+  - runner exit 0, 529검사. `--inject-failure` exit 1.
+  - 진단 5종 모두 exit 0.
+  - 변이 5종 검출(m8 exit 250, m9~m12 FAIL), 구문 오류 0.
+  - 깨끗한 worktree CI 13단계 PASS(360/333/521/347/529, 누수 경고 0).
+  - 제품 saves·GUI 시험 파일 미접촉. crash 실행이 남긴 runner 폴더 2개는 정리했다.
+- **GUI**: 새 GUI는 미실행이다(사용자 테스트 중단 존중, 재요청 안 함). AC-S16 손상복구 GUI 미확인을 유지한다.
+- **결과**: BUG-009~011 fixed(통합·Codex 재검증 대기), IH-112 review, ADR-017 Proposed. main/태그/릴리스 없음. PR/CI/merge 결과는 후속 기록에 남긴다.

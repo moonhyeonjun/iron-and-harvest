@@ -47,6 +47,11 @@ var _disabled_interaction: bool = false
 ## First reason a close/focus-out/removal arrived while opening; the open then aborts.
 var _open_cancel: StringName = &""
 var _window_focused: bool = true
+## Set by the session owner while a save/load holds the session (IH-112 BUG-011). A
+## disabled process_mode stops input and processing but not direct or deferred calls, so
+## the command entries check this: opening (and switching view) is BUSY, a transfer intent
+## is refused. Nothing is closed, released or forced here.
+var _session_suspended: bool = false
 
 
 func setup(service: InventoryService, player: PlayerController, interaction: InteractionController,
@@ -79,9 +84,17 @@ func owns_movement_gate() -> bool:
 	return _owns_gate
 
 
+func set_session_suspended(suspended: bool) -> void:
+	_session_suspended = suspended
+
+
+func is_session_suspended() -> bool:
+	return _session_suspended
+
+
 ## Opens the panel in `view`, or switches the open panel to it (new session ID).
 func request_open(view: View) -> StringName:
-	if _state == State.OPENING:
+	if _state == State.OPENING or _session_suspended:
 		return _reject(BUSY)
 	if _state == State.OPEN:
 		var broken: StringName = _dependency_lost()
@@ -289,6 +302,8 @@ func _on_transfer_requested(session_id: int, source_id: StringName, source_slot:
 func _transfer_blocker(session_id: int, source_id: StringName, source_slot: int, item_id: StringName) -> StringName:
 	if _state != State.OPEN or session_id != _session_id:
 		return STALE_SESSION
+	if _session_suspended:
+		return BUSY
 	var broken: StringName = _dependency_lost()
 	if broken != OK:
 		return broken

@@ -1,5 +1,12 @@
 # 변경 이력
 
+## Unreleased — IH-112 BUG-009~011 수정 (Claude Code, 2026-11-01)
+
+- BUG-009: F5/F9는 coordinator의 현재 epoch를 쓴다. SaveUI가 해제·삭제 예약·분리돼도 키 저장/불러오기가 동작하고 표시만 생략한다.
+- BUG-010: 시작 전 거부를 보고하는 중에도 새 save/load는 BUSY이며 다시 보고하지 않는다.
+- BUG-011: 로드 동안 기존 세션을 정지 표시하고, InventoryController가 지연된 open/view/전송 의도를 거부한다(BUSY/STALE_SESSION). 강제 닫기나 게이트 추가는 없다.
+- 회귀 추가: 저장 runner 425→529검사.
+
 ## Unreleased — IH-112 Codex 기술 검토
 
 - 기존 CI13단계·저장425검사 통과를 독립 확인하고 BUG-009(UI 제거 뒤 키 입력 충돌)·010(거부 보고 재진입 저장)·011(suspend 중 지연 모달 명령)을 추가 재현했다.
