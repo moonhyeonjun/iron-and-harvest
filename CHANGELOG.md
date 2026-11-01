@@ -1,5 +1,11 @@
 # 변경 이력
 
+## Unreleased — IH-111 BUG-007/008 수정 (Claude Code, 2026-11-01)
+
+- BUG-007: 채집 시험 맵이 해제·트리 밖·삭제 예약 HUD에 쓰지 않는다(표시만 생략, 거래 유지). HUD 지점 줄에 fixture 이름을 표시한다.
+- BUG-008: GatherCatalog는 외부 `.tres` 정의만 지원한다. 내장(`::`) 정의는 거부하고, 경로 없는 정의는 코드 전용 opt-in일 때만 허용한다.
+- 회귀: AC-G01 내장 fixture 5종·경로 없음 정책, AC-G09 실제 HUD free/queue_free/remove_child 뒤 후속 E·전송·full·rebind. 채집 runner 309→347검사.
+
 ## Unreleased — IH-111 Codex 기술 검토
 
 - BUG-007(실제 채집 HUD 제거 후 호출·엔진 충돌), BUG-008(내장 정의의 비정수 수량 검증 우회)을 재현했다. IH-111 review 재개, [Claude 수정 프롬프트](docs/03-development/IH-111-REVIEW.md)와 수락 조건을 작성했다. 게임 코드 변경 없음.

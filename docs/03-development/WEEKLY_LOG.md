@@ -323,3 +323,26 @@
 
 - 독립 공통 CI 종료0/12단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집309, 반복22종 차이0·고아0·엔진 오류0. 기존 suite 통과와 새 재현 실패를 구분한다.
 - 리뷰 문서13개를 반영한 별도 worktree 정적 검사 PASS, diff --check PASS. 사용자 루트는 AGENTS.md의 기존 링크4개만 실패하며 사용자 파일은 보존한다. 필수 PR CI 후 문서만 develop에 통합하고 실제 SHA/CI/원격 결과는 PR 이력과 완료 보고에 기록한다.
+
+## 2026-11-01 — IH-111 BUG-007/008 수정 (Claude Code)
+
+- 시작: develop f51ede5(origin 일치), 사용자 미추적 AGENTS.md 보존·미커밋. `fix/gathering-hud-and-definition-validation` 분기.
+- 재현(수정 전): Codex 진단 4종을 그대로 실행(`build/ih-111-fix/before_*.log`).
+  - HUD.free 후 E: exit 250(signal 11)
+  - queue_free 첫 E: bag 9/stock 5 성공(FAIL 1)
+  - 다음 E: exit 250
+  - 내장 2.5/true/"3": compile/build 성공(FAIL 3)
+- 실패 회귀 28e5a80: runner가 AC-G01 내장·경로 없음에서 실패하고, AC-G09 HUD 사례에서 exit 250으로 충돌.
+- 수정:
+  - 56b7d5b: HUD 수명 가드, 외부 .tres 전용 원본 정책
+  - b5afd93: HUD fixture 이름 표시
+- 검증:
+  - `python3 tools/godot.py --headless --script res://tests/test_gathering.gd`: exit 0, 347검사 PASS, 2회 차이 0·고아 0·엔진 오류 0
+  - `--inject-failure`: exit 1
+  - 진단 4종: 수정 후 exit 0
+  - 변이 5종 검출(가드 3곳 제거는 exit 250, 내장/경로 없음 허용은 AC-G01 FAIL). 구문 오류 0
+  - 깨끗한 worktree CI: 56b7d5b 12단계 PASS(360/333/521/347), b5afd93 12단계 PASS(360/333/521/347, 누수 경고 0)
+- GUI: 사용자, b5afd93, normal/full/rebind.
+  - 첫 시도(56b7d5b)에서 "다 normal로만 3개창이 떴다"는 보고가 있었다. 인자·제목·full 합계(목재 16·석재 114)는 정상이었으나 화면 구분 표시가 부족해 HUD fixture 표시를 추가했다.
+  - 재확인 결과 "1~5 모두 정상", 세 창 exit 0·오류 0.
+- 결과: BUG-007/008 fixed(통합·Codex 재검증 대기), IH-111 review 유지, ADR-016 Proposed. DEBT-004 미변경. main/태그/릴리스 없음. PR/CI/merge 결과는 PR 이력과 후속 기록에 남긴다.

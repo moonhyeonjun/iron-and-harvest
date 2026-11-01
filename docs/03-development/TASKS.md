@@ -150,6 +150,10 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - 현재 증거: feature/gathering-system(14a2687, 24bf870, 5a5f5f5, 03c6a65, a56ab1d, 7787c26). AC-G01~13 자동 309검사 PASS, 변이 7종 검출, 깨끗한 worktree CI 12단계 PASS(이동 360·상호작용 333·인벤토리 521·채집 309), AC-G14 사용자 GUI "1~5 모두 정상"(7787c26). [IH-111 검증 기록](IH-111-VALIDATION.md). [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26) 필수 CI 성공, merge 42e3f4b, develop CI 성공 → done. ADR-016 Proposed.
 
 - Codex 후속 검토(c266d52): BUG-007/008 open으로 done→review. [재현·Claude 수정 프롬프트](IH-111-REVIEW.md)를 완료한 후 재판정한다. 기존 PASS/통합 기록은 보존한다.
+- Claude 수정(fix/gathering-hud-and-definition-validation, 28e5a80·56b7d5b·b5afd93):
+  - HUD 표시 수명 가드를 넣고, 내장/경로 없는 GatherDef를 거부한다.
+  - 채집 347검사 PASS, 변이 5종 검출, 사용자 GUI "1~5 모두 정상"(b5afd93).
+  - [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). PR 필수 CI·develop 통합·Codex 재검증 전까지 review를 유지한다.
 
 ## IH-112 — 초기 저장과 복원
 
