@@ -2,6 +2,10 @@
 
 상태: 명세 준비 완료 → **2026-11-01 Claude Code 구현·검증·통합(done)**, [검증 기록](IH-102-VALIDATION.md). 아래는 원래 인수인계 내용이다. 2026-10-31. IH-004 CI 검증을 완료한 뒤 작성했다. Codex는 이번에 게임 기능/입력/씬을 변경하지 않았다.
 
+## 현재 후속 작업
+
+2026-11-01 Codex 리뷰에서 BUG-003/004를 확인해 **review로 재개**했다. 아래 최초 구현 프롬프트를 다시 실행하지 말고 [검토·수정 프롬프트](IH-102-REVIEW.md)의 후속 작업을 먼저 수행한다.
+
 ## 읽기 순서와 기준
 
 CLAUDE.md/.claude/rules → [TASKS](TASKS.md) → [CI 운영](../02-technical-design/CI.md) → [이동 구현·검증](IH-101-VALIDATION.md) → [상호작용 명세](../02-technical-design/INTERACTION.md) → [수락 조건](IH-102-ACCEPTANCE.md) → [ADR-014](../04-decisions/ADR/ADR-014-interaction-boundary.md).

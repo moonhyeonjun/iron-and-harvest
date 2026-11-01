@@ -1,6 +1,10 @@
 # IH-102 상호작용 대상·프롬프트 검증 — 2026-11-01
 
-## 결론
+## 현재 판정 — Codex 후속 검토
+
+2026-11-01, `29b2ed3` 추가 검사에서 BUG-003/004가 재현되어 IH-102를 **review로 재개**했다. 아래는 Claude Code 구현 당시의 검증 이력이며, 기존 299검사 PASS가 두 경계의 안전성을 입증하지는 않는다. 재현·수정 기준·전달 프롬프트는 [Codex 검토](IH-102-REVIEW.md)를 따른다.
+
+## 구현 당시 결론
 
 Claude Code가 [명세](../02-technical-design/INTERACTION.md)에 따라 InteractionController/Target/UI와 테스트 맵을 구현했다. AC-I01~12 자동 검사는 실제 씬·Area2D·물리 질의·UI 입력 경로로 통과했다. GUI 수동 항목은 사용자가 실제 창에서 확인했다. 공통 CI 실행기에 등록했으며 로컬의 깨끗한 worktree에서 전체 10단계 PASS를 확인했다.
 

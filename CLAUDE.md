@@ -27,7 +27,7 @@ IH-101은 구현·검증·develop 통합 완료다. 후속 작업 전 [이동 �
 
 ## 다음 기능: IH-102
 
-IH-004 CI 완료 후 [상호작용 인수인계](docs/03-development/IH-102-HANDOFF.md), [명세](docs/02-technical-design/INTERACTION.md), [수락 조건](docs/03-development/IH-102-ACCEPTANCE.md)를 준비했다. 2026-11-01 Claude Code가 구현하고 AC-I01~12와 로컬 CI를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop에 통합했다(done). 기존 이동 회귀를 보존하며 test_interaction은 tools/run_ci.py에 등록되어 있다. main/develop은 CI checks가 필수이므로 문서도 PR로 검증한다.
+IH-004 CI 완료 후 [상호작용 인수인계](docs/03-development/IH-102-HANDOFF.md), [명세](docs/02-technical-design/INTERACTION.md), [수락 조건](docs/03-development/IH-102-ACCEPTANCE.md)를 준비했다. 2026-11-01 Claude Code가 구현하고 AC-I01~12와 로컬 CI를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop에 통합했다. 이후 Codex 추가 검토에서 BUG-003/004를 재현하여 review로 재개했다. [검토·수정 프롬프트](docs/03-development/IH-102-REVIEW.md)를 먼저 수행한다. 기존 이동 회귀를 보존하며 test_interaction은 tools/run_ci.py에 등록되어 있다. main/develop은 CI checks가 필수이므로 문서도 PR로 검증한다.
 
 ## 작업 절차
 

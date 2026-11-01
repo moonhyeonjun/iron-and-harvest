@@ -2,7 +2,11 @@
 
 2026-10-31 Codex 작성 → **2026-11-01 AC-I01~12 실행, 모두 pass**(Claude Code 구현·자동 검사, GUI 항목은 사용자 확인, AC-I12의 PR CI·develop 원격 반영은 [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)(merge 318fcd2)로 확인). 측정값·명령·확인 주체는 [IH-102 검증 기록](IH-102-VALIDATION.md)에 있다. 아래 기준은 원래 계획이며 판정 기준을 넓히지 않았다. 기준은 [상호작용 명세](../02-technical-design/INTERACTION.md), 의존성은 IH-101 및 검증 도구 IH-004다.
 
-## 검사표
+## 후속 검토 판정 (2026-11-01)
+
+기존 표의 pass는 당시 실행한 시나리오의 결과다. Codex 추가 재현에서 AC-I04/I06의 실행 시 중복 ID, AC-I08의 RESOLVING 중 disable 경계가 실패했다(BUG-003/004). **전체 인수 판정은 review**이며, [추가 수락 조건](IH-102-REVIEW.md)을 기존 runner에 포함하고 수정 검증 후 완료로 복귀한다.
+
+## 기존 검사표
 
 | ID | 시나리오 | 수락 기준 | 방식 |
 |---|---|---|---|

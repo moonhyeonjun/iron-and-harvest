@@ -158,3 +158,14 @@
 - 통합 tree = 검증 커밋 8c8414c. IH-102 done. main·v0.1.0 미변경, v0.2.0 태그/릴리스 없음(별도 검토).
 - 앱 PR 추적 연결은 `gh` CLI 부재로 사용하지 않고 GitHub API로 CI를 확인했다.
 - 다음: v0.2.0 마일스톤 판정 검토(Codex), ADR-012/014 Accepted 여부, IH-110 아이템/인벤토리 명세.
+
+## 2026-11-01 — IH-102 Codex 기술 재검토
+
+- 대상 develop/origin `29b2ed3`, 추적 변경 없음. 사용자 미추적 AGENTS.md는 보존·미커밋.
+- 기존 전체 CI 재실행: clean detached worktree, `python3 tools/run_ci.py` 10단계 PASS/종료0. Python19, 이동360, 상호작용299검사. Import/smoke/runtime 오류0, 반복2회 측정24종 차이0·고아0. 원격 동일 SHA run41267694674 success 확인.
+- 추가 실제 입력·씬·물리 진단에서 BUG-003(실행 시 중복 ID), BUG-004(RESOLVING 중 disable) 재현: 종료1, 두 경우 모두 ACTIVE/패널=true. 엔진 오류 없음. 기존 suite에 없는 경계이며 기존 PASS로 덮지 않는다.
+- IH-102 done→review 재개, v0.2.0/ADR Accepted 판단 보류. Codex는 게임 코드/씬/CI를 바꾸지 않았고 [검토·수정 프롬프트](IH-102-REVIEW.md)를 작성했다. Claude의 다음 작업은 두 결함 수정과 기존 runner에 회귀 편입이다.
+- GUI 새 실행/조작 없음. 과거 사용자 확인(3d99d36)과 이번 자동 재검증을 구분한다.
+- 문서: 리뷰/수락/인수인계/검증/TASKS/BUGS/CHANGELOG 및 README·TDD·생활·ADR 상태 표기 정리.
+- 현재 사용자 작업 트리 정적 검사에는 AGENTS.md의 없는 .Codex/rules 링크4개가 실패한다. 사용자 파일은 그대로 두고 커밋된 clean worktree의 검사 결과와 구분했다.
+- 로그: build/ih-102-codex-review/ (Git 무시). docs/ih-102-technical-review에서 문서 커밋·필수 PR CI 후 develop 통합 예정. 실제 SHA/PR 결과는 Git 이력 및 최종 보고를 따른다. main/v0.1.0 보존, 태그/릴리스 없음.
