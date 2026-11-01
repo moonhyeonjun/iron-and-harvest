@@ -49,6 +49,9 @@ var _next_request_id: int = 1
 var _state: State = State.IDLE
 var _active_request_id: int = 0
 var _active_target: WeakRef = null
+var _active_target_id: StringName = &""
+## First reason the controller became unable to start while try_begin was running.
+var _resolve_cancel: StringName = &""
 var _owns_movement_gate: bool = false
 var _enabled: bool = true
 var _window_focused: bool = true
@@ -65,6 +68,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	_cancel_resolving(REMOVED)
 	_candidates.clear()
 	_cancel_queued = false
 	_discard_queue(REMOVED)
@@ -78,6 +82,7 @@ func set_interaction_enabled(enabled: bool) -> void:
 		return
 	_enabled = enabled
 	if not enabled:
+		_cancel_resolving(DISABLED)
 		_discard_queue(DISABLED)
 		if _state == State.ACTIVE:
 			_close_active(DISABLED)
@@ -113,6 +118,7 @@ func _notification(what: int) -> void:
 		_window_focused = false
 		if not is_node_ready():
 			return
+		_cancel_resolving(FOCUS_LOST)
 		_discard_queue(FOCUS_LOST)
 		if _state == State.ACTIVE:
 			_close_active(FOCUS_LOST)
@@ -156,40 +162,42 @@ func _resolve_queued() -> void:
 	var target: InteractionTarget = _queued_target.get_ref() as InteractionTarget if _queued_target != null else null
 	var captured_id: StringName = _queued_target_id
 	_clear_queue()
-	var reason: StringName = OK
-	if _state != State.IDLE:
-		reason = BUSY
-	elif not _enabled:
-		reason = DISABLED
-	elif not _window_focused:
-		reason = FOCUS_LOST
-	elif not _player.is_control_effective():
-		# Someone else holds the movement gate; never open over or unlock it.
-		reason = CONTROL_BLOCKED
-	elif captured_id.is_empty() and target == null:
-		reason = NO_TARGET
-	else:
-		# Only the target shown when E was pressed is checked; never a substitute.
-		reason = _check_target(target, captured_id)
+	var reason: StringName = BUSY if _state != State.IDLE else _start_blocker()
+	if reason == OK:
+		if captured_id.is_empty() and target == null:
+			reason = NO_TARGET
+		else:
+			# Only the target shown when E was pressed is checked; never a substitute.
+			reason = _check_target(target, captured_id)
 	if reason != OK:
 		request_rejected.emit(request_id, reason)
 		return
 	_state = State.RESOLVING
+	_resolve_cancel = &""
 	var began: bool = target.try_begin(request_id)
+	# try_begin may disable us, take focus, detach or free us, or change the target.
+	# Re-check everything a start needs; the controller's own state comes first so no
+	# physics query runs outside the tree.
+	var cancel: StringName = _resolve_cancel
+	_resolve_cancel = &""
+	if cancel.is_empty():
+		cancel = _start_blocker()
+	if cancel.is_empty() and began:
+		cancel = _check_target(target, captured_id)
+	_state = State.IDLE
 	if not began:
-		_state = State.IDLE
-		request_rejected.emit(request_id, TARGET_REJECTED)
+		request_rejected.emit(request_id, cancel if not cancel.is_empty() else TARGET_REJECTED)
 		return
-	if not _is_usable(target, captured_id):
-		# The target removed or disabled itself during try_begin: undo, do not open.
+	if not cancel.is_empty():
+		# Accepted by the target but no longer startable: undo once, report once.
 		if is_instance_valid(target):
 			target.end_interaction(request_id, true)
-		_state = State.IDLE
-		request_rejected.emit(request_id, INVALID_TARGET)
+		request_rejected.emit(request_id, cancel)
 		return
 	_state = State.ACTIVE
 	_active_request_id = request_id
 	_active_target = weakref(target)
+	_active_target_id = captured_id
 	_player.set_control_enabled(false)
 	_owns_movement_gate = true
 	_set_selected(null)
@@ -197,9 +205,9 @@ func _resolve_queued() -> void:
 
 
 func _revalidate_active() -> void:
-	# Deleted, hidden, unavailable, pushed out of range or behind a wall: cancel.
+	# Deleted, hidden, unavailable, renamed, duplicated, pushed away or walled off: cancel.
 	var target: InteractionTarget = _active_target.get_ref() as InteractionTarget
-	var reason: StringName = _check_target(target, &"", false)
+	var reason: StringName = _check_target(target, _active_target_id, false)
 	if reason != OK:
 		_close_active(reason)
 
@@ -212,6 +220,7 @@ func _close_active(reason: StringName) -> void:
 	_state = State.IDLE
 	_active_request_id = 0
 	_active_target = null
+	_active_target_id = &""
 	# An E queued during the session still gets a result, never a silent drop.
 	_discard_queue(BUSY)
 	if is_instance_valid(target):
@@ -229,22 +238,13 @@ func _update_selection() -> void:
 		return
 	var best: InteractionTarget = null
 	var best_key: Array = []
-	var seen: Dictionary = {}
-	var duplicated: Dictionary = {}
-	var usable: Array[InteractionTarget] = []
 	for key: int in _candidates.keys():
 		var target: InteractionTarget = (_candidates[key] as WeakRef).get_ref() as InteractionTarget
-		if not _is_usable(target, &""):
-			if target == null:
-				_candidates.erase(key)
+		if target == null:
+			_candidates.erase(key)
 			continue
-		if seen.has(target.target_id):
-			duplicated[target.target_id] = true
-		seen[target.target_id] = true
-		usable.append(target)
-	for target: InteractionTarget in usable:
-		# A repeated ID among candidates makes every holder of it unselectable.
-		if duplicated.has(target.target_id) or _check_target(target, target.target_id) != OK:
+		# Same rule set as request execution, including the duplicate-ID check.
+		if _check_target(target, target.target_id) != OK:
 			continue
 		var offset: Vector2 = target.get_anchor_position() - _player.global_position
 		var dot: float = 1.0 if offset.is_zero_approx() else _facing_vector().dot(offset.normalized())
@@ -258,7 +258,7 @@ func _update_selection() -> void:
 
 ## OK or the reason the target cannot be used from the player's current feet position.
 func _check_target(target: InteractionTarget, expected_id: StringName, check_facing: bool = true) -> StringName:
-	if not _is_usable(target, expected_id):
+	if not _is_usable(target, expected_id) or _has_usable_twin(target):
 		return INVALID_TARGET
 	var offset: Vector2 = target.get_anchor_position() - _player.global_position
 	var distance: float = offset.length()
@@ -270,6 +270,36 @@ func _check_target(target: InteractionTarget, expected_id: StringName, check_fac
 	if _is_occluded(target.get_anchor_position(), distance):
 		return OCCLUDED
 	return OK
+
+
+## A repeated ID among usable candidates makes every holder of it invalid, both when
+## selecting and when executing or keeping a session. Only the bounded candidate set is
+## scanned, never the whole map.
+func _has_usable_twin(target: InteractionTarget) -> bool:
+	for key: int in _candidates:
+		var other: InteractionTarget = (_candidates[key] as WeakRef).get_ref() as InteractionTarget
+		if other != target and _is_usable(other, target.target_id):
+			return true
+	return false
+
+
+## Controller-side reason a request cannot start now (or OK).
+func _start_blocker() -> StringName:
+	if not is_inside_tree() or is_queued_for_deletion():
+		return REMOVED
+	if not _enabled:
+		return DISABLED
+	if not _window_focused:
+		return FOCUS_LOST
+	if not is_instance_valid(_player) or _player.is_queued_for_deletion() or not _player.is_control_effective():
+		# Someone else holds the movement gate; never open over or unlock it.
+		return CONTROL_BLOCKED
+	return OK
+
+
+func _cancel_resolving(reason: StringName) -> void:
+	if _state == State.RESOLVING and _resolve_cancel.is_empty():
+		_resolve_cancel = reason
 
 
 func _is_usable(target: InteractionTarget, expected_id: StringName) -> bool:
