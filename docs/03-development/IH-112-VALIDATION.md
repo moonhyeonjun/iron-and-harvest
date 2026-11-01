@@ -1,10 +1,14 @@
 # IH-112 초기 저장·복원 검증 — 2026-11-01
 
-## Codex 후속 판정 — review
+## 현재 판정
+
+Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다.
+
+## 최초 Codex 후속 판정 — review
 
 2026-11-01 `b13292b`에서 CI13단계·저장425검사 PASS를 독립 확인했다. 추가 진단으로 BUG-009(SaveUI 제거 후 키 입력 충돌), BUG-010(거부 보고 중 재진입 저장), BUG-011(suspend 중 지연 모달 명령)을 재현했다. **IH-112 review 유지, 세 결함 open**. [재현·수정 수락 조건·Claude 프롬프트](IH-112-REVIEW.md)를 따른다. 아래는 최초 구현·자동·부분 GUI 확인 기록이며 새 경계의 통과를 뜻하지 않는다. AC-S16 손상복구 GUI 미확인도 유지하고 추가 사용자 테스트를 재요청하지 않는다.
 
-Claude Code가 BUG-009/010/011을 수정했다([아래 수정 기록](#bug-009011-수정--claude-code-2026-11-01)). 세 결함은 fixed이며 Codex 재검증을 기다린다. IH-112는 review를 유지한다(AC-S16 손상복구 GUI 미확인).
+Claude Code가 BUG-009/010/011을 수정했다([아래 수정 기록](#bug-009011-수정--claude-code-2026-11-01)). 이 시점에는 세 결함 fixed·Codex 재검증 대기였으며 아래 독립 재검증으로 resolved를 확인했다. IH-112는 review를 유지한다(AC-S16 손상복구 GUI 미확인).
 
 ## 결론
 
@@ -388,3 +392,13 @@ macOS APFS에서 다음을 실제 파일로 검증했다: rename 교체, 단계�
 - [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307597804/job/124851080300): develop push(`5070bd8`) success.
 - 통합 tree는 검증한 `bb4d6fe`와 같다. main·태그·릴리스는 변경하지 않았다.
 - BUG-009~011은 fixed·통합 완료이며 resolved는 Codex 재검증 뒤에 판정한다. IH-112 review 유지(AC-S16 손상복구 GUI 미확인).
+
+## Codex 독립 수정 재검증
+
+- 날짜/대상: 2026-11-01, develop/origin `d2e1c883271b9c105e0f2be726a8373f5e146148`. 원격 develop CI [41308294854](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41308294854) success 확인. 수정 PR #36(5070bd8)·기록 PR #37을 포함한다.
+- 환경: macOS 13.4 / Apple M1 / Godot 4.7.2 Standard·GDScript·Compatibility. 별도 detached worktree에서 `python3 tools/run_ci.py`: exit 0, 13단계 PASS. Python19·경제7·이동360·상호작용333·인벤토리521·채집347·저장529. 저장 반복 측정18종 차이0·고아0·예상 밖 엔진 오류0. INF fixture overflow 경고4건은 기존 runner 정책으로 구분한다.
+- 수정 전 원본 진단 `probe.gd`/`position_probe.gd`를 변경 없이 복사해 ui_free/ui_queue/reject/suspend/suspend_position 각각 재실행: 모두 exit 0·RESULT: PASS. UI 제거 뒤 F5 충돌 없음, 거부 보고 중 nested BUSY·은행 둘 다 없음, FOCUS_LOST/INVALID_POSITION 뒤 동일 월드·CLOSED·게이트 미소유 확인. 진단의 engine error 목록도 모두 비었다.
+- 코드 검토: 키 경로는 Coordinator epoch·수명을 사용하고 UI 표시와 분리한다. 시작 전 보고에도 `_emitting` 가드가 적용된다. 로드의 기존/후보 세션 정지와 실패 복귀가 InventoryController 명령 진입까지 전달된다. 추가 Player 게이트나 실패 후 강제 닫기로 결과를 맞추지 않는다. 회귀 AC-S10/11/12의 성공·실패·보고·열린 패널 분기를 검토했다.
+- 로그/원본 진단: `build/ih-112-fix-codex-review/`(Git 제외). 고유 `user://tests/ih112/codex_probe_*` 및 runner 시험 루트만 사용했고 제품 saves·사용자 GUI 시험 파일은 건드리지 않았다. 새 GUI·변이 검사는 실행하지 않았다. Claude 변이 결과와 독립 실행 결과를 구분한다.
+- 판정: BUG-009~011 resolved. IH-112는 AC-S16 손상복구 GUI 미확인으로 review, ADR-017 Proposed 유지. 기존 추가 사용자 테스트 중단 지시를 존중하고 완료 기준을 임의로 낮추지 않는다. 추가 코드 수정 요청 없음. v0.3.0 판정은 별도다.
+- 사용자 미추적 AGENTS.md와 기존 링크4개 문제를 보존·미커밋한다. 독립 worktree의 정적 검사를 적용하며 이번 변경은 검토/개발 문서뿐이다. 문서 PR의 실제 commit/CI/merge 결과는 PR 이력과 완료 보고에 남긴다.

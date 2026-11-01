@@ -25,7 +25,7 @@
 
 ## 우선순위와 완료
 
-엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory는 IH-110에서 구현·검증했고 Calendar/Production은 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 IH-110 BUG-005/006 수정과 Codex 독립 재검증도 완료했다. IH-111은 BUG-007/008 수정·Codex 독립 재검증까지 완료해 done이다. IH-112는 구현·자동 검증 후 BUG-009~011 추가 재현과 GUI 부분 확인으로 review다. Interaction 리뷰 수정은 완료했다.
+엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory는 IH-110에서 구현·검증했고 Calendar/Production은 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 IH-110 BUG-005/006 수정과 Codex 독립 재검증도 완료했다. IH-111은 BUG-007/008 수정·Codex 독립 재검증까지 완료해 done이다. IH-112는 BUG-009~011 수정·Codex 독립 재검증 완료(resolved)이며 AC-S16 GUI 부분 확인으로 review다. Interaction 리뷰 수정은 완료했다.
 
 ## TBD
 
@@ -39,4 +39,4 @@
 
 ## IH-112 초기 저장·복원 구현 준비
 
-[상세 명세](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md)를 준비했다. 단일 수동 슬롯 A/B 파일 commit, 버전/숫자/참조 검증, 초기 지급 없는 Gather restore, 후보 세계 검증 후 세션 교체를 정의한다. 기능과 자동 검사는 구현됐으나 BUG-009~011 및 AC-S16 부분 확인으로 review다. [수정 계약](../03-development/IH-112-REVIEW.md)을 따르며 실제 수정은 Claude Code가 수행한다.
+[상세 명세](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md)를 준비했다. 단일 수동 슬롯 A/B 파일 commit, 버전/숫자/참조 검증, 초기 지급 없는 Gather restore, 후보 세계 검증 후 세션 교체를 정의한다. 기능·수정·Codex 독립 재검증(진단5종·CI13단계·저장529)은 완료됐고 BUG-009~011 resolved다. AC-S16 부분 확인으로 review를 유지한다. [수정 계약](../03-development/IH-112-REVIEW.md)의 프롬프트는 완료 이력이다.

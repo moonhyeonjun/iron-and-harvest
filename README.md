@@ -75,5 +75,5 @@ Codex는 a5cefeb에서 IH-110 수정 재현 위반0·전체 CI 11단계(인벤�
 
 [저장·복원 상세 명세](docs/02-technical-design/SAVE_LOAD.md), [AC-S01~16](docs/03-development/IH-112-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-112-HANDOFF.md)를 따른다. 2026-11-01 Claude Code가 구현했다([검증 기록](docs/03-development/IH-112-VALIDATION.md)).
 - 단일 수동 슬롯의 A/B 두 세대, 버전 검증, 초기 재지급 없는 새 세션 복원.
-- AC-S01~15 자동 검증 완료. AC-S16 손상복구 GUI 미확인 및 Codex 재현 BUG-009~011로 review다. [수정 전달 프롬프트](docs/03-development/IH-112-REVIEW.md)를 사용한다. ADR-017 Proposed다.
+- AC-S01~15 자동 검증 완료. BUG-009~011은 수정·Codex 독립 재검증(진단5종·CI13단계·저장529)으로 resolved다. AC-S16 손상복구 GUI 미확인으로 review를 유지한다. [수정 검토 이력](docs/03-development/IH-112-REVIEW.md)의 프롬프트는 완료됐다. ADR-017 Proposed다.
 - 시험 장면: `python3 tools/godot.py res://scenes/tests/save_load_test.tscn`(F5 저장, F9 불러오기, 시험 저장 루트 `user://tests/ih112/gui`). 제품 저장 경로는 쓰지 않는다.

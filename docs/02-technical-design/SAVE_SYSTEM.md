@@ -36,4 +36,4 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 
 ## IH-112 현재 검토
 
-초기 파일 저장·복원은 구현됐고 자동13단계·저장425검사를 통과했다. Codex 후속 검토에서 [BUG-009~011](../03-development/IH-112-REVIEW.md)을 재현해 review다. GUI 손상복구 미확인도 별개로 유지한다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.
+초기 파일 저장·복원은 구현됐고 수정 후 자동13단계·저장529검사를 통과했다. [BUG-009~011](../03-development/IH-112-REVIEW.md)은 Codex 독립 재검증으로 resolved다. IH-112 review는 유지한다. GUI 손상복구 미확인도 별개로 유지한다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.

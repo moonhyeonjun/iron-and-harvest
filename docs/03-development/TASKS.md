@@ -340,3 +340,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - 완료 조건: 테스트 통과, 기존 이력 보존, 원격 SHA와 로컬 비교, 실제 해시/결과 기록.
 - 테스트 항목: 정적 구조, 기존 unittest/경제 가정, diff, ref 일치, 작업 트리.
 - 현재 증거: 최초 커밋957dd3b·정책 커밋8ce8d1d, main/develop/작업 브랜치 push 성공·원격 SHA 일치. 상세는 GIT_BOOTSTRAP.
+
+## IH-112 Codex 수정 재검증 — 2026-11-01
+
+Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다. [검증 기록](IH-112-VALIDATION.md#codex-독립-수정-재검증). 구현/수정 프롬프트는 완료 이력이며 추가 코드 수정 요청은 없다.

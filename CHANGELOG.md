@@ -1,5 +1,10 @@
 # 변경 이력
 
+## Unreleased — IH-112 Codex 수정 재검증
+
+- d2e1c88에서 원래 진단5종·CI13단계·저장529검사 PASS를 독립 확인해 BUG-009~011 resolved로 판정했다.
+- IH-112 review·ADR-017 Proposed 유지(AC-S16 손상복구 GUI 미확인). 수정 프롬프트 완료 이력 및 개발/기술 진입점 갱신, 게임 코드 변경 없음.
+
 ## Unreleased — IH-112 BUG-009~011 수정 (Claude Code, 2026-11-01)
 
 - BUG-009: F5/F9는 coordinator의 현재 epoch를 쓴다. SaveUI가 해제·삭제 예약·분리돼도 키 저장/불러오기가 동작하고 표시만 생략한다.
