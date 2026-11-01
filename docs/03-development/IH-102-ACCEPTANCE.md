@@ -1,6 +1,6 @@
 # IH-102 수락 조건
 
-2026-10-31 Codex 작성 → **2026-11-01 AC-I01~12 실행, 모두 pass**(Claude Code 구현·자동 검사, GUI 항목은 사용자 확인, AC-I12의 PR CI·develop 원격 반영은 통합 후 기록). 측정값·명령·확인 주체는 [IH-102 검증 기록](IH-102-VALIDATION.md)에 있다. 아래 기준은 원래 계획이며 판정 기준을 넓히지 않았다. 기준은 [상호작용 명세](../02-technical-design/INTERACTION.md), 의존성은 IH-101 및 검증 도구 IH-004다.
+2026-10-31 Codex 작성 → **2026-11-01 AC-I01~12 실행, 모두 pass**(Claude Code 구현·자동 검사, GUI 항목은 사용자 확인, AC-I12의 PR CI·develop 원격 반영은 [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)(merge 318fcd2)로 확인). 측정값·명령·확인 주체는 [IH-102 검증 기록](IH-102-VALIDATION.md)에 있다. 아래 기준은 원래 계획이며 판정 기준을 넓히지 않았다. 기준은 [상호작용 명세](../02-technical-design/INTERACTION.md), 의존성은 IH-101 및 검증 도구 IH-004다.
 
 ## 검사표
 
@@ -17,7 +17,7 @@
 | AC-I09 | 걸으며 E, 버튼/Escape, 이동 키 유지, 과거 ID 닫기 | 열린 즉시 velocity0, ACTIVE 이동0. 종료 통지 각각1회, 새 세션에 옛 ID 무효. neutral→새 입력으로 이동 | 물리·GUI / pass |
 | AC-I10 | ACTIVE 중 삭제/숨김/비활성/범위 이탈, focus out/in, Controller·맵 제거 | 안전 취소·큐 폐기·패널 숨김, 소유한 게이트만 해제, 자동 재시작 없음. ready 이전 알림·맵 재진입 오류0 | 자동+실제 앱 전환 / pass |
 | AC-I11 | 프롬프트/제목/설명·닫기 포커스,1280×720/비16:9창 | 행동·대상 일치, UI의 월드/자원 수정 없음, 텍스트 잘림·의도치 않은 키 전파 없음. E→설명→닫기 완주 | GUI·리뷰 / pass |
-| AC-I12 | suite2회·의도적 실패·PR/통합 CI | 반복 결과 동일, 입력·고아 노드·게이트 누수0, 엔진 오류0, 실패 exit1, IH-101 회귀·CI checks 통과, 문서/원격 검증 | 자동·리뷰 / pass(통합 전) |
+| AC-I12 | suite2회·의도적 실패·PR/통합 CI | 반복 결과 동일, 입력·고아 노드·게이트 누수0, 엔진 오류0, 실패 exit1, IH-101 회귀·CI checks 통과, 문서/원격 검증 | 자동·리뷰 / pass |
 
 거리/각도 경계 테스트는 직접 지정한 Vector2를 사용하고 측정 허용 오차는0.001로 기록한다. 허용 거리 자체를 넓히지 않는다. dot0.5의 실제 계산값도 출력한다. 초기 overlap이 서버에 반영되는 두 틱을 기다리는 것은 허용하지만 매 요청 검증을 생략하지 않는다.
 

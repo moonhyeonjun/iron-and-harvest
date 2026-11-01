@@ -4,7 +4,7 @@
 
 Claude Code가 [명세](../02-technical-design/INTERACTION.md)에 따라 InteractionController/Target/UI와 테스트 맵을 구현했다. AC-I01~12 자동 검사는 실제 씬·Area2D·물리 질의·UI 입력 경로로 통과했다. GUI 수동 항목은 사용자가 실제 창에서 확인했다. 공통 CI 실행기에 등록했으며 로컬의 깨끗한 worktree에서 전체 10단계 PASS를 확인했다.
 
-IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합·원격 확인 뒤 done으로 바꾼다. 거리32·정면 dot0.5·E/Escape·문구·패널 배치는 검증용 제안이며 최종 값이 아니다(ADR-014 Proposed 유지). 아이템 지급·가방·채집·대화 트리·상점·전투·저장·통치는 구현하지 않았다.
+IH-102 상태는 **done**이다. [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)의 필수 CI checks 성공 후 develop에 병합하고 원격 CI를 확인했다(아래 통합 기록). 거리32·정면 dot0.5·E/Escape·문구·패널 배치는 검증용 제안이며 최종 값이 아니다(ADR-014 Proposed 유지). 아이템 지급·가방·채집·대화 트리·상점·전투·저장·통치는 구현하지 않았다.
 
 ## 환경·대상
 
@@ -45,7 +45,7 @@ IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합�
 | AC-I09 | pass | 걸으며 E: 열린 틱에 velocity0, 20틱 이동0. Enter(닫기 버튼)=COMPLETED, end1(cancelled=false). S 유지 중 10틱 이동0, 해제→재입력 10틱 15.9998. Escape=CANCELLED. 이전 ID의 close/cancel/finish_active/UI close_session은 새 세션에 영향 없음 | 자동 + 사용자 GUI |
 | AC-I10 | pass | ACTIVE 중 queue_free/숨김/비활성=INVALID_TARGET, 밀려남=OUT_OF_RANGE, 벽=OCCLUDED: 다음 틱 종료, 패널 숨김, 소유 게이트 해제. focus out=FOCUS_LOST(큐의 E도 FOCUS_LOST로 폐기), focus in 자동 재시작0, 선택 복귀. ready 이전 포커스 알림 오류0, 맵 트리 이탈·재진입 후 선택 정상, Controller 제거=REMOVED·end1·게이트 해제, 세션 중 맵 해제 오류0. 실제 앱 전환은 사용자 확인 | 자동 + 사용자 GUI |
 | AC-I11 | pass | 프롬프트 'E 살펴보기 — 마을 안내판'/'… 보급 상자', 제목·설명 일치, 닫기 버튼 포커스, 패널 (190,120) 260×120이 640×360 안, 설명 2/2줄 표시, E→읽기→닫기 완주 후 프롬프트 복귀. UI 코드는 표시와 의도 신호만 가짐. 실제 창·비16:9 가독성은 사용자 확인 | 자동 + GUI·리뷰 |
-| AC-I12 | pass(통합 전) | 2회 반복 측정24종 차이0, 고아0, 키·게이트 누수0(모든 case 종료 검사), 엔진 오류0, 실패 주입 종료1, IH-101 회귀·로컬 CI PASS. PR 필수 CI checks와 develop 원격 반영은 통합 후 기록 | 자동·리뷰 |
+| AC-I12 | pass | 2회 반복 측정24종 차이0, 고아0, 키·게이트 누수0(모든 case 종료 검사), 엔진 오류0, 실패 주입 종료1, IH-101 회귀·로컬 CI PASS. PR 필수 CI·develop push CI 성공, 원격 반영 확인(통합 기록) | 자동·리뷰 |
 
 ## 수동 GUI 확인
 
@@ -64,3 +64,10 @@ IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합�
 6. **프롬프트와 neutral**: 명세대로 `Player.is_control_effective()`가 거짓이면 프롬프트를 숨긴다. 이동 키를 누른 채 패널을 닫으면 키를 뗄 때까지 프롬프트가 보이지 않고 E는 CONTROL_BLOCKED가 된다.
 7. **한글 글꼴**: 별도 글꼴 자산 없이 엔진 기본 글꼴의 시스템 fallback으로 표시된다. 다른 OS/배포 빌드의 글꼴 포함 여부는 IH-006 아트/UI 규격에서 결정한다.
 8. **단일 게이트 한계**: 세션 중 외부가 이동을 다시 막으면 Player 게이트는 이미 닫혀 있어 구분되지 않고, 종료 시 Controller가 자신의 해제를 수행한다. 명세대로 다중 모달 조율은 후속 설계이며 이번에 검사하지 않았다.
+
+## 통합 기록
+
+- [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9): feature/interaction-system(`8c8414c`) → develop, merge `318fcd20911023d57585befce10f5bc153b0a252`. 병합 전 GitHub API mergeable_state=clean, base `82e2ba2`(strict 충족). 보호 규칙 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41266988871/job/124731789818): Ubuntu 24.04 / Godot 4.7.2에서 10단계 PASS, `interaction-acceptance`·`player-acceptance` 모두 `RESULT: PASS`, 엔진 오류0. 앞선 head `0737e39`의 실행은 새 push로 cancelled(concurrency 설정).
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41267229659/job/124732455905): develop push(`318fcd2`) CI checks success. ls-remote develop=`318fcd2`.
+- 통합 tree는 검증한 `8c8414c`와 동일(`git diff --exit-code`). main(`64928e5`)과 v0.1.0 태그는 변경하지 않았다. v0.2.0 태그/릴리스는 별도 검토 대상이다.
