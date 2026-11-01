@@ -6,6 +6,10 @@ extends Area2D
 
 const GROUP: StringName = &"interaction_target"
 
+## INSPECT opens the read-only panel (IH-102). INSTANT runs one prepared command right after
+## the controller's last re-check (IH-111) and opens nothing.
+enum ExecutionKind { INSPECT, INSTANT }
+
 ## Authored map-unique ID. Never derived from display names or node paths.
 @export var target_id: StringName = &""
 @export var display_name: String = ""
@@ -38,6 +42,15 @@ func try_begin(request_id: int) -> bool:
 func end_interaction(request_id: int, _cancelled: bool) -> void:
 	if request_id == _active_request_id:
 		_active_request_id = 0
+
+
+func get_execution_kind() -> ExecutionKind:
+	return ExecutionKind.INSPECT
+
+
+## The single-use command prepared by try_begin for request_id (INSTANT only), else null.
+func get_prepared_command(_request_id: int) -> RefCounted:
+	return null
 
 
 ## World point used for range, facing and line of sight; placed on walkable floor.

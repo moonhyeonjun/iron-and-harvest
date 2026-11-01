@@ -9,8 +9,10 @@ signal target_changed(target_id: StringName, action_label: String, display_name:
 signal session_opened(request_id: int, title: String, description: String)
 signal session_closed(request_id: int, reason: StringName)
 signal request_rejected(request_id: int, reason: StringName)
+## An INSTANT target's command committed (IH-111). `result` is the command's own result.
+signal instant_completed(request_id: int, target_id: StringName, result: RefCounted)
 
-enum State { IDLE, RESOLVING, ACTIVE }
+enum State { IDLE, RESOLVING, ACTIVE, EXECUTING }
 
 const NO_TARGET: StringName = &"NO_TARGET"
 const INVALID_TARGET: StringName = &"INVALID_TARGET"
@@ -53,6 +55,9 @@ var _active_target_id: StringName = &""
 ## First reason the controller became unable to start while try_begin was running.
 var _resolve_cancel: StringName = &""
 var _owns_movement_gate: bool = false
+## True while an INSTANT result is being cleaned up and reported; with EXECUTING it marks
+## the window in which a re-entrant E press is dropped instead of queued for the next tick.
+var _reporting: bool = false
 var _enabled: bool = true
 var _window_focused: bool = true
 
@@ -134,6 +139,15 @@ func _notification(what: int) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if (_state == State.EXECUTING or _reporting) and event.is_action(ACTION_INTERACT):
+		# Pressed from inside a commit or its callbacks: consumed, never a next-tick job.
+		get_viewport().set_input_as_handled()
+		return
+	if _state == State.RESOLVING and event.is_action_pressed(ACTION_CANCEL, false):
+		# Escape while try_begin runs cancels this request before anything commits.
+		_cancel_resolving(CANCELLED)
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed(ACTION_INTERACT, false):
 		# One intent per tick: repeated presses before it is processed get no new ID.
 		if _queued_request_id == 0:
@@ -159,6 +173,9 @@ func _physics_process(_delta: float) -> void:
 		_revalidate_active()
 	if _queued_request_id != 0:
 		_resolve_queued()
+	# A commit callback may have taken us out of the tree; no physics queries then.
+	if not is_inside_tree() or not is_instance_valid(_player) or not _player.is_inside_tree():
+		return
 	_update_selection()
 
 
@@ -180,6 +197,10 @@ func _resolve_queued() -> void:
 	_state = State.RESOLVING
 	_resolve_cancel = &""
 	var began: bool = target.try_begin(request_id)
+	# INSTANT targets hand over their prepared command now, before the last re-check.
+	var instant: bool = began and is_instance_valid(target) \
+		and target.get_execution_kind() == InteractionTarget.ExecutionKind.INSTANT
+	var command: RefCounted = target.get_prepared_command(request_id) if instant else null
 	# try_begin may disable us, take focus, detach or free us, or change the target.
 	# Re-check everything a start needs; the controller's own state comes first so no
 	# physics query runs outside the tree.
@@ -189,15 +210,22 @@ func _resolve_queued() -> void:
 		cancel = _start_blocker()
 	if cancel.is_empty() and began:
 		cancel = _check_target(target, captured_id)
+	if cancel.is_empty() and instant and (command == null or not command.has_method("commit")):
+		cancel = TARGET_REJECTED
 	_state = State.IDLE
 	if not began:
 		request_rejected.emit(request_id, cancel if not cancel.is_empty() else TARGET_REJECTED)
 		return
 	if not cancel.is_empty():
 		# Accepted by the target but no longer startable: undo once, report once.
+		if command != null and command.has_method("cancel"):
+			command.cancel()
 		if is_instance_valid(target):
 			target.end_interaction(request_id, true)
 		request_rejected.emit(request_id, cancel)
+		return
+	if instant:
+		_execute_instant(request_id, target, captured_id, command)
 		return
 	_state = State.ACTIVE
 	_active_request_id = request_id
@@ -207,6 +235,26 @@ func _resolve_queued() -> void:
 	_owns_movement_gate = true
 	_set_selected(null)
 	session_opened.emit(request_id, target.display_name, target.description)
+
+
+## Runs a prepared INSTANT command synchronously with no signal or callback of ours in
+## between. Once the command reports success the transfer is installed: removal of the
+## target, UI or this controller during its change signal never undoes or retries it, and
+## it opens no panel and never touches the movement gate.
+func _execute_instant(request_id: int, target: InteractionTarget, target_id: StringName, command: RefCounted) -> void:
+	_state = State.EXECUTING
+	var result: RefCounted = command.commit()
+	_state = State.IDLE
+	_reporting = true
+	var ok: bool = result != null and result.get("ok") == true
+	if is_instance_valid(target):
+		target.end_interaction(request_id, not ok)
+	if is_inside_tree() and not is_queued_for_deletion():
+		if ok:
+			instant_completed.emit(request_id, target_id, result)
+		else:
+			request_rejected.emit(request_id, StringName(result.get("code")) if result != null else TARGET_REJECTED)
+	_reporting = false
 
 
 func _revalidate_active() -> void:
