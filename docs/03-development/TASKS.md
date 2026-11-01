@@ -23,7 +23,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:done | IH-110 |
-| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:backlog | IH-110, IH-111 |
+| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:ready | IH-110, IH-111 |
 | IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
 | IH-130 | 건설·수리 프로젝트 | feature | priority:high | status:backlog | IH-120, IH-110 |
@@ -136,7 +136,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - Codex 후속 검토: 14302e5의 CI 11단계 PASS, 추가 진단은 수명2·ID1 위반으로 종료1. BUG-005/006 open, review로 재개. [수정 수락 조건](IH-110-REVIEW.md)을 충족한 후 done 복귀를 판정한다.
 - BUG-005/006 수정(2026-11-01): fix/inventory-lifecycle-and-id-validation `5004419`(실패 회귀)·`fb5cd0c`(수정)·`a714c5a`/`8dfe8bb`(검사 보완). 재현 진단 종료1→0, runner 수정 전 충돌·25실패 → 수정 후 PASS, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS(이동 360·상호작용 333·인벤토리 521), 사용자 GUI "1~4 모두 정상"(8dfe8bb). [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 필수 CI 성공, merge cbb836b, develop CI 성공 → done.
 - Codex 수정 재검증(2026-11-01): a5cefeb의 원래 재현 종료0/위반0, 전체 CI 11단계/인벤토리521검사 PASS. BUG-005/006 resolved·IH-110 done 유지. [독립 검증](IH-110-VALIDATION.md).
-- 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. 후속 IH-111은 구현·수정·독립 재검증 done, IH-112는 backlog다.
+- 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. 후속 IH-111은 구현·수정·독립 재검증 done, IH-112는 상세 설계 ready다.
 
 ## IH-111 — 채집과 자원 지점
 
@@ -159,13 +159,14 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 
 ## IH-112 — 초기 저장과 복원
 
-- 목적: 초기 저장과 복원을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 위치·재고·지점 snapshot/복원.
-- 관련 문서: [설계](../02-technical-design/SAVE_SYSTEM.md).
-- 예상 영향 범위: Save/fixtures.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 손상·쓰기 실패·왕복·미래 버전.
-- 현재 증거/미확정: 스키마는 구현 때 확정.
+- 목적: 채집/보관/이동한 세계를 저장하고 재시작 뒤 같은 상태로 이어간다.
+- 유형/우선순위/상태: feature / priority:critical / status:ready. 의존 IH-110/111 done.
+- 요구사항: 위치·방향·bag/store/stock5재고·결속3개, 단일 수동 A/B 슬롯, schema1/시험v0·checksum·정규화, 명시 복구본, 후보 세션 검증 후 publish·이전 epoch 차단.
+- 관련 문서: [저장 방향](../02-technical-design/SAVE_SYSTEM.md), [구현 명세](../02-technical-design/SAVE_LOAD.md), [AC-S01~16](IH-112-ACCEPTANCE.md), [Claude 전달 프롬프트](IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md).
+- 예상 영향: SaveCodec/Store/Coordinator/Bootstrap, Gather restore/읽기 경계, Player 복원, 모달·Interaction suspend/epoch, 전용 맵/UI/runner·CI 등록.
+- 완료 조건: AC-S01~16·실제 파일/중단·GUI·실패 주입/변이·기존 회귀·필수 CI/리뷰/develop 통합, 검증 기록.
+- 현재 증거: 2026-11-01 Codex 상세 설계 완료. 구현·신규 검사·GUI는 미실행, 다음 담당 Claude Code.
+- 제외/TBD: 자동/종료 저장·슬롯 선택/삭제·Cloud·타 맵/달력/NPC. 수치/경로/파일 레이아웃은 Proposed, 실제4.7.2/OS 측정으로 구현 차이를 기록한다. v0.3.0 판정은 별도.
 
 ## IH-120 — 달력·계절·하루 경계
 
