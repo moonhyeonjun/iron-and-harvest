@@ -150,3 +150,11 @@
 - 발견: headless 입력이 Viewport로 전달됨(BUG-002, IH-101 기록 정정). 맵 해제 중 트리 밖 버튼 release_focus 엔진 오류는 커밋 전에 수정. probe 탐침의 `_initialize` 직후 @onready nil·자기 셸을 끈 pkill 패턴은 제 스크립트 오류.
 - 수동 GUI: 사용자가 3d99d36에서 프롬프트/전환/패널/Enter·Escape/E 연타/걷는 중 E/neutral/Cmd+Tab/비16:9를 확인하고 "1~5 모두 정상". Claude는 엔진 viewport 캡처로 한글 렌더링과 패널 여백만 보조 확인(ENV-003).
 - 결과: AC-I01~12 pass, IH-102 review. PR 필수 CI·develop 통합은 후속 기록. v0.2.0 태그/릴리스 없음.
+
+### IH-102 통합 결과
+
+- [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9) 8c8414c → develop, merge 318fcd20911023d57585befce10f5bc153b0a252. 병합 전 mergeable_state=clean.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41266988871/job/124731789818) success(10단계 PASS, interaction/player 모두 RESULT: PASS). 이전 head 0737e39 실행은 cancelled. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41267229659/job/124732455905) success.
+- 통합 tree = 검증 커밋 8c8414c. IH-102 done. main·v0.1.0 미변경, v0.2.0 태그/릴리스 없음(별도 검토).
+- 앱 PR 추적 연결은 `gh` CLI 부재로 사용하지 않고 GitHub API로 CI를 확인했다.
+- 다음: v0.2.0 마일스톤 판정 검토(Codex), ADR-012/014 Accepted 여부, IH-110 아이템/인벤토리 명세.

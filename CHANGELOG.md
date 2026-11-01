@@ -12,6 +12,7 @@
 - InputMap `interact`(물리 E), `interaction_cancel`(Escape), layer_3 이름.
 - `tests/test_interaction.gd` AC-I01~12 자동 검사와 probe target, `tools/run_ci.py`에 interaction-acceptance 등록(`ci_steps()`).
 - Fixed BUG-002: IH-101 runner의 headless 키 이중 전달과 잘못된 관찰 기록.
+- [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop 통합(merge 318fcd2), PR/develop CI checks 성공. main 미반영.
 - 수치·키·문구는 검증용 제안. 가방·채집·대화·상점·전투·저장·통치는 미구현. v0.2.0 태그/릴리스 없음.
 
 ## Unreleased — 2026-10-31
