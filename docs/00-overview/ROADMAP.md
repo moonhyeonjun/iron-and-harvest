@@ -1,6 +1,6 @@
 # 로드맵
 
-현재 버전은 Unreleased이며 릴리스/태그가 없다. 사용자 지정 버전 순서는 [마일스톤](../03-development/MILESTONES.md)을 따른다. 버전 번호는 달력 날짜나 구현 시작으로 확정하지 않는다.
+v0.1.0 Foundation 태그가 존재하며, v0.2.0 Character는 [기능 완료 판정](../03-development/CHARACTER-v0.2.0-VERIFICATION.md)을 통과했다. 원격 태그 발행은 main CI 검증 후 수행한다. 사용자 지정 버전 순서는 [마일스톤](../03-development/MILESTONES.md)을 따른다. 버전 번호는 달력 날짜나 구현 시작으로 확정하지 않는다.
 
 ## 단계
 

@@ -8,6 +8,8 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 
 현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 Claude Code가 구현하고 AC-01~12를 검증했으며 [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop에 통합했다(done). main 반영·v0.2.0 태그는 하지 않았다.
 
+v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마일스톤 PASS](CHARACTER-v0.2.0-VERIFICATION.md). main 승격·태그 발행은 필수 CI 이후 진행한다. IH-110은 상세 명세가 아직 없어 backlog를 유지한다.
+
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
 | IH-001 | 기반·문서·관리 체계 | documentation | priority:high | status:done | 없음 |

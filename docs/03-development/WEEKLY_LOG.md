@@ -194,3 +194,13 @@
 - BUG-003/004 resolved와 IH-102 done 유지. 게임 코드/씬/엔진/CI는 변경하지 않고 리뷰/검증/작업/버그/주간 기록 및 README·HANDOFF의 완료된 수정 안내를 정리했다.
 - docs/ih-102-fix-verification에서 문서 커밋·필수 PR CI 후 develop 통합. 실제 SHA와 PR 결과는 Git 이력 및 최종 보고를 따른다.
 - 다음 설계 후보: v0.2.0 마일스톤 판정, IH-110 아이템·인벤토리 명세. main/v0.1.0·ADR Proposed 유지, 새 태그/릴리스 없음.
+
+## 2026-11-01 — v0.2.0 Character 판정
+
+- 시작 develop/origin35c70dd, 사용자 미추적 AGENTS.md 보존. main64928e5는 develop의 조상이고 기존 이력을 덮어쓸 필요가 없다. local/remote v0.2.0 없음, v0.1.0 보존 확인.
+- 기존 마일스톤의 작은 맵 이동/대상 조작, IH-101/102 수락 조건을 대조해 기능 판정 PASS. BUG-001~004 resolved.
+- 기존 독립 검사(Python19·이동360·상호작용333·전체10단계) 이후 실행 코드 변경 없음을 git diff로 확인했다. 같은 로컬 전체 검사는 반복하지 않고 문서 정적 검사 및 보호 규칙의 PR/main CI를 수행한다.
+- GUI는 기존 사용자0332b5a 확인 기록을 사용한다. 단일 게이트·배포 글꼴·라이선스·최종 조작값은 판정표에서 후속 범위로 구분했다. ADR-012/014 Proposed 유지.
+- 변경 문서: Character 판정표, MILESTONES/TASKS/README/CHANGELOG/ROADMAP/ADR 색인/주간 기록. 게임 코드·씬·CI 설정 미변경.
+- Git 계획: 문서 PR→develop→main PR, main CI 성공 후 annotated v0.2.0 태그와 원격 검증. 이후 main 이력/발행 기록을 develop에 동기화한다. 실제 SHA/PR/CI는 실행 후 기록한다.
+- 다음: IH-110 상세 설계. 제품 실행파일·GitHub Release·Steam 게시 없음.

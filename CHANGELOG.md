@@ -2,7 +2,14 @@
 
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
-## Unreleased — 2026-11-01
+## v0.2.0 Character — 2026-11-01
+
+- 기능 마일스톤 판정 PASS: IH-101 이동·충돌·카메라, IH-102 대상 선택·살펴보기·안전한 종료. [판정/승격 기준](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md).
+- BUG-001~004 수정과 회귀 포함. CI 10단계/Python19/이동360/상호작용333 검사, 기존 사용자 GUI 확인.
+- 엔진4.7.2 Standard/GDScript/Compatibility 고정, 기본 Foundation 씬 유지, 테스트 맵 명시 실행.
+- 개발용 소스 기준점이다. 채집·가방·저장·Export/Steam 출시·제품 라이선스는 후속 범위다. 원격 태그는 main CI 성공 후 발행한다.
+
+## 구현 이력 — 2026-11-01 (v0.2.0에 포함)
 
 ### IH-102 리뷰 수정 (Claude Code)
 
@@ -28,7 +35,7 @@
 - [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop 통합(merge 318fcd2), PR/develop CI checks 성공. main 미반영.
 - 수치·키·문구는 검증용 제안. 가방·채집·대화·상점·전투·저장·통치는 미구현. v0.2.0 태그/릴리스 없음.
 
-## Unreleased — 2026-10-31
+## 구현 이력 — 2026-10-31 (v0.2.0에 포함)
 
 - IH-004 완료 후 IH-102 상호작용 상세 명세·수락12항목·Claude 인수인계 작성. ADR-014 Proposed, 기능 미구현/검사 미실행.
 
