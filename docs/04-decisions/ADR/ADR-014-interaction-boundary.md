@@ -21,3 +21,9 @@ Player 하위의 별도 Controller가 Area 후보·정면각·가시선으로 �
 ## 영향·검증
 
 [상세 명세](../../02-technical-design/INTERACTION.md)와 [수락 검사](../../03-development/IH-102-ACCEPTANCE.md)에 파일·데이터·API·12개 관문을 정의했다. Claude Code가 구현하며 Codex는 설계·기술 검토를 맡는다. Accepted 전환과 v0.2.0 태그는 구현 검증 이후 별도로 판정한다.
+
+## 구현 검증 결과 (2026-11-01)
+
+Claude Code가 제안 구조대로 구현했고 AC-I01~12 자동 검사와 사용자 GUI 확인을 통과했다([검증 기록](../../03-development/IH-102-VALIDATION.md)). 상태는 **Proposed 유지**다. 구조는 고정 엔진에서 동작했지만 범위·정면각·키·UI의 제품 값과 Accepted 전환은 별도 결정이다.
+
+검토 항목: ① 외부 차단을 `CONTROL_BLOCKED`로 거부하고 neutral 동안 프롬프트를 숨기는 정책. ② 단일 이동 게이트에서 세션 중 외부 잠금을 구분하지 못하는 한계. ③ 시스템 글꼴 fallback에 의존한 한글 표시. ④ 조작감은 단일 사용자의 짧은 확인이며 플레이테스트 표본이 아니다.

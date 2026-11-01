@@ -2,6 +2,18 @@
 
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
+## Unreleased — 2026-11-01
+
+### IH-102 상호작용 대상·프롬프트 (Claude Code)
+
+- InteractionController(Player 마지막 자식, priority 10): Area2D 후보, 거리32·정면 dot0.5·world_solid 가시선, 정수 tuple 선택, 틱당 1개 입력 의도 큐와 캡처 대상 재검증, 단조 request ID, 세션·이동 게이트·포커스·삭제·제거 취소.
+- InteractionTarget(layer 3=값4, 비물리 Area): 안내판/상자 살펴보기 전용, 보상·아이템 없음. InteractionUI: 프롬프트와 제목/설명/닫기 패널, 닫기·취소 의도만 발행.
+- `scenes/tests/interaction_test.tscn`: 이동 맵 인스턴스 + 대상2 + ID 검수 + 신호 연결. Foundation 진입점 유지.
+- InputMap `interact`(물리 E), `interaction_cancel`(Escape), layer_3 이름.
+- `tests/test_interaction.gd` AC-I01~12 자동 검사와 probe target, `tools/run_ci.py`에 interaction-acceptance 등록(`ci_steps()`).
+- Fixed BUG-002: IH-101 runner의 headless 키 이중 전달과 잘못된 관찰 기록.
+- 수치·키·문구는 검증용 제안. 가방·채집·대화·상점·전투·저장·통치는 미구현. v0.2.0 태그/릴리스 없음.
+
 ## Unreleased — 2026-10-31
 
 - IH-004 완료 후 IH-102 상호작용 상세 명세·수락12항목·Claude 인수인계 작성. ADR-014 Proposed, 기능 미구현/검사 미실행.

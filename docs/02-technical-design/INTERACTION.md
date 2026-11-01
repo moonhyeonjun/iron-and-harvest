@@ -1,6 +1,6 @@
 # IH-102 상호작용 상세 명세
 
-상태: **Proposed 구현 기준안**, 2026-10-31. IH-004 원격 성공/실패/통합 검사 완료 후 Codex가 설계했다. 기능은 미구현이며 구현 담당은 Claude Code다. 엔진은 ADR-011, 이동은 기존 IH-101을 그대로 사용한다.
+상태: **Proposed 구현 기준안, IH-102 구현·검증 완료(review)**. 2026-10-31 Codex 설계, 2026-11-01 Claude Code 구현. 결과와 설계 차이는 이 문서 끝과 [검증 기록](../03-development/IH-102-VALIDATION.md)에 있다. 엔진은 ADR-011, 이동은 기존 IH-101을 그대로 사용한다.
 
 관련: [생활 시스템](../01-game-design/LIFE_SYSTEM.md), [이동 명세](PLAYER_MOVEMENT.md), [수락 조건](../03-development/IH-102-ACCEPTANCE.md), [인수인계](../03-development/IH-102-HANDOFF.md), [ADR-014](../04-decisions/ADR/ADR-014-interaction-boundary.md).
 
@@ -127,4 +127,17 @@ ACTIVE 동안 E는 새 행동을 만들지 않는다. 대상 삭제/숨김/avail
 
 ## 완료·TBD
 
-[AC-I01~12](../03-development/IH-102-ACCEPTANCE.md)의 실제 자동·GUI 결과와 필수 CI를 통과해야 IH-102 done이다. 현재는 명세만 작성했으며 테스트/게임플레이 구현은 없다. 최종 범위/정면각/키/UI/대상 전환 감각은 Proposed, 마우스 선택·다중 행동 메뉴·누르고 있기·NPC 이동·예약/비동기 작업은 후속이다. v0.2.0 태그는 IH-102 이후 별도 마일스톤 검토에서 판단한다.
+[AC-I01~12](../03-development/IH-102-ACCEPTANCE.md)의 실제 자동·GUI 결과와 필수 CI를 통과해야 IH-102 done이다. 최종 범위/정면각/키/UI/대상 전환 감각은 Proposed, 마우스 선택·다중 행동 메뉴·누르고 있기·NPC 이동·예약/비동기 작업은 후속이다. v0.2.0 태그는 IH-102 이후 별도 마일스톤 검토에서 판단한다.
+
+## 구현 결과·설계 차이 (2026-11-01)
+
+계획한 파일·신호·API·레이어·입력·선택 규칙대로 구현했다. 검증용 수치(32, dot0.5, E/Escape)는 바꾸지 않았다. 차이와 보완은 다음과 같다.
+
+- InspectPanel은 PanelContainer이고 Title/Description/CloseButton은 `InspectPanel/Layout` 아래에 있다. 가독성을 위해 여백 StyleBox를 추가했다.
+- reason에 `CONTROL_BLOCKED`(외부 이동 차단)와 `REMOVED`(Controller 제거)를 추가했다.
+- UI는 패널이 보일 때 `_shortcut_input`에서 Escape를 먼저 처리한다. Controller의 `interaction_cancel`은 취소할 세션/큐가 있을 때만 소비하는 예비 경로다.
+- 맵 검수는 Target의 `reject_registration()`으로 빈/중복 ID를 등록 제외한다. Controller는 `is_registered()`와 후보 중 중복 ID를 함께 거른다.
+- 프롬프트 표시 조건에 `Player.is_control_effective()`를 쓰므로, 이동 키를 누른 채 패널을 닫으면 키를 뗄 때까지 프롬프트가 숨겨진다.
+- headless에서도 `parse_input_event`+flush가 Viewport로 전달된다(BUG-002). 수락 문서의 `push_input` 추가 전달은 쓰지 않는다.
+- 한글 표시는 엔진 기본 글꼴의 시스템 fallback에 의존한다. 글꼴 자산은 IH-006에서 결정한다.
+- 단일 이동 게이트 한계: 세션 중 외부가 추가로 막은 잠금은 구분되지 않는다. 다중 모달 조율은 후속 설계다.
