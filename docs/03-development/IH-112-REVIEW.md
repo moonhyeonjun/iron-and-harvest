@@ -1,6 +1,8 @@
 # IH-112 Codex 기술 검토 — 2026-11-01
 
-## 현재 판정
+**Codex 최종 판정(2026-11-01): IH-112 done, ADR-017 Accepted.** AC-S01~15 자동529검사·독립 진단5종, AC-S16 사용자 GUI 확인, PR #39 및 develop CI success를 대조했다. 기존 GUI는 빌드438ef89, 손상복구는3d248d0의 사용자 확인이며 Codex의 새 GUI 실행으로 주장하지 않는다. 사용자 테스트 재개가 최신 방침이다. 아래 review/부분 확인/중단 문구는 당시 이력이다. [v0.3.0 판정](GATHERING-v0.3.0-VERIFICATION.md)을 따른다.
+
+## 이전 독립 검증 판정 (GUI 재개 전)
 
 Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다.
 

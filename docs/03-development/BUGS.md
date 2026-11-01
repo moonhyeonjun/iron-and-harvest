@@ -73,3 +73,7 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
 - resolved는 develop 통합과 Codex 재검증 뒤에 판정한다.
 
 Codex가 d2e1c88에서 원래 진단5종과 CI13단계·저장529검사를 독립 재실행해 BUG-009~011 resolved를 확인했다. [검증](IH-112-VALIDATION.md#codex-독립-수정-재검증). IH-112 review는 AC-S16 미확인으로 유지하며 미해결 제품 결함과 구분한다.
+
+## IH-112 최종 판정 — 2026-11-01
+
+BUG-009~011 resolved 유지. 사용자 테스트를 재개해 손상복구 GUI의 “1~4 모두 정상”을 확인했고 PR #39/develop CI success와 함께 최종 검토했다. IH-112 done·ADR-017 Accepted. 기존 미확인/중단/review는 당시 이력이다. DEBT-002/003/004 및 지원 환경 제약은 미해결 항목으로 보존한다.

@@ -1,6 +1,6 @@
 # 저장·불러오기
 
-상태: 장기 방향 Proposed. IH-112 최소 저장(단일 수동 A/B 슬롯)은 2026-11-01에 구현했고 review 상태다([검증](../03-development/IH-112-VALIDATION.md)). IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01 최초 설계 ready, 현재 review). 아래 장기 대상 전체를 이번에 구현하지 않는다.
+상태: 장기 방향 Proposed. IH-112 최소 저장(단일 수동 A/B 슬롯)은 2026-11-01에 구현·최종 검증했고 done 상태다([검증](../03-development/IH-112-VALIDATION.md)). IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01 최초 설계 ready, 현재 done·ADR-017 Accepted). 아래 장기 대상 전체를 이번에 구현하지 않는다.
 
 ## 포함할 상태
 
@@ -36,4 +36,4 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 
 ## IH-112 현재 검토
 
-초기 파일 저장·복원은 구현됐고 수정 후 자동13단계·저장529검사를 통과했다. [BUG-009~011](../03-development/IH-112-REVIEW.md)은 Codex 독립 재검증으로 resolved다. IH-112 review는 유지한다. GUI 손상복구 미확인도 별개로 유지한다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.
+초기 파일 저장·복원은 구현됐고 수정 후 자동13단계·저장529검사를 통과했다. [BUG-009~011](../03-development/IH-112-REVIEW.md)은 Codex 독립 재검증으로 resolved다. AC-S16 사용자 GUI 확인과 최종 검토를 완료해 IH-112 done·ADR-017 Accepted다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.

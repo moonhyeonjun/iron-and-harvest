@@ -1,5 +1,10 @@
 # 변경 이력
 
+## Unreleased — v0.3.0 Gathering 기능 판정 (2026-11-01)
+
+- IH-110/111/112 done, 수집·보관·초기 저장/복원과 실패 복구의 완료 조건 PASS. 손상복구 GUI 사용자 확인과 PR #39 CI·통합 검토로 IH-112 최종 완료, ADR-017 Accepted.
+- [마일스톤 판정](docs/03-development/GATHERING-v0.3.0-VERIFICATION.md)·관련 기술/개발 문서 갱신. main 승격/CI/태그 성공 전 발행 완료로 기록하지 않는다. 게임 코드 변경 없음.
+
 ## Unreleased — IH-112 AC-S16 손상복구 GUI 확인 (2026-11-01)
 
 - 사용자 테스트 재개 지시에 따라 '최신 저장 손상 → 명시 복구본' GUI를 사용자가 확인했다(빌드 3d248d0, 새 시험 경로 `user://tests/ih112/gui_recovery_20261101`). 문서만 변경했고 게임 코드는 바뀌지 않았다. IH-112 done 판정은 Codex 후속 검토에 남긴다.
