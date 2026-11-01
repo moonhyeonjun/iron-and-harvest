@@ -25,8 +25,27 @@ const MESSAGES: Dictionary = {
 	&"BUSY": "처리 중입니다. 다시 시도하세요.",
 }
 
+## Display names of PlayerController.Facing, as written in save files (IH-112).
+const FACING_NAMES: Dictionary = {
+	PlayerController.Facing.UP: "up", PlayerController.Facing.DOWN: "down",
+	PlayerController.Facing.LEFT: "left", PlayerController.Facing.RIGHT: "right",
+}
+const MAP_BOUNDS: Rect2 = Rect2(0, 0, 1280, 720)
+const PLAYER_ID: String = "player_01"
+const STORE_OWNER: String = "fixture_store_01"
+const BUSY_REASON: StringName = &"BUSY"
+const NOT_READY: StringName = &"NOT_READY"
+
 ## "normal", "full" or "rebind". Tests may set it before the map enters the tree.
 var fixture: String = ""
+## IH-112 RESTORE boot, injected before the map enters the tree: {"inventory", "gather"}
+## from GatherService.restore plus the saved "position" (Vector2) and "facing". When set,
+## nothing is built or granted; the map adopts these services as they are.
+var restore_context: Dictionary = {}
+## True while staged as a load candidate: interaction stays off until activate().
+var start_inactive: bool = false
+## Only a map that is the whole scene names the window; a hosted map leaves it alone.
+var owns_window_title: bool = true
 var inventory: InventoryService
 var gather: GatherService
 var setup_errors: PackedStringArray = []
@@ -43,15 +62,26 @@ var rebind_report: Dictionary = {}
 
 func _ready() -> void:
 	interaction.set_interaction_enabled(false)
-	if fixture.is_empty():
+	if not restore_context.is_empty():
+		# Shown instead of an initial fixture name, so restored data is never read as one.
+		fixture = "저장 복원"
+	elif fixture.is_empty():
 		fixture = "normal"
 		for argument: String in OS.get_cmdline_user_args():
 			if argument.begins_with("--fixture="):
 				fixture = argument.trim_prefix("--fixture=")
-	get_window().title = "IH-111 gathering test (%s)" % fixture
+	if owns_window_title:
+		get_window().title = "IH-111 gathering test (%s)" % fixture
 	points = $GatheringPoints
 	var errors: PackedStringArray = _audit_targets()
-	if errors.is_empty():
+	if not restore_context.is_empty():
+		inventory = restore_context.get("inventory")
+		gather = restore_context.get("gather")
+		if inventory == null or gather == null or inventory.is_closed() or gather.is_closed():
+			errors.append("restore context has no open services")
+		elif errors.is_empty():
+			player.restore_state(restore_context.position, restore_context.facing)
+	elif errors.is_empty():
 		var built: GatherService.Result = GatherService.build(ITEM_CATALOG, GATHER_CATALOG,
 			[_bag_snapshot(), _store_snapshot()], BAG_ID, BINDINGS)
 		if built.ok:
@@ -72,8 +102,17 @@ func _ready() -> void:
 	interaction.request_rejected.connect(_on_rejected)
 	inventory.inventories_changed.connect(func(_ids: Array[StringName], _revisions: Dictionary) -> void:
 		_update_hud(), CONNECT_DEFERRED)
-	interaction.set_interaction_enabled(true)
 	_update_hud()
+	if not start_inactive:
+		activate()
+
+
+## Turns interaction on for a verified session. A staged load candidate stays inactive
+## until the coordinator publishes it (IH-112).
+func activate() -> void:
+	start_inactive = false
+	if setup_errors.is_empty() and gather != null and not gather.is_closed():
+		interaction.set_interaction_enabled(true)
 
 
 func _exit_tree() -> void:
@@ -81,6 +120,84 @@ func _exit_tree() -> void:
 		gather.close()
 	if inventory != null:
 		inventory.close()
+
+
+# --- IH-112 save/load hooks ------------------------------------------------------------
+
+## Why this world cannot be saved or replaced right now, or &"" when it is quiescent:
+## no open panel, no queued/running interaction, no prepared or running gather and no
+## inventory commit. Nothing is cancelled or closed to make it quiescent.
+func save_blocker() -> StringName:
+	if not setup_errors.is_empty() or inventory == null or gather == null:
+		return NOT_READY
+	if inventory.is_closed() or gather.is_closed() or not is_inside_tree() or is_queued_for_deletion():
+		return NOT_READY
+	if controller.get_state() != InventoryController.State.CLOSED or not interaction.is_quiescent() \
+			or inventory.is_busy() or gather.is_busy() or gather.has_pending_command():
+		return BUSY_REASON
+	return &""
+
+
+## The world to save, captured synchronously (no await, no signal): player position and
+## facing, every inventory of the session (bag, store, each hidden stock) and the point
+## bindings. remaining/depleted are not stored; they are derived from the stocks.
+func capture_payload() -> Dictionary:
+	var inventories: Array = []
+	var ids: Array = [String(BAG_ID), String(STORE_ID)]
+	for binding: Dictionary in gather.export_bindings():
+		ids.append(binding.stock_inventory_id)
+	ids.sort()
+	for inventory_id: String in ids:
+		inventories.append(inventory.snapshot(inventory_id).value)
+	return {
+		"map_id": MAP_ID,
+		"player": {"player_id": PLAYER_ID, "inventory_id": String(BAG_ID),
+			"position": {"x": player.global_position.x, "y": player.global_position.y},
+			"facing": FACING_NAMES[player.get_facing()]},
+		"inventories": inventories,
+		"points": gather.export_bindings(),
+	}
+
+
+## What a save of this map must contain, from the trusted local definitions (IH-112).
+static func save_manifest() -> Dictionary:
+	var items_service: InventoryService = InventoryService.new(ITEM_CATALOG)
+	var items: Dictionary = {}
+	var records: Dictionary = {}
+	for item_id: StringName in items_service.get_item_ids():
+		records[item_id] = items_service.get_item_info(item_id)
+		items[String(item_id)] = int(records[item_id].stack_limit)
+	items_service.close()
+	var definitions: Dictionary = GATHER_CATALOG.compile(records).get("records", {})
+	var inventories: Dictionary = {
+		String(BAG_ID): {"owner_id": PLAYER_ID, "capacity": 12},
+		String(STORE_ID): {"owner_id": STORE_OWNER, "capacity": 12},
+	}
+	var points: Array = []
+	for binding: Dictionary in BINDINGS:
+		var definition: Dictionary = definitions.get(StringName(binding.definition_id), {})
+		inventories[binding.stock_inventory_id] = {"owner_id": binding.point_id, "capacity": 1,
+			"item_id": String(definition.get("item_id", "")), "initial": int(definition.get("initial_quantity", 0))}
+		points.append(binding.duplicate())
+	points.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.point_id < b.point_id)
+	return {"map_id": MAP_ID, "player_id": PLAYER_ID, "bag_id": String(BAG_ID), "bounds": MAP_BOUNDS,
+		"inventories": inventories, "points": points, "items": items}
+
+
+## RESTORE services for a verified payload: every saved inventory registered once in a new
+## InventoryService, stocks bound by the map's own bindings. Nothing is granted. The result
+## is a restore_context for a candidate map (or the build error).
+static func restore_session(payload: Dictionary) -> Dictionary:
+	var restored: GatherService.Result = GatherService.restore(ITEM_CATALOG, GATHER_CATALOG,
+		payload.inventories, BAG_ID, BINDINGS)
+	if not restored.ok:
+		return {"ok": false, "detail": restored.detail}
+	var facing: PlayerController.Facing = PlayerController.Facing.DOWN
+	for key: PlayerController.Facing in FACING_NAMES:
+		if FACING_NAMES[key] == payload.player.facing:
+			facing = key
+	return {"ok": true, "context": {"inventory": restored.value.inventory, "gather": restored.value.gather,
+		"position": Vector2(payload.player.position.x, payload.player.position.y), "facing": facing}}
 
 
 ## Swaps the point views for a new instance (or `replacement`) bound to the same stocks.
