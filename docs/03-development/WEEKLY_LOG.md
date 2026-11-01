@@ -169,3 +169,13 @@
 - 문서: 리뷰/수락/인수인계/검증/TASKS/BUGS/CHANGELOG 및 README·TDD·생활·ADR 상태 표기 정리.
 - 현재 사용자 작업 트리 정적 검사에는 AGENTS.md의 없는 .Codex/rules 링크4개가 실패한다. 사용자 파일은 그대로 두고 커밋된 clean worktree의 검사 결과와 구분했다.
 - 로그: build/ih-102-codex-review/ (Git 무시). docs/ih-102-technical-review에서 문서 커밋·필수 PR CI 후 develop 통합 예정. 실제 SHA/PR 결과는 Git 이력 및 최종 보고를 따른다. main/v0.1.0 보존, 태그/릴리스 없음.
+
+## 2026-11-01 — IH-102 BUG-003/004 수정 (Claude Code)
+
+- 시작: develop clean(dc2a185, origin 일치), 사용자 untracked AGENTS.md 보존·미커밋. `fix/interaction-request-validation` 분기.
+- 재현: Codex 진단 종료1(위반2) 확인 후 runner에 회귀 12종 추가. `aaac5da`에서 종료1, 26검사 실패.
+- 수정 `0332b5a`: 중복 ID 규칙 일원화(선택·실행·활성), 활성 세션 ID 고정 재검증, try_begin 중 취소 사유 기록과 반환 후 제어기 상태 재검사.
+- 검증: 재현 종료0, runner 333검사 PASS(2회 차이0, 고아0, 엔진 오류0), 실패 주입 종료1, 표적 변이(disable 기록 제거) 검출, 깨끗한 worktree run_ci 10단계 PASS(IH-101 포함).
+- GUI: 사용자, 빌드 0332b5a, "1~5 모두 정상". 이전 3d99d36 창 종료 후 재실행. 런타임 중복 ID·재진입은 화면 조작으로 만들 수 없어 자동 검사로만 확인.
+- 범위: 전역 잠금·새 게임플레이·아이템/인벤토리/채집 미추가. main·v0.1.0 미변경, v0.2.0·ADR Accepted는 별도 판단.
+- 다음: PR 필수 CI와 develop 통합 후 IH-102 done 기록.

@@ -4,6 +4,40 @@
 
 2026-11-01, `29b2ed3` 추가 검사에서 BUG-003/004가 재현되어 IH-102를 **review로 재개**했다. 아래는 Claude Code 구현 당시의 검증 이력이며, 기존 299검사 PASS가 두 경계의 안전성을 입증하지는 않는다. 재현·수정 기준·전달 프롬프트는 [Codex 검토](IH-102-REVIEW.md)를 따른다.
 
+## BUG-003/004 수정 검증 (2026-11-01, Claude Code)
+
+브랜치 `fix/interaction-request-validation` ← develop `dc2a185`. 커밋: `aaac5da` 실패 회귀 추가, `0332b5a` 수정. 환경은 위와 같다(macOS 13.4 / M1, Godot 4.7.2 Standard). 원시 로그는 `build/ih-102-fix/`(Git 무시).
+
+수정 내용:
+- **BUG-003**: 중복 ID 규칙을 `_check_target`(`_has_usable_twin`)으로 옮겨 선택·요청 실행·활성 세션 재검증이 같은 정책을 쓴다. 사용 가능한 후보끼리 ID가 겹치면 모두 무효(INVALID_TARGET)다. 활성 세션은 열 때의 ID로 재검증하므로 ID가 바뀌거나 중복되면 다음 틱에 INVALID_TARGET으로 닫는다(end1, 게이트 복구). 검사는 Detector 후보 집합만 순회한다.
+- **BUG-004**: `try_begin` 실행 중의 비활성화·포커스 상실·트리 이탈을 첫 취소 사유로 기록한다. 반환 후에는 제거·enabled·포커스·이동 게이트를 다시 보고, 그다음 대상을 재검증한다. 받아들였지만 시작할 수 없게 된 요청은 end(cancelled) 1회, rejected 1회로 끝나고 ACTIVE·패널·게이트 소유가 생기지 않는다. 비활성화 후 같은 호출 안에서 다시 활성화해도 DISABLED다. 전역 잠금·비동기 구조는 추가하지 않았다.
+
+| 명령 | 빌드 | 종료 | 결과 |
+|---|---|---:|---|
+| Codex 재현 진단(IH-102-REVIEW의 gdscript 블록) | `dc2a185`(수정 전) | 1 | 위반2: 두 경우 모두 ACTIVE·패널·게이트 차단 |
+| 같은 재현 | `0332b5a` | 0 | 위반0, 두 요청 모두 열리지 않고 control_effective=true |
+| `python3 tools/godot.py --headless --script res://tests/test_interaction.gd` | `aaac5da`(회귀만 추가) | 1 | 새 사례 12종 모두 실패(26검사) |
+| 같은 runner | `0332b5a` | 0 | 333검사 PASS, 2회 측정33종 차이0, 고아0, 엔진 오류0 |
+| 같은 runner `-- --inject-failure` | `0332b5a` | 1 | 의도한 실패1건만 |
+| 표적 변이: `_cancel_resolving(DISABLED)` 제거 | `0332b5a` 변형 | 1 | `disable_enable_in_begin` 실패. 반환 후 상태 재확인만으로는 부족함을 확인 |
+| `python3 tools/run_ci.py` (깨끗한 worktree) | `0332b5a` | 0 | 10단계 PASS, IH-101 player 123.9초 PASS·엔진 오류0, interaction 29.6초 |
+
+새 회귀 사례와 결과:
+
+| AC | 사례 | 결과 |
+|---|---|---|
+| AC-I04 | E 캡처 뒤 같은 ID 후보가 available/visible로 바뀜 | INVALID_TARGET 1회, begin0/0, 열림0, 이후 선택 없음 |
+| AC-I08 | try_begin 안에서 disable / disable 후 enable | DISABLED 1회, end(cancelled) 1회, 열림0, 패널 숨김, 다른 대상 begin0, 게이트 유지, 복구 후 새 E는 더 큰 ID로 정상 열림 |
+| AC-I10 | 세션 중 활성 대상 ID 중복 / 이름 변경 | 다음 틱 INVALID_TARGET 종료, end1, 쌍둥이 begin0, 게이트 복구 |
+| AC-I10 | try_begin 안에서 focus out / 트리 이탈(remove_child) | FOCUS_LOST / REMOVED 1회, end1, 열림0, 복구 후 새 E 정상 |
+| AC-I10 | try_begin 안에서 Controller queue_free | REMOVED 1회, journal begin→end, 열림0, 게이트 유지 |
+
+리뷰가 "직접 재현하지 않았다"고 남긴 포커스 상실·트리 이탈 변형도 수정 전 코드에서 같은 방식(ACTIVE·패널)으로 실패했다. 그래서 BUG-004에 포함해 수정했다.
+
+GUI: **사용자**가 빌드 `0332b5a`에서 시작 프롬프트/오른쪽 상자, E 패널과 클릭·Enter·Escape 닫기, 패널 중 E 연타, 걸으며 E와 neutral, 패널 중 Cmd+Tab 복귀, 비16:9 리사이즈를 확인하고 "1~5 모두 정상"으로 응답했다. 이전 `3d99d36` 창은 종료한 뒤 새로 실행했으며 GUI 로그 오류는 0이다. 런타임 중복 ID·try_begin 재진입은 정상 화면 조작으로 만들 수 없어 자동 검사로만 확인했다.
+
+판정: 수정·로컬 검증 완료. IH-102는 필수 PR CI와 develop 통합을 확인한 뒤 done으로 바꾼다.
+
 ## 구현 당시 결론
 
 Claude Code가 [명세](../02-technical-design/INTERACTION.md)에 따라 InteractionController/Target/UI와 테스트 맵을 구현했다. AC-I01~12 자동 검사는 실제 씬·Area2D·물리 질의·UI 입력 경로로 통과했다. GUI 수동 항목은 사용자가 실제 창에서 확인했다. 공통 CI 실행기에 등록했으며 로컬의 깨끗한 worktree에서 전체 10단계 PASS를 확인했다.

@@ -31,3 +31,5 @@ Claude Code가 제안 구조대로 구현했고 AC-I01~12 자동 검사와 사�
 ## Codex 후속 검토 (2026-11-01)
 
 `29b2ed3`의 추가 재현에서 실행 시 중복 ID 검사 누락과 RESOLVING 중 disable 무시를 확인했다(BUG-003/004). [검토·수락 보완](../../03-development/IH-102-REVIEW.md)을 따른다. IH-102는 review로 재개하며 ADR 상태는 Proposed 유지다. 보상/다중 모달 등의 범위를 넓히지 않고 기존 시작·취소 계약을 보완한다.
+
+수정 결과(2026-11-01): `0332b5a`에서 중복 ID 정책을 선택·실행·활성 검증에 일원화하고, try_begin 중 취소 사유를 기록하도록 수정했다. 회귀와 CI는 [검증 기록](../../03-development/IH-102-VALIDATION.md)에 있다. ADR 상태는 Proposed를 유지하며, Accepted 전환은 별도 판단한다.
