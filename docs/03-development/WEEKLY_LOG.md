@@ -138,3 +138,15 @@
 - IH-102 ready. AC-I01~12는 모두미실행. 게임플레이 코드/씬/InputMap 미변경, 기존 IH-101 보존.
 - 문서 링크·구조·diff 검사를 수행하고 필수 CI를 거쳐 PR로 통합한다. 신규 기능 테스트 통과로 기록하지 않는다.
 - 다음: Claude Code가 인수인계 프롬프트에 따라 IH-102 구현·자동/GUI검증. v0.2.0 태그는 구현 완료 후 별도 판정.
+
+## 2026-11-01 — IH-102 상호작용 구현 (Claude Code)
+
+- 시작: develop clean(82e2ba2, origin 일치), untracked `AGENTS.md`(사용자 Codex 지침)는 보존·미커밋. `feature/interaction-system` 신규 분기.
+- 환경: macOS 13.4 / M1, Godot 4.7.2.stable.official.ed1daf0bf Standard, Compatibility.
+- 구현: InteractionController/Target/UI, 테스트 맵·ID 검수, InputMap/layer_3, runner·probe target, CI 등록. Autoload·이벤트 버스·보상 로직 없음.
+- 커밋: 95c723e, f89d812, bcab854, 4f69d80(BUG-002), 5062a83(ci), 3d99d36(style), bf8501b(리뷰: 종료 틱 큐 요청 BUSY 보고).
+- 자동: test_interaction 종료0(최종 299검사, 2회 차이0, 고아0, 엔진 오류0, 약25초). 실패 주입 종료1, `run_step` 실패 사유 3종. IH-101 runner 종료0. unittest 19개 OK. 깨끗한 worktree의 `run_ci.py` 10단계 PASS(첫 시도는 worktree 안의 출력 파일 때문에 source-tree-clean 실패, 출력 위치 변경 후 재실행).
+- 변이 5종: 4종 검출(AC-I04/I02·I05·I10/I07/전반), 캡처 대체 변이는 현재 처리 순서상 등가로 통과(이유는 검증 기록).
+- 발견: headless 입력이 Viewport로 전달됨(BUG-002, IH-101 기록 정정). 맵 해제 중 트리 밖 버튼 release_focus 엔진 오류는 커밋 전에 수정. probe 탐침의 `_initialize` 직후 @onready nil·자기 셸을 끈 pkill 패턴은 제 스크립트 오류.
+- 수동 GUI: 사용자가 3d99d36에서 프롬프트/전환/패널/Enter·Escape/E 연타/걷는 중 E/neutral/Cmd+Tab/비16:9를 확인하고 "1~5 모두 정상". Claude는 엔진 viewport 캡처로 한글 렌더링과 패널 여백만 보조 확인(ENV-003).
+- 결과: AC-I01~12 pass, IH-102 review. PR 필수 CI·develop 통합은 후속 기록. v0.2.0 태그/릴리스 없음.

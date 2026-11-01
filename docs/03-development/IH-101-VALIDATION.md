@@ -61,7 +61,7 @@ IH-101 상태는 **done**이다. [PR #4](https://github.com/moonhyeonjun/iron-an
 
 1. **벽 미끄러짐 속도**: Godot floating 모드는 첫 slide에서 남은 이동 길이를 유지한다. 그래서 Block을 →+↑로 밀면 투영 속도67.9가 아니라 약96 u/s로 벽을 따라 이동한다. 명세는 "벽을 따라 y감소"만 요구하므로 위반은 아니다. 이 조작감을 유지할지는 ADR-012 검토 항목으로 남긴다.
 2. **macOS 포커스 알림 순서**: GUI 시작 시 APPLICATION_FOCUS_IN→OUT이 Player의 트리 진입 전에 오고, 약7프레임 뒤 FOCUS_IN이 다시 온다. 상태는 기록하고 Visual 갱신만 `_ready` 이후로 미룬다(BUG-001).
-3. **headless 입력 전달**: `Input.parse_input_event`는 InputMap/폴링 상태를 갱신하지만 headless DisplayServer는 Viewport/UI로 이벤트를 전달하지 않는다. UI 소비 사례는 runner가 같은 이벤트를 `push_input`으로 전달한다.
+3. **headless 입력 전달 (2026-11-01 정정, BUG-002)**: 처음에는 headless가 Viewport로 전달하지 않는다고 기록했으나 틀렸다. `parse_input_event`+`flush_buffered_events()`가 동기 전달하며, 당시 탐침 이벤트에 unicode가 없어 LineEdit에 글자가 찍히지 않은 것을 오판했다. AC-08 UI 사례는 키를 두 번 전달하고 있었고 검사 결론(UI 소비·폴링 유지·게이트 차단)은 같다. `4f69d80`에서 한 번만 전달하도록 고쳤다.
 4. **맵 중심**: (640,360)은 Block 내부이고 물리 엔진이 벽 밖으로 밀어낸다. 카메라 중심 추적 검사는 빈 바닥 (400,360)을 사용한다.
 5. **AC-06 x≤594 범위**: 평평한 옆면(y≥280)에만 적용한다. y 274~280에서는 원형 발이 모서리를 돌며 x≈600까지 갈 수 있고, 이 구간은 관통 검사로 확인한다.
 6. **카메라 지연**: Camera2D가 Player의 자식이고 physics callback을 쓰므로 같은 틱에 갱신된다. 측정 지연은 0이었다.

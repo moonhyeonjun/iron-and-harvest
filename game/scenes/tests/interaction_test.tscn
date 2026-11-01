@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/tests/interaction_test.gd" id="1_map"]
+[ext_resource type="PackedScene" path="res://scenes/tests/movement_test.tscn" id="2_world"]
+[ext_resource type="PackedScene" path="res://scenes/interaction/interaction_target.tscn" id="3_target"]
+[ext_resource type="PackedScene" path="res://ui/interaction/interaction_ui.tscn" id="4_ui"]
+
+[node name="InteractionTest" type="Node2D"]
+script = ExtResource("1_map")
+
+[node name="World" parent="." instance=ExtResource("2_world")]
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="SignEntrance" parent="Targets" instance=ExtResource("3_target")]
+position = Vector2(128, 388)
+target_id = &"sign_entrance"
+display_name = "마을 안내판"
+description = "마을 입구의 낡은 안내판이다. 비바람에 닳은 글씨로 '강철과 수확의 마을'이라 적혀 있다."
+
+[node name="Visual" parent="Targets/SignEntrance" index="2"]
+color = Color(0.55, 0.38, 0.2, 1)
+polygon = PackedVector2Array(-8, -14, 8, -14, 8, -4, 1, -4, 1, 2, -1, 2, -1, -4, -8, -4)
+
+[node name="CrateSupplies" parent="Targets" instance=ExtResource("3_target")]
+position = Vector2(156, 360)
+target_id = &"crate_supplies"
+display_name = "보급 상자"
+description = "못질된 나무 상자다. 옆면에 밀가루와 소금이라는 낙인이 찍혀 있지만 뚜껑은 굳게 닫혀 있다."
+
+[node name="Visual" parent="Targets/CrateSupplies" index="2"]
+color = Color(0.66, 0.5, 0.3, 1)
+polygon = PackedVector2Array(-7, -12, 7, -12, 7, 0, -7, 0)
+
+[node name="InteractionUI" parent="." instance=ExtResource("4_ui")]
+
+[editable path="Targets/SignEntrance"]
+[editable path="Targets/CrateSupplies"]

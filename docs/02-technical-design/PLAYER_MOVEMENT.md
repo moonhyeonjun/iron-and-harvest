@@ -143,4 +143,4 @@ TBD: 최종 속도/가감속/달리기, 아트·해상도·카메라 보간, 게
 - 포커스: macOS GUI 시작 시 APPLICATION_FOCUS_IN→OUT이 트리 진입 전에 도착한다. controller는 상태만 기록하고 Visual 갱신은 `_ready` 이후로 미룬다(BUG-001). 포커스 판단은 APPLICATION_FOCUS 알림을 사용한다.
 - 테스트 맵 중심 (640,360)은 Block 내부다. 카메라 중심 추적은 빈 바닥에서 검사한다. AC-06의 x≤594는 평평한 옆면(y≥280)에 적용하고 모서리 구간은 관통 검사로 확인한다.
 - 카메라는 Player 자식 + physics callback이라 같은 틱에 갱신되어 측정 지연이 0이다.
-- headless DisplayServer는 parse된 입력을 Viewport로 전달하지 않는다. UI 소비 검사는 runner가 `push_input`으로 전달한다.
+- (2026-11-01 정정, BUG-002) headless에서도 `parse_input_event`+`flush_buffered_events()`가 Viewport로 동기 전달한다. 이전의 '전달하지 않는다'는 unicode 없는 이벤트로 오판한 것이며, runner의 중복 `push_input`을 제거했다.

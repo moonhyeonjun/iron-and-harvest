@@ -55,10 +55,10 @@ def run_step(name, command, output_dir, *, marker=None, engine=False, timeout=30
     return result
 
 
-def main():
-    python = sys.executable
+def ci_steps(python):
+    """Ordered (name, command, options); each gameplay suite needs its PASS marker."""
     godot = [python, "tools/godot.py"]
-    steps = [
+    return [
         ("foundation", [python, "tools/validate_foundation.py"], {}),
         ("python-tests", [python, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"], {}),
         ("economy-design", [python, "tools/check_economy.py"], {}),
@@ -69,12 +69,17 @@ def main():
         ("foundation-runtime", godot + ["--headless", "--quit-after", "10"], {"engine": True}),
         ("player-acceptance", godot + ["--headless", "--script", "res://tests/test_player_movement.gd"],
          {"engine": True, "marker": "RESULT: PASS"}),
+        ("interaction-acceptance", godot + ["--headless", "--script", "res://tests/test_interaction.gd"],
+         {"engine": True, "marker": "RESULT: PASS"}),
         ("source-tree-clean", [python, "-c",
          "import subprocess,sys; r=subprocess.run(['git','status','--porcelain','--untracked-files=all'],capture_output=True,text=True,check=True); print(r.stdout,end=''); sys.exit(bool(r.stdout))"], {}),
     ]
+
+
+def main():
     results = []
     output_dir = ROOT / "build/ci"
-    for name, command, options in steps:
+    for name, command, options in ci_steps(sys.executable):
         print(f"Running {name}", flush=True)
         result = run_step(name, command, output_dir, **options)
         results.append(result)

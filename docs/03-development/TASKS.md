@@ -18,7 +18,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
 | IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:done | IH-002 |
-| IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:ready | IH-101, IH-004 |
+| IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:review | IH-101, IH-004 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:backlog | IH-110 |
 | IH-112 | 초기 저장과 복원 | feature | priority:critical | status:backlog | IH-110, IH-111 |
@@ -113,10 +113,10 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 목적: 표시된 가까운 대상에 한 번 요청하고 안전하게 종료하는 생활 행동 경계를 만든다.
 - 요구사항: Area 후보·거리/정면/가시선·안정 선택·프롬프트·입력 큐/재검증·살펴보기 패널·취소/게이트 복구.
 - 관련 문서: [상세 명세](../02-technical-design/INTERACTION.md), [수락 검사](IH-102-ACCEPTANCE.md), [인수인계](IH-102-HANDOFF.md), ADR-014 Proposed.
-- 예상 영향 범위: game/scripts/interaction, scenes/interaction, ui/interaction, tests, player.tscn의 컴포넌트, InputMap, tools/run_ci.py의 검사 등록. 이번에는 문서만 작성했다.
+- 영향 범위: game/scripts/interaction·tests, scenes/interaction·tests, ui/interaction, game/tests(runner·probe), player.tscn 마지막 자식, InputMap/layer_3, tools/run_ci.py 등록.
 - 완료 조건: AC-I01~12 pass·실제 GUI·기존 이동 회귀·CI checks·리뷰·develop 통합. 명세만으로 done 금지.
 - 테스트 항목: 범위/방향/동률/벽, 삭제/거부/연타/중복 종료, UI 소비/포커스/이동 복구/씬 수명·CI.
-- 현재 증거/미확정: IH-004 완료 후 Codex 상세 설계/전달 프롬프트 작성. ready는 구현 준비이며 모든 신규 수락 검사는 미실행. 반경/정면각/키/UI는 검증용 제안.
+- 현재 증거/미확정: feature/interaction-system에서 구현(95c723e, f89d812, bcab854, 4f69d80, 5062a83, 3d99d36, bf8501b). AC-I01~12 자동 299검사 PASS, 사용자 GUI "1~5 모두 정상", 로컬 CI 10단계 PASS. [검증 기록](IH-102-VALIDATION.md). PR 필수 CI·develop 통합 확인 전이라 review. 반경/정면각/키/UI는 검증용 제안(ADR-014 Proposed).
 - 의존성 메모: IH-101은 기능 의존, IH-004는 사용자 지정 개발 순서와 PR 검증 기반이다.
 
 ## IH-110 — 아이템 정의와 인벤토리
