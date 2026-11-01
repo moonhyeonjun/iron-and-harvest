@@ -955,12 +955,14 @@ func _n12_ui_service_lifecycle() -> bool:
 		var events_before: int = _events.size()
 		var mark: int = _rec.size()
 		_break(action, ui, service)
-		# Same frame: a view switch and a late intent must not reach the dead UI or the stock.
-		var switched: StringName = _controller.request_open(IC.View.STORE)
+		# Same frame: a late intent must not reach the stock.
 		if is_instance_valid(ui):
 			ui.transfer_requested.emit(open_session, &"player_bag", 0, &"wood", 1, 0, 0)
+		# The per-tick check alone must close the bag; only then try a view switch.
 		await _ticks(2)
 		var closed: Array = _since(mark, "closed")
+		var switched: StringName = _controller.request_open(IC.View.STORE)
+		await _ticks(1)
 		var expected: StringName = IC.SERVICE_UNAVAILABLE if action == "close_service" else IC.REMOVED
 		var ok: bool = closed.size() == 1 and closed[0].reason == expected and switched != IC.OK \
 			and _controller.get_state() == IC.State.CLOSED and not _controller.owns_movement_gate() \
