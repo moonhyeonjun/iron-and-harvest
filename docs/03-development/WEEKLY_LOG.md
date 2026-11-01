@@ -295,3 +295,13 @@
 - 사용자 루트 정적 검사 종료1: 미추적 AGENTS.md의 기존 .Codex/rules 링크4개만 실패. 해당 파일은 보존·미커밋한다.
 - 변경18파일만 복사한 detached worktree 정적 검사 종료0: 필수42파일/디렉터리/링크·펜스/리소스 경로/작업 그래프/ignore PASS. git diff --check PASS.
 - 게임/도구/테스트/CI 설정 변경 없음. 신규 채집 검사·GUI는 미실행. 기존 회귀는 보호된 PR CI에서 확인하며 실제 커밋/PR/CI 결과는 PR 이력과 완료 보고에 기록한다.
+
+## 2026-11-01 — IH-111 채집·자원 지점 구현 (Claude Code)
+
+- 시작: develop clean(fe6a293, origin 일치), 사용자 untracked AGENTS.md 보존·미커밋. `feature/gathering-system` 분기. 게임 코드는 IH-110 수정 이후 변경 없음.
+- 사전 측정: int 타입 Resource 필드가 .tres의 2.5/true/"3"을 조용히 2/1/3으로 로드 → GatherCatalog 원본 리터럴 검사, IH-110 영향은 DEBT-004로 기록.
+- 구현: 14a2687(정의·서비스), 24bf870(Interaction INSTANT), 5a5f5f5(Target·맵·HUD), 03c6a65(runner), a56ab1d(CI), 7787c26(테스트 순환 수정).
+- 개발 중 발견: runner 정리 코드가 해제된 Controller를 타입 변수에 대입해 G09 코루틴이 중단 → 남은 맵이 같은 물리 공간에서 중복 ID를 만들어 이후 사례가 연쇄 실패. 정리 코드 수정과 남은 맵 가드 추가. 공통 CI가 종료 시 ObjectDB 146 누수로 실패 → 테스트 lambda의 자기 서비스 캡처 순환을 해제로 고침(제품 코드는 탐침으로 누수 0 확인).
+- 검증: test_gathering 309검사 PASS(2회 차이0, 고아0, 엔진 오류0, 누수 경고0). 실패 주입 종료1. 표적 변이 7종 검출. 깨끗한 worktree CI 12단계 PASS(360/333/521/309).
+- GUI: 사용자, 빌드 7787c26, normal/full/rebind 창, "1~5 모두 정상", full·rebind exit0·오류0.
+- 결과: AC-G01~14 pass, IH-111 review. ADR-016 Proposed 유지. PR 필수 CI·develop 통합은 후속 기록. main/태그/릴리스 없음.

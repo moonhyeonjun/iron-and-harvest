@@ -16,7 +16,7 @@ python3 tools/run_ci.py
 
 커밋된 깨끗한 작업 트리에서 실행한다. 로컬에서는 기존 Godot 탐색 또는 GODOT_BIN을 사용한다. 마지막 검사는 staged/unstaged/untracked 변경을 모두 검사하므로 기존 사용자 수정이 있으면 실패로 보고할 뿐 삭제하지 않는다. Godot Import가 소스나 UID를 새로 만들면 변경을 검토·커밋한 뒤 재실행한다. .godot와 build는 ignore한다.
 
-순서: Foundation 정적 검사 → Python 회귀 → 경제 설계 → 엔진 버전 → Import → 빈 Foundation smoke/실행 → IH-101 물리 suite → IH-102 상호작용 suite → IH-110 인벤토리 suite → 소스 트리 청결 검사. 첫 실패 뒤 후속 단계는 미실행으로 끝낸다. IH-101 suite는 내부2회와 cap30/60/120 비교를 포함한다. IH-102 suite(약31초)도 내부2회 반복과 엔진 오류 수집을 포함하며 `RESULT: PASS` 마커가 필수다. IH-110 suite(약8초)도 내부 2회 반복·엔진 오류 수집·`RESULT: PASS` 마커를 갖는다. 단계 목록은 `ci_steps()`에 있고, Python 회귀가 세 gameplay suite의 등록·순서·마커를 검사한다. 별도의4프로세스 매트릭스는 중복 실행하지 않는다.
+순서: Foundation 정적 검사 → Python 회귀 → 경제 설계 → 엔진 버전 → Import → 빈 Foundation smoke/실행 → IH-101 물리 suite → IH-102 상호작용 suite → IH-110 인벤토리 suite → IH-111 채집 suite → 소스 트리 청결 검사. 첫 실패 뒤 후속 단계는 미실행으로 끝낸다. IH-101 suite는 내부2회와 cap30/60/120 비교를 포함한다. IH-102 suite(약31초)도 내부2회 반복과 엔진 오류 수집을 포함하며 `RESULT: PASS` 마커가 필수다. IH-110 suite(약8초)도 내부 2회 반복·엔진 오류 수집·`RESULT: PASS` 마커를 갖는다. 단계 목록은 `ci_steps()`에 있고, Python 회귀가 네 gameplay suite의 등록·순서·마커를 검사한다. IH-111 suite(약19초)도 같은 규칙을 따른다. 종료 시 `resources still in use` 같은 엔진 ERROR도 CI 실패이며, 2026-11-01 이 검사로 테스트 쪽 RefCounted 순환을 발견해 고쳤다. 별도의4프로세스 매트릭스는 중복 실행하지 않는다.
 
 ## 실패 판정·로그
 

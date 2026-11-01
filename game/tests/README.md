@@ -48,6 +48,15 @@ python3 tools/godot.py --headless --script res://tests/test_inventory.gd -- --in
 
 실제 창 조작·가독성(AC-N14)은 GUI 수동 확인 대상이다.
 
+## test_gathering.gd — IH-111 채집·자원 지점
+
+도메인 사례는 GatherService/InventoryService로 모든 재고(가방·보관함·지점 stock) snapshot, revision, 변경 이벤트, 독립 합계를 비교한다. 장면 사례는 gathering_test 맵에서 실제 E/I/Escape 입력과 `support/gather_probe_target.gd`(try_begin 안 콜백)로 재검증·취소·commit 후 수명·재진입·rebind를 확인한다. `fixtures/gathering/`은 엔진이 조용히 정수화하는 수량 리터럴 거부를 확인하는 fixture다. 약19초.
+
+```sh
+python3 tools/godot.py --headless --script res://tests/test_gathering.gd
+python3 tools/godot.py --headless --script res://tests/test_gathering.gd -- --inject-failure
+```
+
 ## 테스트 맵 수동 실행
 
 ```sh
@@ -55,6 +64,8 @@ python3 tools/godot.py res://scenes/tests/movement_test.tscn
 python3 tools/godot.py res://scenes/tests/interaction_test.tscn
 python3 tools/godot.py res://scenes/tests/inventory_test.tscn
 python3 tools/godot.py res://scenes/tests/inventory_test.tscn -- --fixture=full
+python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=full
+python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=rebind
 ```
 
 테스트 맵은 명시 경로로만 실행한다. export에서 tests 리소스를 제외하는 정책은 배포 단계에서 검증한다.

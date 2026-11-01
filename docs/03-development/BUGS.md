@@ -13,6 +13,7 @@ IH-101 이동과 IH-102 상호작용에서 확인된 결함은 아래에 기록�
 | BUG-005 | IH-110 / medium (P2) | resolved | 14302e5: 가방 OPENING 중 target_changed 콜백에서 UI.queue_free 또는 service.close를 실행해도 OPEN/자기 게이트 소유 유지. 즉시 UI.free는 _show에서 signal11 충돌 | 콜백 이후·OPEN 유지 시 UI/서비스 재검증 누락. [재현·수정 수락 조건](IH-110-REVIEW.md). `fb5cd0c`: 열기 콜백 뒤, OPEN 중 매 물리 틱, 보기 전환·이동 요청 전에 UI(생존·트리·삭제 예약)와 서비스 close를 재검사한다. 거부 1회 또는 닫힘 1회(REMOVED/SERVICE_UNAVAILABLE)로 게이트·interaction을 복구하고, 죽은 UI에는 호출하지 않는다. AC-N12 회귀 8종이 수정 전 충돌(signal 11)/실패, 수정 후 PASS. [검증](IH-110-VALIDATION.md) |
 | BUG-006 | IH-110 / medium (P2) | resolved | is_valid_id("wood\n")=true, 개행 포함 inventory 등록 OK·catalog compile 성공 | 끝 개행을 허용하는 정규식으로 전체 ASCII ID 규칙 불충족. 자동 trim 없이 전체 문자열 검증·catalog/register/snapshot 회귀 추가. [검토](IH-110-REVIEW.md). `fb5cd0c`: 정규식 대신 문자 단위로 전체 검사하고 trim/소문자화를 하지 않는다. AC-N01/02/09 회귀(LF/CRLF·중간 개행·공백·탭·비ASCII·대소문자·길이 1/64/65)는 수정 전 실패, 수정 후 PASS. [검증](IH-110-VALIDATION.md) |
 | DEBT-002 | 설계 한계 | documented | 이동 게이트는 단일 소유자 bool이다. 상호작용 세션 중 외부가 추가로 잠근 것은 구분되지 않아 세션 종료 시 해제될 수 있다(미검사) | 다중 모달/전투가 생길 때 상위 조율자 설계(ADR-014 검토 항목). 지금 전역 잠금 시스템은 만들지 않음 |
+| DEBT-004 | 데이터 검증 | documented | Godot 4.7.2는 타입 있는 int Resource 필드에 `.tres` 값 `2.5`/`true`/`"3"`을 오류 없이 2/1/3으로 로드한다(IH-111 측정). IH-111 GatherDef.initial_quantity는 원본 리터럴 검사로 막았으나 IH-110 ItemDef.stack_limit은 같은 검사가 없다 | IH-110 정의 로더에 같은 리터럴 검사를 추가할지 별도 작업에서 결정(이번 범위 밖). 현재 7종 .tres는 모두 정수 리터럴 |
 | DEBT-003 | UI 글꼴 | documented | 한글 프롬프트/패널은 엔진 기본 글꼴의 시스템 fallback으로 표시된다(macOS 확인) | 배포 OS별 글꼴 포함 여부와 라이선스는 IH-006/IH-003에서 결정 |
 | ENV-002 | Git 초기 상태 | resolved | 최초 커밋 957dd3b와 main/develop ref 생성, push 성공 | 원격 SHA 일치와 기본 main 확인, GIT_BOOTSTRAP 참조 |
 | DEBT-001 | 문서 | documented | 이전 초안의 루트 경로/수치와 새 체계 공존 | 이전 문서는 참고 전용으로 분리, 새 문서만 현재 기준 |
@@ -21,6 +22,8 @@ IH-101 이동과 IH-102 상호작용에서 확인된 결함은 아래에 기록�
 2026-11-01 Codex가 `69561ca`에서 원래 두 재현과 전체 CI를 다시 실행해 BUG-003/004 resolved를 확인했다. [독립 재검증](IH-102-VALIDATION.md).
 
 IH-110 최초 구현 당시에는 결함을 발견하지 못했으나 후속 Codex 리뷰에서 BUG-005/006을 재현했고 이후 수정·검증했다. 정의 .tres 생성 시 기본값과 같은 stack_limit이 생략되는 위험은 커밋 전에 설계로 막았다(ItemDef 기본값 0, [검증 기록](IH-110-VALIDATION.md) 구현 차이 1). DEBT-002/003은 그대로다.
+
+IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCounted 순환(관찰 lambda가 자기 서비스를 캡처)은 공통 CI의 종료 시 엔진 오류 검사로 발견해 커밋 전에 고쳤다([검증](IH-111-VALIDATION.md)).
 
 이슈 추가 형식: ID, 심각도/우선순위, 환경/빌드/커밋(없으면 없음), 재현, 기대/실제, 로그, 영향, 우회, 담당 작업, 회귀 검사. 추측과 확인된 재현을 구분한다. 해결 시 실제 검증 기록을 연결한다.
 

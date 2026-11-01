@@ -1,5 +1,12 @@
 # 변경 이력
 
+## Unreleased — IH-111 채집·자원 지점 (Claude Code, 2026-11-01)
+
+- GatherDef/GatherCatalog(정의 3종, 원본 리터럴 검사), GatherService(build 일괄 검증·등록, 숨은 1슬롯 stock, 파생 잔량, 단발 명령 stock→bag transfer).
+- Interaction INSTANT 실행(EXECUTING, instant_completed, RESOLVING 중 Escape 취소, 실행 중 E 소비), GatherTarget, 단일 세션 gathering_test(normal/full/rebind)와 HUD.
+- `tests/test_gathering.gd`(309검사)와 fixture, `tools/run_ci.py`에 gathering-acceptance 등록.
+- 수치는 검증 제안. 도구·기력·재생·저장·농사·전투·위임·범용 잠금 미구현. 태그/릴리스 없음.
+
 ## Unreleased — IH-111 상세 설계
 
 - 유한 지점 재고→bag 원자 transfer, INSTANT 실행·취소·수명 경계, 소진/재진입·세 정의/fixture를 설계했다.

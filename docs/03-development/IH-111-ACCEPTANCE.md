@@ -1,23 +1,23 @@
 # IH-111 수락 조건
 
-상태: **설계 ready / 구현·검사 미실행**, 2026-11-01. 계약은 [GATHERING](../02-technical-design/GATHERING.md), 전달은 [HANDOFF](IH-111-HANDOFF.md). 실제 runner/GUI 증거가 있을 때만 pass로 기록한다. 기존 PASS가 신규 채집 검증을 대신하지 않는다.
+상태: **AC-G01~14 실행, 모두 pass**(2026-11-01, Claude Code 구현·자동 309검사, AC-G14는 사용자 GUI 확인, 빌드 `7787c26`). PR 필수 CI·develop 통합 전에는 review다. 측정·명령·변이·설계 차이는 [IH-111 검증 기록](IH-111-VALIDATION.md)에 있다. 아래 기준은 원래 계약이며 기준을 낮추지 않았다. 원래 상태: 설계 ready, 2026-11-01. 계약은 [GATHERING](../02-technical-design/GATHERING.md), 전달은 [HANDOFF](IH-111-HANDOFF.md). 실제 runner/GUI 증거가 있을 때만 pass로 기록한다. 기존 PASS가 신규 채집 검증을 대신하지 않는다.
 
 | ID | 검사·수락 조건 | 방법 |
 |---|---|---|
-| AC-G01 정의 | 세 정의 로드. 미등록 품목·음수/0/소수/bool/스택 초과 거부. ID 빈값/끝 개행/공백/길이65 거부. 공유 Resource/외부 사본 수정이 live 정의·재고에 영향 없음 | 도메인 |
-| AC-G02 결속 | 중복 point/stock/전체 target ID(비가용 포함), bag/store와 stock 충돌, 동일 point의 활성 뷰2개 거부. 잘못된 마지막 항목 때문에 부분 플레이가 허용되지 않음. 동일 정의의 두 지점은 독립 | 도메인+씬 |
-| AC-G03 성공 | stock -1/bag +1, 두 revision +1, 신호1회/ID2개. 신호에서 양쪽 최종 상태 조회 가능. 다른 품목/store 불변, 독립 초기 합과 일치 | 도메인 |
-| AC-G04 공간 | 기존 스택 여유만 있어도 성공. full이면 NO_SPACE, 전체 snapshot/revision/이벤트 불변. store로 옮긴 뒤 성공. 초과 지급/바닥 드롭 없음 | 도메인+GUI |
-| AC-G05 소진 | 마지막1개 후 null슬롯/잔량0/소진 뷰/프롬프트 없음. 반복 요청 DEPLETED, 음수/추가 이벤트 없음. stock 구조 손상은 INVALID_STOCK, 자동 재충전 금지 | 도메인+씬 |
-| AC-G06 명령 | prepare 수량/신호 변경0. bag·stock 변경 각각 STALE_REVISION. 취소/소비/타 서비스 명령 INVALID_COMMAND. 성공/실패/취소 뒤 새 준비 가능. 같은 명령 재사용 지급0 | 도메인 |
-| AC-G07 재검증 | 실제 E 입력 후 실행 전 거리/정면/벽/ID/중복/available/삭제 변경 시 지급0. 다른 대상으로 대체 지급 없음. 요청 terminal 보고 최대1 | 입력+물리 |
-| AC-G08 commit 전 취소 | try_begin에서 disable→enable, focus-out→복귀, 대상/Controller 이탈·queue_free, Escape 주입. 취소 래치 유지, 명령 해제, end/rejected 각 최대1, 재고 불변, 새 요청 정상 | 엔진 콜백 |
-| AC-G09 commit 후 수명 | 변경 신호에서 Target/UI 즉시 free·queue_free, Controller/맵 이탈·queue_free, GatherService/InventoryService.close. 이미 적용된 양쪽 거래는1회 성공. 죽은 Node 호출/오류/누수 없음. 표시 생략을 실패/rollback으로 처리하지 않음 | 엔진 콜백 |
-| AC-G10 입력·재진입 | 변경 신호에서 prepare/commit 및 E/I 재진입은 BUSY/거부, 다음 틱 추가 지급0. echo/held E 반복 지급0, 같은 틱 복수 입력 최대1, 정상 key-up/down 후 다음 채집1 | 도메인+Viewport |
-| AC-G11 UI·이동 | instant의 inspect session_opened0/이동 게이트 소유0, 알림 정확. 가방/살펴보기 열림 중 채집0, 닫은 뒤 기존 중립키 정책. UI 제거로 거래 반복 없음 | 자동+GUI |
-| AC-G12 재진입 | 부분/완전 소진 각각 뷰 unload/rebind 뒤 값/revision 동일, 초기 재지급0, 이전 준비 명령 무효. 숨은 stock은 bag/store UI 대상이 아님. 세션 종료 뒤 명령 CLOSED/INVALID_COMMAND | 씬+GUI |
-| AC-G13 회귀 | 새 runner 공통 CI 등록, 결정적 반복 결과 일치, 아래 실패/변이 검출. 기존 이동360/상호작용333/인벤토리521 검증 의도 보존. 엔진 오류/고아0 | 로컬+원격 CI |
-| AC-G14 GUI | 아래 실제 조작 확인 주체·빌드 SHA·환경·결과·로그 기록. headless/캡처만으로 키 조작·감각 pass 처리 금지 | 실제 창 |
+| AC-G01 정의 | 세 정의 로드. 미등록 품목·음수/0/소수/bool/스택 초과 거부. ID 빈값/끝 개행/공백/길이65 거부. 공유 Resource/외부 사본 수정이 live 정의·재고에 영향 없음 | 도메인 / pass |
+| AC-G02 결속 | 중복 point/stock/전체 target ID(비가용 포함), bag/store와 stock 충돌, 동일 point의 활성 뷰2개 거부. 잘못된 마지막 항목 때문에 부분 플레이가 허용되지 않음. 동일 정의의 두 지점은 독립 | 도메인+씬 / pass |
+| AC-G03 성공 | stock -1/bag +1, 두 revision +1, 신호1회/ID2개. 신호에서 양쪽 최종 상태 조회 가능. 다른 품목/store 불변, 독립 초기 합과 일치 | 도메인 / pass |
+| AC-G04 공간 | 기존 스택 여유만 있어도 성공. full이면 NO_SPACE, 전체 snapshot/revision/이벤트 불변. store로 옮긴 뒤 성공. 초과 지급/바닥 드롭 없음 | 도메인+GUI / pass |
+| AC-G05 소진 | 마지막1개 후 null슬롯/잔량0/소진 뷰/프롬프트 없음. 반복 요청 DEPLETED, 음수/추가 이벤트 없음. stock 구조 손상은 INVALID_STOCK, 자동 재충전 금지 | 도메인+씬 / pass |
+| AC-G06 명령 | prepare 수량/신호 변경0. bag·stock 변경 각각 STALE_REVISION. 취소/소비/타 서비스 명령 INVALID_COMMAND. 성공/실패/취소 뒤 새 준비 가능. 같은 명령 재사용 지급0 | 도메인 / pass |
+| AC-G07 재검증 | 실제 E 입력 후 실행 전 거리/정면/벽/ID/중복/available/삭제 변경 시 지급0. 다른 대상으로 대체 지급 없음. 요청 terminal 보고 최대1 | 입력+물리 / pass |
+| AC-G08 commit 전 취소 | try_begin에서 disable→enable, focus-out→복귀, 대상/Controller 이탈·queue_free, Escape 주입. 취소 래치 유지, 명령 해제, end/rejected 각 최대1, 재고 불변, 새 요청 정상 | 엔진 콜백 / pass |
+| AC-G09 commit 후 수명 | 변경 신호에서 Target/UI 즉시 free·queue_free, Controller/맵 이탈·queue_free, GatherService/InventoryService.close. 이미 적용된 양쪽 거래는1회 성공. 죽은 Node 호출/오류/누수 없음. 표시 생략을 실패/rollback으로 처리하지 않음 | 엔진 콜백 / pass |
+| AC-G10 입력·재진입 | 변경 신호에서 prepare/commit 및 E/I 재진입은 BUSY/거부, 다음 틱 추가 지급0. echo/held E 반복 지급0, 같은 틱 복수 입력 최대1, 정상 key-up/down 후 다음 채집1 | 도메인+Viewport / pass |
+| AC-G11 UI·이동 | instant의 inspect session_opened0/이동 게이트 소유0, 알림 정확. 가방/살펴보기 열림 중 채집0, 닫은 뒤 기존 중립키 정책. UI 제거로 거래 반복 없음 | 자동+GUI / pass |
+| AC-G12 재진입 | 부분/완전 소진 각각 뷰 unload/rebind 뒤 값/revision 동일, 초기 재지급0, 이전 준비 명령 무효. 숨은 stock은 bag/store UI 대상이 아님. 세션 종료 뒤 명령 CLOSED/INVALID_COMMAND | 씬+GUI / pass |
+| AC-G13 회귀 | 새 runner 공통 CI 등록, 결정적 반복 결과 일치, 아래 실패/변이 검출. 기존 이동360/상호작용333/인벤토리521 검증 의도 보존. 엔진 오류/고아0 | 로컬+원격 CI / pass |
+| AC-G14 GUI | 아래 실제 조작 확인 주체·빌드 SHA·환경·결과·로그 기록. headless/캡처만으로 키 조작·감각 pass 처리 금지 | 실제 창 / pass |
 
 ## 독립 검증·실패 주입
 
@@ -34,7 +34,7 @@
 4. 완전 소진 시 빈 표시/프롬프트 없음. 멀어졌다 돌아와도 재생 없음. rebind fixture에서 최초 채집 뒤 수량 유지.
 5. 포커스 이탈/복귀 후 유령 입력/추가 지급 없음, 새 누름 정상. 알림/글자/가방이 겹쳐 조작을 막지 않음. 사용자 확인 시 빌드와 체크 항목을 함께 제시.
 
-## 구현 후 명령 후보(현재 파일 없음)
+## 구현 후 명령(2026-11-01 실행, 결과는 검증 기록)
 
 ```sh
 python3 tools/godot.py --headless --import

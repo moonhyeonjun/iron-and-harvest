@@ -67,4 +67,6 @@ Codex는 a5cefeb에서 IH-110 수정 재현 위반0·전체 CI 11단계(인벤�
 
 ## 다음 구현: IH-111
 
+2026-11-01 Claude Code가 구현하고 AC-G01~14를 검증했다([검증 기록](docs/03-development/IH-111-VALIDATION.md), review). 시험 맵은 `python3 tools/godot.py res://scenes/tests/gathering_test.tscn`(`-- --fixture=full`/`rebind`)이다.
+
 [채집·자원 지점 명세](docs/02-technical-design/GATHERING.md), [AC-G01~14](docs/03-development/IH-111-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-111-HANDOFF.md)를 준비했다. 숨은 유한 재고→가방의 원자 전송과 즉시 상호작용을 설계했다. 상태는 ready(구현 전), ADR-016 Proposed다. main/v0.2.0은 보존한다.

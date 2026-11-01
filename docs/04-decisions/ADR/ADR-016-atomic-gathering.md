@@ -1,6 +1,6 @@
 # ADR-016: 유한 재고 전송과 즉시 채집 실행 경계
 
-- 상태: **Proposed** (구현·수락 검증 전)
+- 상태: **Proposed** — 구현·수락 검증 완료(2026-11-01), Accepted 판정은 별도
 - 날짜: 2026-11-01
 - 관련: IH-111, [GATHERING](../../02-technical-design/GATHERING.md), [ADR-014](ADR-014-interaction-boundary.md), [ADR-015](ADR-015-inventory-contract.md)
 
@@ -29,3 +29,7 @@ IH-110의 InventoryService는 두 재고의 원자 transfer·revision·단일 �
 Interaction의 최소 instant 분기, Gather 정의/서비스/Target, 전용 테스트 맵·CI 회귀가 필요하다. IH-112 저장에는 결속과 숨은 stock을 포함하되 remaining을 중복 저장하지 않는다. 기존 ADR-014/015 전체를 대체하지 않고 채집 경계를 구체화한다.
 
 AC-G01~14·기존 회귀·실제 GUI·필수 PR CI를 확인한 후 Accepted 전환을 별도 판단한다. 문서 ready만으로 Accepted나 IH-111 done을 기록하지 않는다.
+
+## 구현 검증 결과 (2026-11-01)
+
+Claude Code가 이 제안대로 구현했다. 숨은 1슬롯 stock과 기존 transfer 재사용, 단발 명령, 최종 재검증 뒤 INSTANT 실행, commit 후 수명 변화 무롤백을 AC-G01~14와 변이 7종 검출로 확인했다([검증 기록](../../03-development/IH-111-VALIDATION.md)). 타입 있는 Resource 필드가 소수/bool을 조용히 정수화하는 엔진 동작을 측정했고, 정의 원본 리터럴 검사로 보완했다. 상태는 Proposed를 유지하며, Accepted 전환과 최종 수치는 별도 판단한다. DEBT-002는 해결되지 않았다.
