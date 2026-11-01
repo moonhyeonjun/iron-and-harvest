@@ -67,3 +67,7 @@ IH-111에서 game/systems/gathering(GatherDef·GatherCatalog·GatherService), ga
 ## IH-112 저장·세션 경계 제안
 
 [SAVE_LOAD](SAVE_LOAD.md): Codec은 순수 값·버전/검증, Store는 고정 A/B 파일 I/O, Coordinator/작은 bootstrap은 안정 snapshot과 후보 세션 검증/publish를 맡는다. 상태 복원은 새 서비스에만 하며 UI/월드의 live 값을 하나씩 덮어쓰지 않는다. 파일 commit과 세션 publish는 서로 다른 경계다. epoch는 파일에 저장하지 않고 이전 UI/명령의 새 세션 접근을 거부한다. 기존 Player bool 게이트에 제3 소유자를 추가하지 않는다. SaveCodec/Store/Coordinator·Gather restore·맵 훅으로 구현·검증했으며 IH-112 done, ADR-017 Accepted다. bootstrap은 별도 빈 모듈 대신 gathering 맵의 최소 훅을 사용한다. process_mode와 별개로 InventoryController의 직접/지연 명령도 세션 정지 가드를 확인한다.
+
+## IH-120 시간 경계 제안 (미구현)
+
+[CALENDAR](CALENDAR.md): 월드마다 CalendarService가 날짜 상태를 소유하고 season/year/시각은 파생한다. 교체 World 밖 CalendarController가 현재 SaveCoordinator world/epoch만 진행하며 후보·이전 세션을 tick하지 않는다. 기존 맵은 passive, 전용 calendar_test만 자동 진행한다. pending/보고와 파일 요청은 선택적 외부 blocker 하나로 직렬화한다. 시간 정지는 이동 bool 게이트/전역 pause를 작성하지 않고 사유를 합성한다. 날짜 알림에 미래 보상 리스너를 붙여 원자 결산으로 간주하지 않는다. schema2와 세션 전체 snapshot/restore가 필요하며 ADR-018 Proposed다.

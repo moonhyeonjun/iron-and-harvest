@@ -24,7 +24,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:done | IH-110 |
 | IH-112 | 초기 저장과 복원 | feature | priority:critical | status:done | IH-110, IH-111 |
-| IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
+| IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:ready | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
 | IH-130 | 건설·수리 프로젝트 | feature | priority:high | status:backlog | IH-120, IH-110 |
 | IH-131 | 기초 노동 배치와 위임 | feature | priority:high | status:backlog | IH-130 |
@@ -188,13 +188,15 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 
 ## IH-120 — 달력·계절·하루 경계
 
-- 목적: 달력·계절·하루 경계을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 날짜 전진·경계 이벤트·일시 정지.
-- 관련 문서: [설계](../01-game-design/WORLD_SYSTEM.md).
-- 예상 영향 범위: Calendar/Season.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 중복 결산·로드·계절/연도 경계.
-- 현재 증거/미확정: 계절 길이/일시 정지 범위 TBD.
+- 목적: 같은 세계의 날짜·계절을 진행하고 저장/복원과 다음 날 경계를 일관되게 제공한다.
+- 유형/우선순위/상태: feature / priority:high / status:ready. 의존 IH-112 done.
+- 요구사항: 단일 day_index/tick/revision·파생 날짜, 물리스텝 시간, 자연/다음새벽 동일 전진, 정지 사유 합성·epoch/pending/보고 가드, schema2·v0/1 이관, HUD/전용 시험 맵.
+- 관련: [명세](../02-technical-design/CALENDAR.md), [AC-C01~16](IH-120-ACCEPTANCE.md), [Claude 인수인계](IH-120-HANDOFF.md), [ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md), [세계](../01-game-design/WORLD_SYSTEM.md).
+- 예상 영향: CalendarRules/Service·Controller/HUD, gathering의 capture/restore/manifest/suspend/close, Codec2·SaveCoordinator/SaveLoadTest 최소 hook, fixture·runner/CI·문서.
+- 완료 조건: C01~16·실제 파일/구버전/실패·변이/반복·기존 회귀·사용자 GUI·필수 PR CI/리뷰/develop 통합, 검증 기록. ready는 구현 완료가 아니다.
+- 우선순위: 순수 상태/경계 → schema2·이관 → passive World 연결 → 실시간/정지/입력 → 파일/수명/회귀·CI → GUI/인수 검증.
+- 제외/TBD: 작물/생산 결산·노화/월간·수면·배속/오프라인. 14일×4계절·10분/하루·06:00 시작은 검증용 제안, 제품 시간과 생애 대응은 미확정.
+- 현재 증거: 2026-11-01 상세 설계/인수인계 작성. 게임 코드·신규 runner·Calendar GUI는 미실행. 구현 때 IH-120-VALIDATION.md를 생성한다. main/태그/릴리스 변경 없음.
 
 ## IH-121 — 심기·성장·수확
 
@@ -352,8 +354,8 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
 
 ## v0.3.0 기능 판정 — 2026-11-01
 
-IH-110/111/112 done으로 Gathering 기능 완료 조건 PASS. main 승격·CI·태그 발행은 [판정 문서](GATHERING-v0.3.0-VERIFICATION.md)의 단계로 수행한다. IH-120은 다음 상세 설계 대상이며 아직 backlog다. 달력 구현을 시작하거나 ready로 임의 전환하지 않는다.
+IH-110/111/112 done으로 Gathering 기능 완료 조건 PASS. main 승격·CI·태그 발행은 [판정 문서](GATHERING-v0.3.0-VERIFICATION.md)의 단계로 수행한다. 이 판정 당시 IH-120은 상세 설계 전 backlog였다. 현재 상태는 위 IH-120 행/명세를 따른다.
 
 ## v0.3.0 발행 결과
 
-v0.3.0 Gathering 확정: 판정 PR #40(ee44adf) → main 승격 PR #41(6ed5f8c), PR/main CI success. annotated 태그 `7b491187c95a38dd9b7c9e18ae55c4894a06749a` → `6ed5f8c981ff75fdc872d84cac48806c41e50a57` 로컬/원격 일치. [발행 기록](GATHERING-v0.3.0-VERIFICATION.md). 기존 태그 보존, GitHub Release/Export/Steam 게시 없음. 다음은 IH-120 상세 설계(backlog).
+v0.3.0 Gathering 확정: 판정 PR #40(ee44adf) → main 승격 PR #41(6ed5f8c), PR/main CI success. annotated 태그 `7b491187c95a38dd9b7c9e18ae55c4894a06749a` → `6ed5f8c981ff75fdc872d84cac48806c41e50a57` 로컬/원격 일치. [발행 기록](GATHERING-v0.3.0-VERIFICATION.md). 기존 태그 보존, GitHub Release/Export/Steam 게시 없음. 발행 당시 다음은 IH-120 상세 설계(backlog)였다. 현재는 상세 설계 ready이며 구현 전이다.

@@ -502,3 +502,14 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
 - annotated v0.3.0 객체 `7b491187c95a38dd9b7c9e18ae55c4894a06749a` → `6ed5f8c981ff75fdc872d84cac48806c41e50a57`. 로컬/원격 객체·peeled SHA 및 main ref 확인. 기존 v0.1.0/v0.2.0 보존.
 - main 승격 이력을 포함한 docs/v0.3.0-publication에서 README/CHANGELOG/판정·마일스톤·로드맵·작업/주간 기록을 갱신한다. 정적 검사와 필수 PR CI를 거쳐 develop에 동기화하며 실제 후속 SHA/CI는 PR 이력에 남긴다. 태그 이동 없음.
 - 사용자 AGENTS.md 보존·미커밋, 게임/씬/테스트/CI 변경 없음. Release 페이지/Export/Steam 게시 없음. 다음은 IH-120 설계다.
+
+## 2026-11-01 — IH-120 달력·계절·하루 경계 상세 설계
+
+- 기준 develop4d30344, 원격 CI41313835375 success 확인. IH-112 done·ADR-017 Accepted·v0.3.0 확정이 의존 기준이다. 사용자 AGENTS.md 미추적·기존 링크4개 문제는 보존한다.
+- CALENDAR/AC-C01~16/HANDOFF/ADR-018 Proposed 작성. 단일 정수 달력·파생 계절/연도·06:00 경계·pending N과 자연 tick 직렬화·정지 사유 합성·수명/epoch·schema2 필수 calendar·정확한0→1→2 이관·원본 파일 보존을 명세화했다.
+- 기본14일×4계절·10분/하루와 빠른 프로필은 검증용 제안이며 제품 밸런스/노화/월간/농사결산은 TBD/후속이다. 날짜 알림을 경제 원자 결산/영구 exactly-once 보상으로 과장하지 않는다.
+- TASKS IH-120 ready, 기술/게임/저장/데이터/성능/마일스톤·README/CLAUDE·ADR 진입점 갱신. 게임/씬/테스트/CI 설정은 변경하지 않는다. 신규 Calendar 검사/GUI/성능은 미실행이며 문서 PR의 기존 CI와 구분한다.
+- 별도 worktree 정적 검사·diff 검토 후 필수 문서 PR CI/develop 통합을 수행한다. 실제 SHA/CI/merge/ref는 PR 이력·완료 보고 및 build/ih-120-design/에 기록한다. main/태그/릴리스 미변경.
+- 다음: Claude Code가 인수인계 명세에 따라 작은 단계로 구현·자동/사용자 GUI 검증하고 Codex 후속 검토를 위해 review로 보고한다.
+
+- 설계 자체 검증: 날짜/표시 예시6종과 최대일자 계산을 독립 확인했다(build/ih-120-design/arithmetic.log). clean worktree 정적 검사 PASS, diff --check PASS. 신규 Calendar 코드 검증과는 구분한다. 사용자 루트는 AGENTS.md 기존 링크4개만 실패한다.

@@ -22,3 +22,7 @@ v0.1.0은 확정된 기준점이다. v0.2.0 Character는 [마일스톤 판정](C
 ## v0.3.0 현재 관문
 
 IH-110 아이템/가방·IH-111 채집·IH-112 초기 저장/복원은 수정·독립 검증·실제 사용자 GUI와 최종 검토까지 done이다. ADR-017 Accepted. [v0.3.0 Gathering 판정](GATHERING-v0.3.0-VERIFICATION.md)에서 수집/이동/복원·실패 복구·세대 보존 PASS를 확인했다. main 승격과 태그의 실제 결과는 판정 문서의 발행 기록 및 Git ref로 확인하며 제품 출시와 구분한다.
+
+## v0.4.0 준비
+
+IH-120 달력 상세 설계 ready([명세](../02-technical-design/CALENDAR.md), [인수인계](IH-120-HANDOFF.md)). 구현·새 검증은 아직 없고 IH-121 농사도 backlog다. IH-120 하나만으로 v0.4.0 Farming 완료/태그를 판정하지 않는다.

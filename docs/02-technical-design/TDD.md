@@ -40,3 +40,7 @@
 ## IH-112 초기 저장·복원 구현 준비
 
 [상세 명세](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md)를 준비했다. 단일 수동 슬롯 A/B 파일 commit, 버전/숫자/참조 검증, 초기 지급 없는 Gather restore, 후보 세계 검증 후 세션 교체를 정의한다. 기능·수정·Codex 독립 재검증(진단5종·CI13단계·저장529)은 완료됐고 BUG-009~011 resolved다. AC-S16 손상복구 사용자 확인과 후속 검토까지 완료해 IH-112 done·ADR-017 Accepted다. [수정 계약](../03-development/IH-112-REVIEW.md)의 프롬프트는 완료 이력이다.
+
+## IH-120 달력 구현 준비
+
+[CALENDAR](CALENDAR.md), [AC-C01~16](../03-development/IH-120-ACCEPTANCE.md), [인수인계](../03-development/IH-120-HANDOFF.md), [ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md)를 작성했다. 상태는 ready/Proposed이며 구현 전이다. 정수 물리 tick·06:00 경계·정지 사유 합성·단일 경계 알림과 schema2 필수 calendar/0→1→2 검증 이관을 제안한다. 기존 schema1 코드와 구분한다. 농사/경제 결산과 전체 시뮬레이션은 구현하지 않는다.

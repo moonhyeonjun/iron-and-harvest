@@ -15,7 +15,7 @@ Definition(불변 콘텐츠) / State(세이브되는 세계) / View(표현) / Sa
 | CharacterState | id, role, skills, traits, loyalty, household | 주민/임명 |
 | RelationshipState | from_id, to_id, value, memories | 인물/사건 |
 | EstateState | id, treasury, storage, policies, assignments | 통치 |
-| CalendarState | day_index, season, year, time_of_day | 전체 |
+| CalendarState (IH-120 제안) | rule_id, day_index, tick_in_day, revision; season/year/시각 파생 | 전체·schema2 예정 |
 | ProjectState | id, target, work, reservation, status, rewarded | 직접/위임 |
 | DynastyState | family_id, members, succession | 확장; 초기 미구현 |
 | WorldState | map_ids, territories, flags, journal | 전체/저장 |
@@ -36,6 +36,10 @@ Definition(불변 콘텐츠) / State(세이브되는 세계) / View(표현) / Sa
 
 [GatherDef/PointBinding 계약](GATHERING.md)은 IH-111에서 구현·수정·독립 검증했다. 지점당1슬롯 InventoryState를 수량 원본으로 사용하고 remaining/depleted를 파생한다. 정의·결속은 검증한 스칼라 복사, Node/명령은 임시다. 별도 GatherNode.remaining/reset_at 상태를 선행 구현하지 않는다. stock ID는 bag/store와 같은 재고 네임스페이스에서 유일하며 point ID와 명시 결속한다.
 
-## IH-112 wire/복원 계약(미구현)
+## IH-112 wire/복원 계약(구현·검증 완료)
 
-[SAVE_LOAD](SAVE_LOAD.md)은 format/payload_json/sha256 envelope와 schema/content/generation, map/player/inventories/points를 제안한다. JSON 숫자는 bool 제외·finite·정수값/안전 범위 검사 후 내부 snapshot의 int로 정규화한다. 저장 재고5개를 새 컨텍스트에 등록하고 stock 결속을 복원한다. UI/준비 명령/epoch는 저장하지 않는다. 파일 버전과 런타임 epoch는 별개이며 실제 schema/fixture 검증은 IH-112 구현 때 수행한다.
+[SAVE_LOAD](SAVE_LOAD.md)은 format/payload_json/sha256 envelope와 schema/content/generation, map/player/inventories/points를 제안한다. JSON 숫자는 bool 제외·finite·정수값/안전 범위 검사 후 내부 snapshot의 int로 정규화한다. 저장 재고5개를 새 컨텍스트에 등록하고 stock 결속을 복원한다. UI/준비 명령/epoch는 저장하지 않는다. 파일 버전과 런타임 epoch는 별개다. IH-112는 구현·자동/GUI·최종 검증을 완료했고 ADR-017 Accepted다.
+
+## IH-120 schema2 제안 (미구현)
+
+[CALENDAR](CALENDAR.md)의 calendar는 rule_id/day_index/tick_in_day/revision만 저장한다. 정의는 검증된 로컬 프로필, 날짜/계절/연도는 파생이고 pause/pending/epoch/이벤트 큐는 저장하지 않는다. schema2에는 calendar가 필수이며 v1 전체 검증 후 기본 달력을 넣는 이관을 제안한다. 현재 코드는 schema1이며 설계 문서가 지원 버전을 미리 올리지 않는다. 초기 snapshot부터 농사/결산 cursor를 빈 값으로 넣지 않는다.
