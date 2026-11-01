@@ -410,3 +410,14 @@
   - 창 3(corrupt-latest) 첫 인스턴스는 약 90초간 fixture를 적용하지 못했다(원인 미확인, 재실행 시 정상).
   - 사용자가 "앞으로는 사용자 테스트는 진행하지 않는다"고 답해 절차 6은 미실행이다.
 - **결과**: AC-S01~15 pass, AC-S16 부분, IH-112 review, ADR-017 Proposed. main/태그/릴리스 없음. PR/CI/merge 결과는 후속 기록에 남긴다.
+
+### IH-112 통합 결과
+
+- [PR #33](https://github.com/moonhyeonjun/iron-and-harvest/pull/33) 81214e4 → develop, merge 3ab4795723344d162e74e91657920b7127e9068a(mergeable_state=clean).
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41302107156/job/124835042247) success: Linux 13단계 360/333/521/347/425. 저장 suite의 rename·SIGKILL·재시작 검사가 ext4에서도 PASS, 누수 경고 없음.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41302454648/job/124836057429) success.
+- 통합 tree = 81214e4. IH-112 review 유지(AC-S16 절차 6 미실행). ADR-017 Proposed. main(8901bac)·태그·릴리스 미변경.
+- 다음:
+  - IH-112 review 해소: AC-S16 절차 6 확인 방법 결정(사용자 GUI 중단 지시 반영).
+  - Codex 기술 검토.
+  - v0.3.0 판정은 별도로 한다.
