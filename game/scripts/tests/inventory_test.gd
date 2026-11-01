@@ -23,6 +23,8 @@ var setup_errors: PackedStringArray = []
 func _ready() -> void:
 	service = InventoryService.new(CATALOG)
 	var full: bool = "--fixture=full" in OS.get_cmdline_user_args()
+	# Tells the two GUI fixtures apart during manual checks; no effect headless.
+	get_window().title = "IH-110 inventory test (FULL store fixture)" if full else "IH-110 inventory test"
 	for snapshot: Dictionary in [_bag_snapshot(), _store_snapshot(full)]:
 		var result: InventoryService.Result = service.register_snapshot(snapshot)
 		if not result.ok:
