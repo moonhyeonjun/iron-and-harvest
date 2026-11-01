@@ -346,3 +346,11 @@
   - 첫 시도(56b7d5b)에서 "다 normal로만 3개창이 떴다"는 보고가 있었다. 인자·제목·full 합계(목재 16·석재 114)는 정상이었으나 화면 구분 표시가 부족해 HUD fixture 표시를 추가했다.
   - 재확인 결과 "1~5 모두 정상", 세 창 exit 0·오류 0.
 - 결과: BUG-007/008 fixed(통합·Codex 재검증 대기), IH-111 review 유지, ADR-016 Proposed. DEBT-004 미변경. main/태그/릴리스 없음. PR/CI/merge 결과는 PR 이력과 후속 기록에 남긴다.
+
+### BUG-007/008 통합 결과
+
+- [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29) 1010bde → develop, merge ed554c59a56581f6dc3e76a2bbaa9b684df7918f(mergeable_state=clean).
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41293472692/job/124809362090) success: 12단계, 360/333/521/347, 네 suite RESULT: PASS, 누수 경고 없음.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41293774055/job/124810245717) success.
+- 통합 tree = 1010bde. main(8901bac)·태그·릴리스 미변경.
+- 다음: Codex 독립 재검증(BUG-007/008 resolved, IH-111 done 판정), 이후 IH-112 초기 저장과 복원.

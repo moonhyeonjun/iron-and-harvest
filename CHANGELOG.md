@@ -5,6 +5,7 @@
 - BUG-007: 채집 시험 맵이 해제·트리 밖·삭제 예약 HUD에 쓰지 않는다(표시만 생략, 거래 유지). HUD 지점 줄에 fixture 이름을 표시한다.
 - BUG-008: GatherCatalog는 외부 `.tres` 정의만 지원한다. 내장(`::`) 정의는 거부하고, 경로 없는 정의는 코드 전용 opt-in일 때만 허용한다.
 - 회귀: AC-G01 내장 fixture 5종·경로 없음 정책, AC-G09 실제 HUD free/queue_free/remove_child 뒤 후속 E·전송·full·rebind. 채집 runner 309→347검사.
+- [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29)로 develop 통합(merge ed554c5), PR/develop CI success. Codex 재검증 대기.
 
 ## Unreleased — IH-111 Codex 기술 검토
 

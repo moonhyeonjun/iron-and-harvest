@@ -153,7 +153,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - Claude 수정(fix/gathering-hud-and-definition-validation, 28e5a80·56b7d5b·b5afd93):
   - HUD 표시 수명 가드를 넣고, 내장/경로 없는 GatherDef를 거부한다.
   - 채집 347검사 PASS, 변이 5종 검출, 사용자 GUI "1~5 모두 정상"(b5afd93).
-  - [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). PR 필수 CI·develop 통합·Codex 재검증 전까지 review를 유지한다.
+  - [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29) 필수 CI 성공, merge ed554c5, develop CI 성공. Codex 독립 재검증 전까지 review를 유지한다.
 
 ## IH-112 — 초기 저장과 복원
 
