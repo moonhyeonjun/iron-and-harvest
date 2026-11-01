@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/gathering/gather_target.tscn" id="1_point"]
+
+[node name="GatheringPoints" type="Node2D"]
+
+[node name="BranchPile" parent="." instance=ExtResource("1_point")]
+position = Vector2(250, 360)
+target_id = &"branch_pile_01"
+available_color = Color(0.55, 0.38, 0.2, 1)
+
+[node name="StonePile" parent="." instance=ExtResource("1_point")]
+position = Vector2(250, 470)
+target_id = &"stone_pile_01"
+available_color = Color(0.6, 0.6, 0.62, 1)
+
+[node name="BerryBush" parent="." instance=ExtResource("1_point")]
+position = Vector2(360, 300)
+target_id = &"berry_bush_01"
+available_color = Color(0.25, 0.5, 0.25, 1)
