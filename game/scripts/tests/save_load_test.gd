@@ -4,6 +4,7 @@ extends Node
 ## normal-fixture game; nothing is loaded automatically. Saves go only to the test-only
 ## root under user://tests/ih112/ (never the product user://saves). F5 saves, F9 loads the
 ## newest generation; the previous generation is loaded only with the explicit button.
+## The keys work without SaveUI (results are then only printed); buttons need the UI.
 ## Options: --save-root=user://tests/ih112/<name>, --fixture=corrupt-latest (test fixture:
 ## damages the newest bank before start so the recovery path can be tried by hand).
 
@@ -63,11 +64,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 	if Engine.get_process_frames() == _last_key_frame:
 		return
+	# Keys are live input, not an intent shown on the panel (BUG-009): they use the
+	# coordinator's current epoch, so F5/F9 keep working when SaveUI is freed, queued for
+	# deletion or detached; only the display is skipped. Without a coordinator in the tree
+	# the key does nothing (no file is touched).
+	if not is_instance_valid(coordinator) or not coordinator.is_inside_tree() or coordinator.is_queued_for_deletion():
+		return
 	_last_key_frame = Engine.get_process_frames()
 	if save:
-		coordinator.request_save(ui.get_epoch())
+		coordinator.request_save(coordinator.get_epoch())
 	else:
-		coordinator.request_load(ui.get_epoch())
+		coordinator.request_load(coordinator.get_epoch())
 
 
 func refresh_slot() -> void:

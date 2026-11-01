@@ -96,6 +96,8 @@ func _ready() -> void:
 		return
 	_bind_points()
 	controller.setup(inventory, player, interaction, ui, BAG_ID, STORE_ID)
+	# A staged candidate refuses session commands until it is published (BUG-011).
+	controller.set_session_suspended(start_inactive)
 	($FixtureHud/StoreButton as Button).pressed.connect(func() -> void:
 		controller.request_open(InventoryController.View.STORE))
 	interaction.instant_completed.connect(_on_gathered)
@@ -111,8 +113,17 @@ func _ready() -> void:
 ## until the coordinator publishes it (IH-112).
 func activate() -> void:
 	start_inactive = false
+	set_session_suspended(false)
 	if setup_errors.is_empty() and gather != null and not gather.is_closed():
 		interaction.set_interaction_enabled(true)
+
+
+## Save/load suspension of this session's command entries (IH-112 BUG-011). Interaction
+## input already stops with process_mode and its public calls are no-ops while quiescent;
+## the inventory panel is the entry that direct/deferred calls can still reach.
+func set_session_suspended(suspended: bool) -> void:
+	if is_instance_valid(controller):
+		controller.set_session_suspended(suspended)
 
 
 func _exit_tree() -> void:

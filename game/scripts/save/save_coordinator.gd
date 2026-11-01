@@ -121,6 +121,9 @@ func request_load(epoch: int, source: StringName = SaveStore.SOURCE_LATEST) -> S
 	_cancel = &""
 	_state = State.READING
 	_world_modes = _suspend(_world, true)
+	# process_mode stops input and processing, not direct or deferred calls: the session's
+	# own command entries refuse while this is set (BUG-011).
+	_world.call("set_session_suspended", true)
 	var read: SaveStore.Result = _store.load_slot(source)
 	if not read.ok:
 		_fail_load(read.code, read.detail, read.cause)
@@ -250,6 +253,7 @@ func _fail_load(code: StringName, detail: String, cause: StringName = &"") -> vo
 				service.call("close")
 	if _host_alive() and is_instance_valid(_world):
 		_resume(_world_modes)
+		_world.call("set_session_suspended", false)
 	_world_modes = {}
 	var result: Dictionary = _result("load", code, detail)
 	result.cause = cause if not cause.is_empty() else code
@@ -257,7 +261,8 @@ func _fail_load(code: StringName, detail: String, cause: StringName = &"") -> vo
 
 
 func _request_blocker(epoch: int) -> StringName:
-	if _state != State.IDLE:
+	# A refusal is reported in state IDLE: the report itself is busy too (BUG-010).
+	if _state != State.IDLE or _emitting:
 		return BUSY
 	if epoch != _epoch:
 		return STALE_SESSION
