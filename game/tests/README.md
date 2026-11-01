@@ -24,7 +24,7 @@ python3 tools/godot.py --headless --max-fps 120 --script res://tests/test_player
 python3 tools/godot.py --headless --script res://tests/test_player_movement.gd -- --inject-failure
 ```
 
-한 번 실행에 약2분(실시간 물리 약 3,600틱 × 2회)이 걸린다. 자동 검사 범위는 AC-01~08, AC-09의 포커스 알림 경로, AC-10의 카메라 경계 계산, AC-11이다. 실제 앱 전환(AC-09), 창 크기 변경·화면 흔들림(AC-10), 키보드 조작감은 GUI 수동 확인이 필요하며 이 runner의 PASS로 대체하지 않는다. headless DisplayServer는 parse된 이벤트를 Viewport에 전달하지 않으므로 UI 소비 사례는 runner가 같은 이벤트를 `push_input`으로 전달한다.
+한 번 실행에 약2분(실시간 물리 약 3,600틱 × 2회)이 걸린다. 자동 검사 범위는 AC-01~08, AC-09의 포커스 알림 경로, AC-10의 카메라 경계 계산, AC-11이다. 실제 앱 전환(AC-09), 창 크기 변경·화면 흔들림(AC-10), 키보드 조작감은 GUI 수동 확인이 필요하며 이 runner의 PASS로 대체하지 않는다. `Input.parse_input_event` 후 `Input.flush_buffered_events()`가 headless에서도 이벤트를 Viewport로 동기 전달하므로 UI 소비도 같은 경로로 검사한다(2026-11-01 정정, BUG-002).
 
 ## 테스트 맵 수동 실행
 

@@ -437,17 +437,16 @@ func _ac08_control_gate() -> bool:
 		opposite.delta.length(), one_left.delta.length(), after_opposite.delta.x])
 
 	# A focused UI control consuming the key does not change polled Input state, so
-	# only the gate stops movement. Headless DisplayServer does not dispatch parsed
-	# events to the viewport, so the runner forwards the same event like a window would.
+	# only the gate stops movement. Input.flush_buffered_events() already dispatches the
+	# parsed event to the viewport, so the field receives it exactly once.
 	await _place(OPEN_START)
 	var field: LineEdit = LineEdit.new()
 	_map.get_node("Instructions").add_child(field)
 	field.grab_focus()
 	await process_frame
 	await physics_frame
-	var event: InputEventKey = _key(KEY_D, true, true)
-	root.push_input(event)
-	var consumed: bool = root.is_input_handled() or field.text == "d"
+	_key(KEY_D, true, true)
+	var consumed: bool = field.text == "d"
 	var polled: bool = Input.is_action_pressed(&"move_right")
 	var ungated: Dictionary = await _continue(10)
 	_player.set_control_enabled(false)
