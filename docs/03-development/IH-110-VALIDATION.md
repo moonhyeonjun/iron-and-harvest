@@ -4,7 +4,7 @@
 
 Claude Code가 [INVENTORY 명세](../02-technical-design/INVENTORY.md)에 따라 아이템 정의·카탈로그·고정 슬롯 재고·원자 명령·revision·snapshot과 가방/보관함 UI·조율자·유한 시험 맵을 구현했다. AC-N01~13 자동 검사는 375검사 PASS다. 기존 이동 360검사와 상호작용 333검사 회귀도 같은 로컬 CI에서 통과했다. AC-N14 GUI는 사용자가 실제 창에서 확인했다. 변이 10종과 엔진 오류 전용 변이도 모두 검출됐다.
 
-IH-110 상태는 **review**다. PR 필수 CI 성공과 develop 통합·원격 확인 뒤 done으로 바꾼다. 12슬롯·7품목·스택10은 검증용 제안이며 제품 밸런스가 아니다. ADR-015는 **Proposed**를 유지한다. 채집·소비·장비·제작·드롭·예약·파일 저장·통치·범용 전역 잠금은 구현하지 않았다. IH-102 상자는 살펴보기 전용 그대로이고 `try_begin`/`can_interact`는 아무것도 지급하지 않는다.
+IH-110 상태는 **done**이다. [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 필수 CI 성공 후 develop에 통합하고 원격 CI를 확인했다(아래 통합 기록). 12슬롯·7품목·스택10은 검증용 제안이며 제품 밸런스가 아니다. ADR-015는 **Proposed**를 유지한다. 채집·소비·장비·제작·드롭·예약·파일 저장·통치·범용 전역 잠금은 구현하지 않았다. IH-102 상자는 살펴보기 전용 그대로이고 `try_begin`/`can_interact`는 아무것도 지급하지 않는다.
 
 ## 환경·대상
 
@@ -105,4 +105,11 @@ IH-110 상태는 **review**다. PR 필수 CI 성공과 develop 통합·원격 �
 
 - Windows/Linux GUI, 배포 빌드, 한글 글꼴 번들(DEBT-003)은 확인하지 않았다.
 - 실제 저장 왕복(IH-112), 채집 지급(IH-111), 다중 재료 거래·예약(IH-130/132)은 범위 밖이다.
-- PR 필수 CI와 develop 통합 기록은 이후 추가한다.
+- 통합 결과는 아래 기록에 있다.
+
+## 통합 기록
+
+- [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19): feature/inventory-system(`160ca9e`) → develop, merge `f26a77e66d9d63f9dd9216eae4f82d71fb28bde7`. 병합 전 mergeable_state=clean, base `3803bc7`. 보호 규칙 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41276480044/job/124759576975): Ubuntu 24.04 / Godot 4.7.2에서 11단계 PASS, player·interaction·inventory 모두 `RESULT: PASS`, 엔진 오류0.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41276740036/job/124760326722): develop push(`f26a77e`) CI checks success.
+- 통합 tree는 검증한 `160ca9e`와 동일(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.

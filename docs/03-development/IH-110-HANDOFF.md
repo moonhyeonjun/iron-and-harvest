@@ -1,6 +1,6 @@
 # Claude Code 인수인계 — IH-110
 
-상태: 상세 설계 완료 → **2026-11-01 Claude Code 구현·검증(review)**, [검증 기록](IH-110-VALIDATION.md). 아래는 원래 인수인계 내용이다. Codex는 문서·검증 기준만 작성했다. IH-101/102와 IH-004 CI는 done, v0.2.0 Character는 원격 발행 완료다. main/v0.2.0을 변경하지 않고 최신 develop에서 구현한다.
+상태: 상세 설계 완료 → **2026-11-01 Claude Code 구현·검증·통합(done)**, [검증 기록](IH-110-VALIDATION.md). 아래는 원래 인수인계 내용이다. Codex는 문서·검증 기준만 작성했다. IH-101/102와 IH-004 CI는 done, v0.2.0 Character는 원격 발행 완료다. main/v0.2.0을 변경하지 않고 최신 develop에서 구현한다.
 
 ## 읽기와 변경 범위
 

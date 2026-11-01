@@ -8,6 +8,7 @@
 - InventoryController(가방/살펴보기 배타, opening 래치, session ID, 게이트·interaction 복구)와 InventoryUI(표시·의도만), `scenes/tests/inventory_test.tscn` 유한 보관함(`--fixture=full`).
 - InputMap `inventory_toggle`(물리 I), `inventory_cancel`(Escape), `InteractionController.is_interaction_enabled()` 읽기 API.
 - `tests/test_inventory.gd`(375검사)와 JSON 비교 fixture, `tools/run_ci.py`에 inventory-acceptance 등록.
+- [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19)로 develop 통합(merge f26a77e), PR/develop CI success. IH-110 done.
 - 수치는 검증 제안. 채집·소비·장비·제작·드롭·예약·파일 저장·통치·전역 잠금은 미구현. 태그/릴리스 없음.
 
 ## Unreleased — 설계
