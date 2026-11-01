@@ -175,6 +175,10 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - 제외/TBD: 자동/종료 저장·슬롯 선택/삭제·Cloud·타 맵/달력/NPC. 수치/경로/파일 레이아웃은 Proposed, 실제4.7.2/OS 측정으로 구현 차이를 기록한다. v0.3.0 판정은 별도.
 
 - Codex 후속 검토(2026-11-01, b13292b): CI13단계·저장425검사 PASS, BUG-009~011 추가 재현으로 review 유지. [수정 프롬프트](IH-112-REVIEW.md)를 완료하고 재검증한다. GUI 손상복구 미확인과 사용자 추가 테스트 중단 기록은 별개로 유지한다.
+- Claude 수정(fix/save-input-and-session-boundaries: 450a988·8e18a75·bc0d44f):
+  - 키는 coordinator epoch를 쓰고, 보고 중에는 BUSY, 세션 정지 중 명령은 거부한다.
+  - 저장 529검사, 변이 5종 검출, 깨끗한 worktree CI 13단계 PASS.
+  - [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). PR 필수 CI·develop 통합·Codex 재검증 전까지, 그리고 AC-S16 손상복구 GUI 미확인으로 review를 유지한다.
 
 ## IH-120 — 달력·계절·하루 경계
 
