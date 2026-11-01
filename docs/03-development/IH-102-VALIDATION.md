@@ -9,7 +9,7 @@ IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합�
 ## 환경·대상
 
 - macOS 13.4, MacBook Air M1, Godot `4.7.2.stable.official.ed1daf0bf` Standard, Compatibility(OpenGL 4.1 Metal).
-- 브랜치 `feature/interaction-system` ← develop `82e2ba2`. 커밋: `95c723e` controller/target, `f89d812` UI/맵, `bcab854` runner, `4f69d80` IH-101 runner 이중 전달 수정(BUG-002), `5062a83` CI 등록, `3d99d36` 패널 여백.
+- 브랜치 `feature/interaction-system` ← develop `82e2ba2`. 커밋: `95c723e` controller/target, `f89d812` UI/맵, `bcab854` runner, `4f69d80` IH-101 runner 이중 전달 수정(BUG-002), `5062a83` CI 등록, `3d99d36` 패널 여백, `bf8501b` 리뷰 수정(세션 종료 틱에 큐된 E를 BUSY로 보고).
 - 원시 로그: git 무시 경로 `build/ih-102/`(runner, 변이, GUI 캡처).
 
 ## 실행 명령·결과
@@ -17,14 +17,16 @@ IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합�
 | 명령 | 종료 | 결과 |
 |---|---:|---|
 | `python3 tools/godot.py --headless --import` | 0 | 오류0, `.gd.uid` 6개 생성·추적 |
-| `python3 tools/godot.py --headless --script res://tests/test_interaction.gd` | 0 | 295검사 PASS, 2회 반복 차이0, 고아 노드0, 엔진 오류0, 약25초. 패널 스타일 변경 후 재실행도 PASS |
+| `python3 tools/godot.py --headless --script res://tests/test_interaction.gd` | 0 | 299검사 PASS(`bf8501b`), 2회 반복 차이0, 고아 노드0, 엔진 오류0, 약25초 |
 | 같은 명령 `-- --inject-failure` (`run_step`으로 판정) | 1 | 실패 사유: nonzero exit, engine error in log, missing completion marker |
 | `python3 tools/godot.py --headless --script res://tests/test_player_movement.gd` | 0 | IH-101 회귀 12개 AC PASS(Controller 추가 후) |
 | `python3 -m unittest discover -s tests -p 'test_*.py'` | 0 | 19개 OK(신규: suite 등록/마커/실패 출력 판정) |
-| `python3 tools/run_ci.py` (깨끗한 worktree, `5062a83`) | 0 | 10단계 PASS. player 124.0초, interaction 24.5초 |
+| `python3 tools/run_ci.py` (깨끗한 worktree, `5062a83`) | 0 | 10단계 PASS. player 124.0초, interaction 24.5초. 최종 head는 PR 필수 CI로 확인 |
 | `python3 tools/godot.py res://scenes/tests/interaction_test.tscn` (GUI) | 실행 중 사용자 조작 | 로그 오류0 |
 
 변이 검사: controller에 결함을 하나씩 넣은 5개 worktree로 runner를 실행했다. 중복 ID 필터 제거→AC-I04, 세션 종료 시 게이트 미해제→AC-I04~I11 128건, 가시선 검사 제거→AC-I02/I05/I10, echo 허용→AC-I07 실패(모두 종료1). "누른 시점 캡처 대신 처리 시점 선택 사용"은 통과했다. 현재 처리 순서에서는 선택이 요청 처리 뒤에만 갱신되고 포커스 상실/비활성 경로는 큐를 함께 폐기하므로 두 값이 항상 같은 등가 변이다. 캡처는 처리 순서가 바뀔 때를 위한 방어로 유지한다.
+
+코드 리뷰 수정: 세션이 닫히는 틱에 큐된 E가 결과 없이 지워지던 경계를 BUSY 보고로 고쳤다(`bf8501b`). 새 검사는 수정 전 controller에서 종료1(요청 결과 누락)로 실패하고 수정 후 통과했다.
 
 ## AC별 결과
 
@@ -38,7 +40,7 @@ IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합�
 | AC-I04 | pass | 거리·dot 동률 3배치(생성 순서/좌우 반전) 모두 `tie_a`. 반올림 거리 동률은 정면 대상 우선. 더 가까운 빈 ID·중복 ID 후보를 건너뛰고 `unique` 열기. 맵 검수: EmptyId=EMPTY_ID, SignEntrance·SecondSign=DUPLICATE_ID, 시작 위치 선택 없음. 먼 대상은 후보 아님(전맵 검색 없음, 코드 리뷰도 후보 집합만 순회) | 자동·리뷰 |
 | AC-I05 | pass | 사이 벽: 프롬프트 없음, E=NO_TARGET, begin0. 벽 제거 후 선택·열기. 사용 불가 대상의 Area가 사이에 있어도 뒤 대상 선택. Block 안 Anchor는 차단 | 자동 |
 | AC-I06 | pass | E 후 같은 틱 처리 전 무효화: 범위 밖=OUT_OF_RANGE, queue_free/free/available=false/숨김=INVALID_TARGET. 대체 대상 begin0, 열림0. 더 가까운 대상이 생겨도 캡처 대상 열기. try_begin false=TARGET_REJECTED(end0), 호출 중 자기 삭제=INVALID_TARGET(end1). 게이트·패널 변화 없음, NULL 접근 오류0 | 자동 |
-| AC-I07 | pass | 한 번 누름 begin1·opened1. ACTIVE 중 E=BUSY. 유지+echo8회 요청1, 같은 틱 두 번 누름 요청1. 요청 ID 단조 증가. 자원 시스템이 없어 자원 변화 대상 없음 | 자동 + 사용자 키보드 |
+| AC-I07 | pass | 한 번 누름 begin1·opened1. ACTIVE 중 E=BUSY. 유지+echo8회 요청1, 같은 틱 두 번 누름 요청1, 닫기 버튼과 같은 틱의 E는 BUSY로 보고. 요청 ID 단조 증가. 자원 시스템이 없어 자원 변화 대상 없음 | 자동 + 사용자 키보드 |
 | AC-I08 | pass | 포커스 LineEdit가 E를 소비(text 'e')하면 요청0. 외부 이동 차단 중 프롬프트 숨김·E=CONTROL_BLOCKED·패널 없음·외부 잠금 유지. 비활성 시 숨김·E=DISABLED·활성 세션 DISABLED 종료 | 자동 |
 | AC-I09 | pass | 걸으며 E: 열린 틱에 velocity0, 20틱 이동0. Enter(닫기 버튼)=COMPLETED, end1(cancelled=false). S 유지 중 10틱 이동0, 해제→재입력 10틱 15.9998. Escape=CANCELLED. 이전 ID의 close/cancel/finish_active/UI close_session은 새 세션에 영향 없음 | 자동 + 사용자 GUI |
 | AC-I10 | pass | ACTIVE 중 queue_free/숨김/비활성=INVALID_TARGET, 밀려남=OUT_OF_RANGE, 벽=OCCLUDED: 다음 틱 종료, 패널 숨김, 소유 게이트 해제. focus out=FOCUS_LOST(큐의 E도 FOCUS_LOST로 폐기), focus in 자동 재시작0, 선택 복귀. ready 이전 포커스 알림 오류0, 맵 트리 이탈·재진입 후 선택 정상, Controller 제거=REMOVED·end1·게이트 해제, 세션 중 맵 해제 오류0. 실제 앱 전환은 사용자 확인 | 자동 + 사용자 GUI |
@@ -47,7 +49,7 @@ IH-102 상태는 **review**다. PR의 필수 CI checks 성공과 develop 병합�
 
 ## 수동 GUI 확인
 
-- 확인 주체: **사용자**(실제 창·키보드·마우스·육안), 2026-11-01, 빌드 `3d99d36`(최종 게임 코드와 같은 빌드).
+- 확인 주체: **사용자**(실제 창·키보드·마우스·육안), 2026-11-01, 빌드 `3d99d36`. 이후 `bf8501b`는 세션 종료 틱의 큐 보고와 트리 이탈 시 정리만 바꿨으며 사용자 수동 조작은 다시 하지 않았다.
 - 절차: ① 시작 프롬프트·오른쪽 상자·멀어지면 숨김, ② E 패널·버튼 포커스·클릭/Enter/Escape 닫기·패널 중 E 연타/유지, ③ S 유지 중 E 즉시 정지·닫은 뒤 neutral, ④ 패널 연 채 Cmd+Tab 전환/복귀·자동 재열림 없음, ⑤ 비16:9 리사이즈 가독성.
 - 응답: "1~5 모두 정상". 항목별 메모는 없다.
 - Claude는 화면 기록/보조 접근 권한이 없어(ENV-003) 엔진 viewport 캡처로 한글 렌더링·패널 여백만 보조 확인했다(`build/ih-102/gui/`). OS 창 표시 증거는 아니다.
