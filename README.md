@@ -4,7 +4,9 @@
 
 ## 현재 상태
 
-2026-10-31: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 게임 플레이 기능은 아직 없다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 상세 설계는 준비되었으며 기능 구현은 미착수다.
+v0.2.0 Character의 [기능 완료 조건을 충족했다](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md). 이동·상호작용 테스트 맵을 갖춘 개발 기준점이며, main 승격/태그는 해당 문서의 CI 관문을 거쳐 발행한다.
+
+2026-11-01: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 기본 실행 씬은 빈 Foundation이며, 이동·상호작용은 별도 테스트 맵에서 실행한다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 플레이어 이동·충돌은 Claude Code가 구현하고 AC-01~12를 검증했다([검증 기록](docs/03-development/IH-101-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/movement_test.tscn`으로 실행하며 기본 진입점은 Foundation 그대로다. IH-102 상호작용은 구현·develop 통합 후 [Codex 리뷰](docs/03-development/IH-102-REVIEW.md)에서 BUG-003/004를 확인해 review로 재개했고, [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 채집·인벤토리·저장은 아직 없다.
 
 최초 Foundation 커밋 `957dd3b`를 생성하고 `main`·`develop` 기준점을 구성했다. Git/GitHub는 사용자 요청 범위와 검증 조건에 따라 자율 운영한다. 원격 동기화와 실제 반영 기록은 [Git 구축 기록](docs/03-development/GIT_BOOTSTRAP.md)을 따른다. 최초 보고서는 당시 상태를 보존한 기록이다.
 
@@ -26,7 +28,7 @@
 ## 디렉터리
 
 ```text
-.github/             Issue/PR 템플릿, CI 도입 대기
+.github/             Issue/PR 템플릿, 고정 엔진 CI
 .claude/rules/       아키텍처·코딩·Git·테스트 규칙
 docs/00-overview/    개요·비전·로드맵
 docs/01-game-design/ 시스템 기획
@@ -59,4 +61,4 @@ Codex는 설계/기술 기반 검증, Claude Code는 이후 게임 기능 구현
 
 ## 다음 작업
 
-Claude Code: [IH-101 인수인계](docs/03-development/IH-101-HANDOFF.md)에 따라 이후 이동/충돌 구현과 AC-01~12 검증. Codex: 구현 결과 기술 검토 또는 IH-004 CI 설계/구축. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.
+IH-004 CI는 정상/실패·통합 검증을 완료했다([검증 기록](docs/03-development/IH-004-VALIDATION.md)). IH-102 상호작용(안내판/상자 살펴보기)은 Claude Code가 구현하고 AC-I01~12를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/interaction_test.tscn`으로 실행한다. 아이템·채집·저장은 아직 없다. BUG-003/004 수정은 통합됐으며 [검토 기록](docs/03-development/IH-102-REVIEW.md)을 따른다. v0.2.0 마일스톤의 기능 판정을 통과했다. 다음 설계 작업은 IH-110 아이템·인벤토리 명세다. Codex는 명세·기술 검토를 맡는다. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.

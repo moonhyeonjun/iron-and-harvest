@@ -36,7 +36,7 @@
 
 ## IH-101의 최소 분리 제안
 
-[Player 상세 명세](PLAYER_MOVEMENT.md)에 controller/Visual/맵의 책임과 향후 Interaction·Inventory·Combat 연결 경계를 정의했다. 현재는 문서만 있으며 새 매니저/Autoload/게임플레이 파일을 생성하지 않았다. 물리 위치는 Player, 카메라 경계는 맵, 표현은 Visual이 소유하도록 제안한다. 수락 검증 전에는 Proposed를 유지한다.
+[Player 상세 명세](PLAYER_MOVEMENT.md)에 controller/Visual/맵의 책임과 향후 Interaction·Inventory·Combat 연결 경계를 정의했다. IH-101에서 game/scripts/player(controller·Visual), game/scenes/player, game/scenes/tests로 구현했다. 새 매니저/Autoload는 만들지 않았다. 물리 위치는 Player, 카메라 경계는 맵, 표현은 Visual이 소유한다. AC 검증은 통과했고 ADR-012는 Proposed를 유지한다.
 
 ## 시간·이벤트 제안
 
@@ -49,3 +49,7 @@ Event는 event_id/type/date/actor_ids/target_ids/payload_version을 갖고 상�
 같은 행동이 생활/장부 어디서 들어와도 동일 검증을 통과하고 동일 상태를 만든다. 재고·인력·하루 진행의 불변식을 테스트한다. 서비스 수/폴더 세분화/이벤트 타입/주기 구현은 실제 기능 시 확정한다.
 
 경로 근거: [Godot 파일 시스템](https://docs.godotengine.org/en/stable/tutorials/scripting/filesystem.html). 기존 루트 src 구조는 참조 초안으로 대체되었다.
+
+## IH-102 상호작용 경계 제안
+
+[상세 명세](INTERACTION.md)는 기존 Player 아래 별도 InteractionController의 탐지·선택·재검증·세션과 Target의 행동 허용, UI의 표시 책임을 구분한다. 채집/재고/보상은 후속 도메인 책임이다. 입력 시 대상과 실행 시 대상이 다르거나 소멸하면 거부하며 다른 대상으로 자동 전환하지 않는다. IH-102에서 game/scripts/interaction(controller·target), game/scenes/interaction, game/ui/interaction, game/scenes/tests/interaction_test로 구현했다. Autoload·이벤트 버스·범용 행동 프레임워크는 만들지 않았다. 맵이 Controller와 UI를 연결한다.

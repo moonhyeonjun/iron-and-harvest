@@ -17,13 +17,15 @@
 - [저장 시스템](SAVE_SYSTEM.md): 버전·복구·migration.
 - [성능](PERFORMANCE.md): 처리 주기·측정·최적화 관문.
 - [환경](TOOLCHAIN.md): 실제 발견 도구와 미확인 항목.
-- [IH-101 이동 명세](PLAYER_MOVEMENT.md): Proposed 씬/입력/물리/카메라/확장 계약. 구현은 미착수.
+- [CI](CI.md): IH-004 완료, 공통 검사·고정 의존성·PR 병합 관문.
+- [상호작용](INTERACTION.md): IH-102 Proposed 명세, [검사](../03-development/IH-102-ACCEPTANCE.md)·[인수인계](../03-development/IH-102-HANDOFF.md). Claude Code 구현·AC-I01~12 검증 완료([검증 기록](../03-development/IH-102-VALIDATION.md)), [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop 통합. 이후 [Codex 추가 검토](../03-development/IH-102-REVIEW.md)에서 BUG-003/004 재현 → [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합, done.
+- [IH-101 이동 명세](PLAYER_MOVEMENT.md): Proposed 씬/입력/물리/카메라/확장 계약. Claude Code 구현과 AC-01~12 검증 완료([검증 기록](../03-development/IH-101-VALIDATION.md)), [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop 통합, done.
 - [IH-101 수락 검사](../03-development/IH-101-ACCEPTANCE.md)와 [Claude 인수인계](../03-development/IH-101-HANDOFF.md): 검사12항목·작업 순서·전달 프롬프트.
 
 ## 우선순위와 완료
 
-엔진 확인·빈 프로젝트 import/실행은 완료했다. 다음은 준비된 IH-101 명세에 따른 Player 구현, 이후 IH-102 Interaction이다. Inventory/Calendar/Production이 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 Claude Code가 이후 Player/Interaction을 구현한다.
+엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory/Calendar/Production이 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 Claude Code가 Interaction 리뷰 수정과 후속 게임 기능을 구현한다.
 
 ## TBD
 
-플러그인·전체 테스트 프레임워크·CI 이미지·JSON/Resource 선택·저장 형식·타깃 OS와 최소 사양. 엔진 패치 버전은4.7.2로 고정. [ADR](../04-decisions/ADR/README.md)을 통해 승인/검증한다.
+플러그인·전체 테스트 프레임워크·JSON/Resource 선택·저장 형식·타깃 OS와 최소 사양. 엔진 패치 버전은4.7.2로 고정. [ADR](../04-decisions/ADR/README.md)을 통해 승인/검증한다.

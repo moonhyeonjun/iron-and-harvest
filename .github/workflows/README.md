@@ -1,5 +1,5 @@
-# CI 도입 대기
+# CI workflow
 
-현재 활성 워크플로는 없다. 로컬 foundation 검사 명령은 CONTRIBUTING.md를 따른다.
+ci.yml은 develop/main PR·push와 수동 실행에서 고정 Godot의 headless 검사와 저장소 검사를 실행한다. IH-004의 정상/실패 PR와 develop push 검증을 완료했다. workflow_dispatch는 기본 main에 workflow가 포함되는 다음 승격 이후 사용할 수 있다.
 
-TODO IH-004: IH-002에서 Godot4.7.2와 smoke 실행기가 검증되었으므로 PR 대상 develop/main에 문서·데이터·headless 검사를 구성한다. Action 버전/권한/캐시 키를 검토하고 비밀이 없는 읽기 전용 권한으로 시작한다. 이 파일은 워크플로 YAML이 아니므로 원격 실행을 발생시키지 않는다.
+권한·고정 버전·실패 정책·로그·로컬 명령은 [CI 운영](../../docs/02-technical-design/CI.md)을 따른다. GUI/게임 배포/릴리스는 포함하지 않는다.

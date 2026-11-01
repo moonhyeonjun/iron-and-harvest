@@ -6,19 +6,21 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 우선순위: priority:critical/high/medium/low.
 상태: status:backlog → ready → in-progress → review → done, 진행 불가 시 blocked와 원인 기록. ready는 의존 작업 완료와 인수 조건이 준비되었을 때만 사용한다. blocked가 일정 지연을 숨기는 상태가 되어서는 안 된다.
 
-현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 명세 준비ready이며 구현은 미완료다.
+현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 Claude Code가 구현하고 AC-01~12를 검증했으며 [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop에 통합했다(done). main 반영·v0.2.0 태그는 하지 않았다.
+
+v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마일스톤 PASS](CHARACTER-v0.2.0-VERIFICATION.md). main 승격·태그 발행은 필수 CI 이후 진행한다. IH-110은 상세 명세가 아직 없어 backlog를 유지한다.
 
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
 | IH-001 | 기반·문서·관리 체계 | documentation | priority:high | status:done | 없음 |
 | IH-002 | Godot 환경 고정과 빈 프로젝트 실행 | tech-debt | priority:critical | status:done | 없음 |
 | IH-003 | 라이선스·권리 정책 결정 | design | priority:high | status:backlog | 없음 |
-| IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:ready | IH-002 |
+| IH-004 | CI 검사 도입 | tech-debt | priority:medium | status:done | IH-002 |
 | IH-005 | 실제 개발 일정 재산정 | design | priority:medium | status:backlog | 없음 |
 | IH-006 | 픽셀 규격과 제작 흐름 결정 | art | priority:medium | status:backlog | IH-002 |
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
-| IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:ready | IH-002 |
-| IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:backlog | IH-101 |
+| IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:done | IH-002 |
+| IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:backlog | IH-110 |
 | IH-112 | 초기 저장과 복원 | feature | priority:critical | status:backlog | IH-110, IH-111 |
@@ -76,7 +78,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 예상 영향 범위: .github/workflows.
 - 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
 - 테스트 항목: 로컬 재현·권한·실패 차단.
-- 현재 증거/미확정: 활성 workflow 없음. Godot4.7.2/smoke 검증 완료로 착수 가능; Codex 기술 작업.
+- 현재 증거/미확정: 547b117, PR #6 merge e50a8a2. 로컬/PR/통합 push 성공, 실패 PR #7 blocked 후미병합closed, 두브랜치 required CI 보호 확인. [CI 검증](IH-004-VALIDATION.md), [운영](../02-technical-design/CI.md), ADR-013 Accepted.
 
 ## IH-005 — 실제 개발 일정 재산정
 
@@ -102,21 +104,25 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 
 - 목적: 생활 조작의 기반인 자유 이동과 장애물 회피를 검증한다.
 - 요구사항: CharacterBody2D 이동·4개입력·대각선 속도·조작 게이트·카메라·idle/walk·임시 충돌 맵.
-- 관련 문서: [상세 명세](../02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](IH-101-ACCEPTANCE.md), [인수인계](IH-101-HANDOFF.md).
-- 예상 영향 범위: game/scenes/player·scenes/tests·scripts/player·tests 및 project.godot. 현재 문서 작업에서는 변경 없음.
+- 관련 문서: [상세 명세](../02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](IH-101-ACCEPTANCE.md), [인수인계](IH-101-HANDOFF.md), [검증 기록](IH-101-VALIDATION.md).
+- 영향 범위: game/scenes/player·scenes/tests·scripts/player·tests 및 project.godot(입력·화면·물리·레이어).
 - 완료 조건: AC-01~12 실제pass, 코드 리뷰/문서 갱신/검증된 develop 통합. 명세만으로done 금지.
 - 테스트 항목: 실제 물리 이동 거리·대각선·반대키·30/60/120fps·벽/통로·게이트·포커스·표현·카메라·회귀.
-- 현재 증거/미확정: Codex 상세 설계/테스트 계획/전달 프롬프트 완료, Claude Code 구현 준비ready. 모든 기능 검사는 미실행. 속도/아트/조작 정책은 검증용 Proposed 기준안(ADR-012).
+- 현재 증거/미확정: feature/player-movement에서 구현(e9a0e03, 7cd97c1, 571c1e9). 자동 runner 4변형 PASS·실패 주입 종료1, GUI 수동 항목 사용자 확인. BUG-001 수정. [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4) merge 6575a17로 develop 통합·원격 확인, done. 속도/아트/조작 정책은 검증용 Proposed 기준안(ADR-012).
 
 ## IH-102 — 상호작용 대상·프롬프트
 
-- 목적: 상호작용 대상·프롬프트을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 범위 내 대상 선택·행동 요청·취소.
-- 관련 문서: [설계](../01-game-design/LIFE_SYSTEM.md).
-- 예상 영향 범위: Interaction/UI.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 대상 겹침·범위 밖·연타.
-- 현재 증거/미확정: 이후 작업.
+- 목적: 표시된 가까운 대상에 한 번 요청하고 안전하게 종료하는 생활 행동 경계를 만든다.
+- 요구사항: Area 후보·거리/정면/가시선·안정 선택·프롬프트·입력 큐/재검증·살펴보기 패널·취소/게이트 복구.
+- 관련 문서: [상세 명세](../02-technical-design/INTERACTION.md), [수락 검사](IH-102-ACCEPTANCE.md), [인수인계](IH-102-HANDOFF.md), ADR-014 Proposed.
+- 영향 범위: game/scripts/interaction·tests, scenes/interaction·tests, ui/interaction, game/tests(runner·probe), player.tscn 마지막 자식, InputMap/layer_3, tools/run_ci.py 등록.
+- 완료 조건: AC-I01~12 pass·실제 GUI·기존 이동 회귀·CI checks·리뷰·develop 통합. 명세만으로 done 금지.
+- 테스트 항목: 범위/방향/동률/벽, 삭제/거부/연타/중복 종료, UI 소비/포커스/이동 복구/씬 수명·CI.
+- 현재 증거/미확정: feature/interaction-system에서 구현(95c723e, f89d812, bcab854, 4f69d80, 5062a83, 3d99d36, bf8501b). AC-I01~12 자동 299검사 PASS, 사용자 GUI "1~5 모두 정상", 로컬 CI 10단계 PASS. [검증 기록](IH-102-VALIDATION.md). [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9) 필수 CI 성공 후 merge 318fcd2로 develop 통합, develop push CI 성공, done. 반경/정면각/키/UI는 검증용 제안(ADR-014 Proposed).
+- 후속 판정(2026-11-01): Codex가 `29b2ed3`에서 BUG-003/004를 재현하여 review로 재개. [검토·Claude 수정 프롬프트](IH-102-REVIEW.md)의 실행 시 중복 ID/RESOLVING 취소 회귀를 보완해야 done으로 복귀한다. 기존 통합 이력은 보존한다.
+- BUG-003/004 수정(2026-11-01): fix/interaction-request-validation `aaac5da`(실패 회귀)·`0332b5a`(수정). runner 333검사 PASS, Codex 재현 종료0, 로컬 CI 10단계 PASS, 사용자 GUI "1~5 모두 정상"(0332b5a). [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 필수 CI 성공, merge e5d7730, develop CI 성공 → done.
+- Codex 재검증(2026-11-01): `69561ca`에서 원래 재현 위반0, 전체 CI 10단계/상호작용333검사 PASS 및 원격 CI 성공 확인. BUG-003/004 resolved·IH-102 done 유지. [검증 기록](IH-102-VALIDATION.md).
+- 의존성 메모: IH-101은 기능 의존, IH-004는 사용자 지정 개발 순서와 PR 검증 기반이다.
 
 ## IH-110 — 아이템 정의와 인벤토리
 

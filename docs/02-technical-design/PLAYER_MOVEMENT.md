@@ -1,6 +1,6 @@
 # IH-101 플레이어 이동·충돌 구현 명세
 
-상태: **구현 준비용 Proposed 명세**, 2026-10-31. Codex 설계 완료, 기능 미구현. 확정 기술은 ADR-011의 Godot4.7.2 Standard/GDScript/Compatibility다. 아래 수치와 조작 정책은 재현 가능한 검증용 기준안이며 최종 게임 밸런스·아트 규격으로 확정하지 않는다. 변경 시 수락 조건도 함께 갱신한다.
+상태: **Proposed 명세, IH-101 구현·검증·develop 통합 완료**, 2026-10-31. Codex 설계 → Claude Code 구현. 결과와 엔진 관찰은 이 문서 끝과 [검증 기록](../03-development/IH-101-VALIDATION.md)에 있다. 확정 기술은 ADR-011의 Godot4.7.2 Standard/GDScript/Compatibility다. 아래 수치와 조작 정책은 재현 가능한 검증용 기준안이며 최종 게임 밸런스·아트 규격으로 확정하지 않는다. 변경 시 수락 조건도 함께 갱신한다.
 
 관련: [생활 시스템](../01-game-design/LIFE_SYSTEM.md), [아키텍처](ARCHITECTURE.md), [ADR-012](../04-decisions/ADR/ADR-012-player-movement.md), [수락 검사](../03-development/IH-101-ACCEPTANCE.md), [Claude 인수인계](../03-development/IH-101-HANDOFF.md).
 
@@ -8,7 +8,7 @@
 
 작은 공간을 자유롭게 걷고 벽과 장애물을 자연스럽게 돌아가는 생활 조작의 기반을 만든다. 통치 모드나 장래의 전투가 플레이어 위치를 별도로 복제하지 않도록 Player가 월드의 실제 위치를 소유한다.
 
-이번 명세의 구현 범위는 키보드 이동·충돌·카메라·idle/walk 표현·임시 테스트 맵·검사다. 상호작용 행동, 채집, 가방, 기력, 달리기, 점프, 공격, 대시, 저장, NPC, 통치 UI, 게임패드 지원은 제외한다. 미래 기능의 빈 매니저/Autoload/전역 이벤트 버스를 만들지 않는다. 현재 문서 작업에서는 아래 파일도 생성하지 않는다.
+이번 명세의 구현 범위는 키보드 이동·충돌·카메라·idle/walk 표현·임시 테스트 맵·검사다. 상호작용 행동, 채집, 가방, 기력, 달리기, 점프, 공격, 대시, 저장, NPC, 통치 UI, 게임패드 지원은 제외한다. 미래 기능의 빈 매니저/Autoload/전역 이벤트 버스를 만들지 않는다. 아래 파일은 IH-101에서 계획대로 생성했다.
 
 ## 예정 Scene 및 파일
 
@@ -134,3 +134,13 @@ controller가 transform, velocity, facing, locomotion과 이동 허용 상태의
 세부 수락 조건은 IH-101-ACCEPTANCE의 AC-01~12다. 실제 물리 검사와 GUI 조작 확인을 모두 통과해야 IH-101을done으로 바꾼다. 명세 작성만으로 v0.2.0을 완료하거나 태그하지 않는다.
 
 TBD: 최종 속도/가감속/달리기, 아트·해상도·카메라 보간, 게임패드/재매핑, NPC 충돌, 게임 진입점 전환. 이번 검증 기준안은 이 TBD들의 제품 결정을 대신하지 않는다. 공식 stable 문서는 이동할 수 있으므로 구현 시 고정4.7.2 바이너리에서도 API와 씬 속성을 검증한다.
+
+## 구현 결과·엔진 관찰 (2026-10-31)
+
+위 계약대로 구현했다. 파일·노드 구성·공개 API(`set_control_enabled`, `is_control_effective`, `get_facing`, `get_locomotion`, Visual의 `set_presentation`)는 명세와 같다. 검증용 수치는 바꾸지 않았다. 고정4.7.2에서 확인한 차이와 보완은 다음과 같다.
+
+- 벽 미끄러짐: floating 모드는 첫 slide에서 남은 이동 길이를 유지한다. →+↑로 Block을 밀면 투영값67.9가 아니라 약96 u/s로 벽을 따라 간다. "벽을 따라 y감소"는 충족한다. 이 감각을 유지할지는 ADR-012 검토 항목이다.
+- 포커스: macOS GUI 시작 시 APPLICATION_FOCUS_IN→OUT이 트리 진입 전에 도착한다. controller는 상태만 기록하고 Visual 갱신은 `_ready` 이후로 미룬다(BUG-001). 포커스 판단은 APPLICATION_FOCUS 알림을 사용한다.
+- 테스트 맵 중심 (640,360)은 Block 내부다. 카메라 중심 추적은 빈 바닥에서 검사한다. AC-06의 x≤594는 평평한 옆면(y≥280)에 적용하고 모서리 구간은 관통 검사로 확인한다.
+- 카메라는 Player 자식 + physics callback이라 같은 틱에 갱신되어 측정 지연이 0이다.
+- (2026-11-01 정정, BUG-002) headless에서도 `parse_input_event`+`flush_buffered_events()`가 Viewport로 동기 전달한다. 이전의 '전달하지 않는다'는 unicode 없는 이벤트로 오판한 것이며, runner의 중복 `push_input`을 제거했다.

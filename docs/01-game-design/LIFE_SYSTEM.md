@@ -18,7 +18,11 @@ v0.2 이동/상호작용 → v0.3 수집/가방 → v0.4 농사. 벽 관통 없�
 
 ## 첫 구현 준비
 
-IH-101의 이동·충돌·카메라와 임시 조작 기준은 [구현 명세](../02-technical-design/PLAYER_MOVEMENT.md)에 있다. Codex 설계만 완료했으며 Claude Code 구현과 실제 조작 검증은 후속이다. 임시 속도/키/화면 값은 최종 제품 결정을 대신하지 않는다.
+IH-101의 이동·충돌·카메라와 임시 조작 기준은 [구현 명세](../02-technical-design/PLAYER_MOVEMENT.md)에 있다. Claude Code가 구현·수락 검증을 완료하고 develop에 통합했다. 결과는 [IH-101 검증 기록](../03-development/IH-101-VALIDATION.md)을 따른다. 임시 속도/키/화면 값은 최종 제품 결정을 대신하지 않는다.
+
+## 상호작용 구현 준비
+
+IH-004 CI 완료 후 [IH-102 명세](../02-technical-design/INTERACTION.md)를 작성했다. 가까운 정면 대상의 행동 안내→E로 살펴보기→설명 읽기→닫기를 최소 경험으로 검증한다. 벽 너머/범위 밖 행동, 삭제된 대상 실행, 중복 요청은 거부한다. 아이템/채집 보상은 이 단계에 포함하지 않는다. Claude Code가 구현·GUI 수락 검사를 완료하고 develop에 통합했다. 이후 [Codex 검토](../03-development/IH-102-REVIEW.md)에서 BUG-003/004를 재현해 review로 재개했고 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 수정·회귀 검사가 다음 작업이다.
 
 ## TBD
 

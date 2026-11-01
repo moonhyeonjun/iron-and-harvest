@@ -2,7 +2,56 @@
 
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
-## Unreleased — 2026-10-31
+## v0.2.0 Character — 2026-11-01
+
+- 기능 마일스톤 판정 PASS: IH-101 이동·충돌·카메라, IH-102 대상 선택·살펴보기·안전한 종료. [판정/승격 기준](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md).
+- BUG-001~004 수정과 회귀 포함. CI 10단계/Python19/이동360/상호작용333 검사, 기존 사용자 GUI 확인.
+- 엔진4.7.2 Standard/GDScript/Compatibility 고정, 기본 Foundation 씬 유지, 테스트 맵 명시 실행.
+- 개발용 소스 기준점이다. 채집·가방·저장·Export/Steam 출시·제품 라이선스는 후속 범위다. 원격 태그는 main CI 성공 후 발행한다.
+
+## 구현 이력 — 2026-11-01 (v0.2.0에 포함)
+
+### IH-102 리뷰 수정 (Claude Code)
+
+- Fixed BUG-003: 실행 직전·활성 세션에서도 후보 중 중복 ID를 재검증한다(선택과 같은 정책). 활성 대상의 ID 변경도 취소한다.
+- Fixed BUG-004: try_begin 중 비활성화·포커스 상실·트리 이탈이 일어난 요청은 ACTIVE가 되지 않는다. end/rejected를 각각 1회 보고하고 게이트를 소유하지 않는다.
+- test_interaction에 회귀 12종 추가(333검사), probe target `on_begin` 훅.
+- [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 develop 통합(merge e5d7730), PR/develop CI success. IH-102 done. main 미반영.
+
+
+### IH-102 Codex 후속 검토
+
+- 추가 경계 재현으로 BUG-003(실행 시 중복 ID 검증 누락), BUG-004(RESOLVING 중 disable 무시) 등록. IH-102 review 재개, 수정 수락 조건과 Claude 프롬프트 작성.
+- 기존 구현/통합/GUI 기록은 보존하고 현재 문서 상태 표기를 정리했다. 게임 코드와 CI 설정 변경 없음.
+
+### IH-102 상호작용 대상·프롬프트 (Claude Code)
+
+- InteractionController(Player 마지막 자식, priority 10): Area2D 후보, 거리32·정면 dot0.5·world_solid 가시선, 정수 tuple 선택, 틱당 1개 입력 의도 큐와 캡처 대상 재검증, 단조 request ID, 세션·이동 게이트·포커스·삭제·제거 취소.
+- InteractionTarget(layer 3=값4, 비물리 Area): 안내판/상자 살펴보기 전용, 보상·아이템 없음. InteractionUI: 프롬프트와 제목/설명/닫기 패널, 닫기·취소 의도만 발행.
+- `scenes/tests/interaction_test.tscn`: 이동 맵 인스턴스 + 대상2 + ID 검수 + 신호 연결. Foundation 진입점 유지.
+- InputMap `interact`(물리 E), `interaction_cancel`(Escape), layer_3 이름.
+- `tests/test_interaction.gd` AC-I01~12 자동 검사와 probe target, `tools/run_ci.py`에 interaction-acceptance 등록(`ci_steps()`).
+- Fixed BUG-002: IH-101 runner의 headless 키 이중 전달과 잘못된 관찰 기록.
+- [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop 통합(merge 318fcd2), PR/develop CI checks 성공. main 미반영.
+- 수치·키·문구는 검증용 제안. 가방·채집·대화·상점·전투·저장·통치는 미구현. v0.2.0 태그/릴리스 없음.
+
+## 구현 이력 — 2026-10-31 (v0.2.0에 포함)
+
+- IH-004 완료 후 IH-102 상호작용 상세 명세·수락12항목·Claude 인수인계 작성. ADR-014 Proposed, 기능 미구현/검사 미실행.
+
+- IH-004: 고정 Action/엔진 체크섬 기반 CI, 공통 검사 실행기와 실패 판정 회귀 추가. 원격 PR/통합 push 성공·실패 PR 차단 검증 완료, ADR-013 Accepted.
+
+### IH-101 플레이어 이동·충돌 (Claude Code)
+
+- CharacterBody2D floating Player: 8방향 키보드 이동(속도96 임시값), 4방향 facing·idle/walk, 조작 게이트·포커스 neutral 정책, 임시 Visual, 비활성 기본 Camera2D.
+- 1280×720 테스트 맵 `scenes/tests/movement_test.tscn`(외곽·Block·폭20 통로, 카메라 limit). 기본 진입점은 Foundation 유지.
+- project.godot: 이동 4액션(WASD physical·화살표 keycode), 물리60Hz, 640×360 viewport/keep/integer, 충돌 레이어 이름.
+- `tests/test_player_movement.gd`: 실제 물리·입력 기반 AC-01~12 자동 검사, 2회 반복 비교, 엔진 오류 수집, `--inject-failure`.
+- Fixed BUG-001: macOS 시작 시 트리 진입 전 포커스 알림의 null Visual 호출.
+- [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop 통합(merge 6575a17). main 미반영.
+- 수치·도형은 검증용 임시값이며 최종 밸런스/아트가 아니다. 상호작용·채집·가방·전투·저장·NPC·UI는 미구현. v0.2.0 태그 없음.
+
+### Foundation 확인·IH-101 명세 (Codex)
 
 - Foundation 재검증 완료, 기존 annotated v0.1.0 → d176bd7 및 원격 일치 확인; 태그 유지.
 - IH-101 이동/입력/카메라/충돌/표현 상세 명세, AC-01~12 검사 계획, Claude Code 전달 프롬프트 추가.

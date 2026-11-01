@@ -90,3 +90,117 @@
 - 통합 tree는 검증한 명세 커밋과 동일. game/tools/tests/.godot-version은 v0.1.0과 변경 없음.
 - v0.1.0 객체7488fc9/대상d176bd7 원격 재확인, 태그 변경 없음. 새 태그/제품 릴리스 없음.
 - 결과 기록은 docs/ih-101-results의 별도 문서 커밋으로 통합한다. 해당 기록 커밋 자체의 최종 SHA는 Git 이력과 완료 보고에서 확인한다.
+
+## 2026-10-31 — IH-101 플레이어 이동·충돌 구현 (Claude Code)
+
+- 시작: develop clean, origin/develop=64928e5. `feature/player-movement` 신규 분기(로컬/원격 기존 브랜치 없음). 사용자 변경 없음.
+- 환경: macOS 13.4 / M1, Godot 4.7.2.stable.official.ed1daf0bf Standard, Compatibility(OpenGL 4.1 Metal).
+- 구현: Player(controller·Visual·Camera2D), 테스트 맵, InputMap/화면/물리/레이어 설정, 물리 수락 runner. 빈 매니저·Autoload·외부 의존 없음.
+- 커밋: e9a0e03 feat, 7cd97c1 test, 571c1e9 fix(BUG-001).
+- 자동: runner 기본/`--max-fps` 30/60/120 모두 종료0(각 330검사, 약2분), `-- --inject-failure` 종료1, 수정 전 controller에 대한 runner 종료1. 5개 프로세스 물리 측정 동일, 한 실행 2회 차이0.
+- 회귀: import·smoke·`--quit-after 10`·테스트 맵 headless·validate_foundation·unittest11·check_economy7·`git diff --check` 모두 종료0, 로그 오류/경고0.
+- 수동 GUI: 사용자가 실제 창·키보드로 키 입력/충돌/포커스 전환/카메라·리사이즈를 확인하고 "1~4 모두 정상"으로 응답(7cd97c1 빌드). Claude는 화면 기록·보조 접근 권한이 없어(ENV-003) 엔진 viewport 캡처로 렌더링만 보조 확인.
+- 관찰: floating 벽 미끄러짐 약96 u/s(투영67.9 아님), macOS 포커스 알림이 `_ready` 전에 도착(BUG-001), headless는 입력을 Viewport로 전달하지 않음. 측정 중 runner 자체 오류 2건(투영 속도 가정, process 프레임 시점 입력)을 발견해 판정 기준을 넓히지 않고 측정 시점·구간을 바로잡음.
+- 결과: AC-01~12 pass, IH-101 review. 상세: [IH-101 검증](IH-101-VALIDATION.md). develop PR 통합·원격 확인은 후속 기록. v0.2.0 태그/릴리스 없음.
+
+### IH-101 통합 결과
+
+- [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4) feature/player-movement → develop, merge 6575a17636bf1449620e880813c0eaa99d1e904c. API merged=true, CI check 없음(IH-004 미도입).
+- 로컬 develop fast-forward, 통합 tree = 검증 커밋 f7d2104 tree. IH-101 done, AC-12 원격 반영 확인.
+- 앱 PR 추적 연결은 `gh` CLI 부재로 실패(기능 영향 없음). main 미변경, v0.1.0 유지, v0.2.0 태그/릴리스 없음.
+- 다음: Codex의 IH-102 상호작용 명세 또는 IH-004 CI. ADR-012 Accepted 여부와 벽 미끄러짐 속도는 설계 검토 항목.
+
+## 2026-10-31 — IH-101 Codex 기술 재검토
+
+- 대상 develop48aee7e, clean/원격 일치. 구현 branch f7d2104와 game/ 동일.
+- 코드/씬/AC 검사 후 기능 수정을 요구할 결함 없음. 정적검사·Python11개·Godot Import·Foundation smoke·물리 runner 재실행 모두종료0.
+- runner 출력은360검사/실패0/엔진오류0, 반복2회 측정17종 차이0. 앞선 Claude 기록330개와 달라 검증 보고서의 집계를 정정했다.
+- GUI 재실행 없음. 사용자 확인은 기존7cd97c1 빌드의 기록으로 구분. ready 이전 포커스 수정은 자동 회귀 통과.
+- 문서만 수정: 검증보고/주간기록과 LIFE_SYSTEM/CLAUDE/ADR-012의 현재 상태. 게임 기능/밸런스/ADR 상태 변경 없음.
+- IH-101 done 유지. 다음 Codex 설계 후보는 IH-102; IH-004 CI도 후속. main/v0.1.0 유지, 새 태그/릴리스 없음.
+- 검토 기록은 docs/ih-101-technical-review에서 커밋하고 검증 후 develop에 통합한다. 기록 커밋 해시와 원격 결과는 Git 이력/완료 보고를 따른다.
+
+## 2026-10-31 — IH-004 CI 완료
+
+- 시작 develop cd06f94 clean. feature/ci-foundation commit547b117, PR #6 merge e50a8a283310b54be6eeaa81cd25da1b8c033a86. 게임 코드 변경 없음.
+- 구현: 공식 Action SHA·엔진 ZIP SHA-256 고정, 읽기 전용 CI checks, 공통 실행기/오류·timeout 판정, 실패 로그7일보존.
+- 로컬9단계/Python17개/경제설계7개/물리360개 통과. 원격 PR run41210930155와 통합 push run41211192044 success.
+- 실패 검증: 별도 PR #7 run41210992257은 의도한 unittest1개 실패, artifact 확인. required CI 적용 후 mergeable_state=blocked. PR은 미병합closed. 실험 이력 보존.
+- develop/main 보호: CI checks(GitHub Actions app15368), strict/admins 적용, force/deletion 금지 확인. 기본 main 파일/태그는 미변경, 수동 workflow_dispatch는 다음 main 승격 후 사용.
+- IH-004 done, ADR-013 Accepted. 상세 [검증 기록](IH-004-VALIDATION.md). 기존 GUI/Windows/Export/Steam 범위는 그대로 별도.
+- 순서: CI 완료를 확인했으므로 이후 IH-102 상호작용 명세를 Codex가 작성한다. 구현은 Claude Code 담당.
+
+## 2026-10-31 — IH-102 상세 설계
+
+- IH-004의 PR/실패 차단/develop push 성공 확인 후 시작. 구현 순서는 사용자 요청을 따른다.
+- 산출물: INTERACTION.md, IH-102-ACCEPTANCE/HANDOFF, ADR-014 Proposed, TDD/아키텍처/생활/작업 진입점 갱신.
+- 설계: 대상 후보/정면각/가시선/동률, 입력 큐와 실행 시 재검증, 프롬프트/살펴보기, 취소·수명·이동 게이트, 향후 보상 도메인 경계.
+- IH-102 ready. AC-I01~12는 모두미실행. 게임플레이 코드/씬/InputMap 미변경, 기존 IH-101 보존.
+- 문서 링크·구조·diff 검사를 수행하고 필수 CI를 거쳐 PR로 통합한다. 신규 기능 테스트 통과로 기록하지 않는다.
+- 다음: Claude Code가 인수인계 프롬프트에 따라 IH-102 구현·자동/GUI검증. v0.2.0 태그는 구현 완료 후 별도 판정.
+
+## 2026-11-01 — IH-102 상호작용 구현 (Claude Code)
+
+- 시작: develop clean(82e2ba2, origin 일치), untracked `AGENTS.md`(사용자 Codex 지침)는 보존·미커밋. `feature/interaction-system` 신규 분기.
+- 환경: macOS 13.4 / M1, Godot 4.7.2.stable.official.ed1daf0bf Standard, Compatibility.
+- 구현: InteractionController/Target/UI, 테스트 맵·ID 검수, InputMap/layer_3, runner·probe target, CI 등록. Autoload·이벤트 버스·보상 로직 없음.
+- 커밋: 95c723e, f89d812, bcab854, 4f69d80(BUG-002), 5062a83(ci), 3d99d36(style), bf8501b(리뷰: 종료 틱 큐 요청 BUSY 보고).
+- 자동: test_interaction 종료0(최종 299검사, 2회 차이0, 고아0, 엔진 오류0, 약25초). 실패 주입 종료1, `run_step` 실패 사유 3종. IH-101 runner 종료0. unittest 19개 OK. 깨끗한 worktree의 `run_ci.py` 10단계 PASS(첫 시도는 worktree 안의 출력 파일 때문에 source-tree-clean 실패, 출력 위치 변경 후 재실행).
+- 변이 5종: 4종 검출(AC-I04/I02·I05·I10/I07/전반), 캡처 대체 변이는 현재 처리 순서상 등가로 통과(이유는 검증 기록).
+- 발견: headless 입력이 Viewport로 전달됨(BUG-002, IH-101 기록 정정). 맵 해제 중 트리 밖 버튼 release_focus 엔진 오류는 커밋 전에 수정. probe 탐침의 `_initialize` 직후 @onready nil·자기 셸을 끈 pkill 패턴은 제 스크립트 오류.
+- 수동 GUI: 사용자가 3d99d36에서 프롬프트/전환/패널/Enter·Escape/E 연타/걷는 중 E/neutral/Cmd+Tab/비16:9를 확인하고 "1~5 모두 정상". Claude는 엔진 viewport 캡처로 한글 렌더링과 패널 여백만 보조 확인(ENV-003).
+- 결과: AC-I01~12 pass, IH-102 review. PR 필수 CI·develop 통합은 후속 기록. v0.2.0 태그/릴리스 없음.
+
+### IH-102 통합 결과
+
+- [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9) 8c8414c → develop, merge 318fcd20911023d57585befce10f5bc153b0a252. 병합 전 mergeable_state=clean.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41266988871/job/124731789818) success(10단계 PASS, interaction/player 모두 RESULT: PASS). 이전 head 0737e39 실행은 cancelled. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41267229659/job/124732455905) success.
+- 통합 tree = 검증 커밋 8c8414c. IH-102 done. main·v0.1.0 미변경, v0.2.0 태그/릴리스 없음(별도 검토).
+- 앱 PR 추적 연결은 `gh` CLI 부재로 사용하지 않고 GitHub API로 CI를 확인했다.
+- 다음: v0.2.0 마일스톤 판정 검토(Codex), ADR-012/014 Accepted 여부, IH-110 아이템/인벤토리 명세.
+
+## 2026-11-01 — IH-102 Codex 기술 재검토
+
+- 대상 develop/origin `29b2ed3`, 추적 변경 없음. 사용자 미추적 AGENTS.md는 보존·미커밋.
+- 기존 전체 CI 재실행: clean detached worktree, `python3 tools/run_ci.py` 10단계 PASS/종료0. Python19, 이동360, 상호작용299검사. Import/smoke/runtime 오류0, 반복2회 측정24종 차이0·고아0. 원격 동일 SHA run41267694674 success 확인.
+- 추가 실제 입력·씬·물리 진단에서 BUG-003(실행 시 중복 ID), BUG-004(RESOLVING 중 disable) 재현: 종료1, 두 경우 모두 ACTIVE/패널=true. 엔진 오류 없음. 기존 suite에 없는 경계이며 기존 PASS로 덮지 않는다.
+- IH-102 done→review 재개, v0.2.0/ADR Accepted 판단 보류. Codex는 게임 코드/씬/CI를 바꾸지 않았고 [검토·수정 프롬프트](IH-102-REVIEW.md)를 작성했다. Claude의 다음 작업은 두 결함 수정과 기존 runner에 회귀 편입이다.
+- GUI 새 실행/조작 없음. 과거 사용자 확인(3d99d36)과 이번 자동 재검증을 구분한다.
+- 문서: 리뷰/수락/인수인계/검증/TASKS/BUGS/CHANGELOG 및 README·TDD·생활·ADR 상태 표기 정리.
+- 현재 사용자 작업 트리 정적 검사에는 AGENTS.md의 없는 .Codex/rules 링크4개가 실패한다. 사용자 파일은 그대로 두고 커밋된 clean worktree의 검사 결과와 구분했다.
+- 로그: build/ih-102-codex-review/ (Git 무시). docs/ih-102-technical-review에서 문서 커밋·필수 PR CI 후 develop 통합 예정. 실제 SHA/PR 결과는 Git 이력 및 최종 보고를 따른다. main/v0.1.0 보존, 태그/릴리스 없음.
+
+## 2026-11-01 — IH-102 BUG-003/004 수정 (Claude Code)
+
+- 시작: develop clean(dc2a185, origin 일치), 사용자 untracked AGENTS.md 보존·미커밋. `fix/interaction-request-validation` 분기.
+- 재현: Codex 진단 종료1(위반2) 확인 후 runner에 회귀 12종 추가. `aaac5da`에서 종료1, 26검사 실패.
+- 수정 `0332b5a`: 중복 ID 규칙 일원화(선택·실행·활성), 활성 세션 ID 고정 재검증, try_begin 중 취소 사유 기록과 반환 후 제어기 상태 재검사.
+- 검증: 재현 종료0, runner 333검사 PASS(2회 차이0, 고아0, 엔진 오류0), 실패 주입 종료1, 표적 변이(disable 기록 제거) 검출, 깨끗한 worktree run_ci 10단계 PASS(IH-101 포함).
+- GUI: 사용자, 빌드 0332b5a, "1~5 모두 정상". 이전 3d99d36 창 종료 후 재실행. 런타임 중복 ID·재진입은 화면 조작으로 만들 수 없어 자동 검사로만 확인.
+- 범위: 전역 잠금·새 게임플레이·아이템/인벤토리/채집 미추가. main·v0.1.0 미변경, v0.2.0·ADR Accepted는 별도 판단.
+- 다음: PR 필수 CI와 develop 통합 후 IH-102 done 기록.
+
+### BUG-003/004 통합 결과
+
+- [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 3225882 → develop, merge e5d7730f1b858b22a5ba9ead1880fe1fd73a8641(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269323346/job/124738634090) success(10단계, 새 회귀 12종 로컬과 동일). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269551599/job/124739307741) success.
+- 통합 tree = 3225882. BUG-003/004 resolved, IH-102 done 복귀. main·v0.1.0 미변경, v0.2.0·ADR-014 Accepted는 별도 판단.
+
+## 2026-11-01 — BUG-003/004 Codex 수정 재검증
+
+- 대상 develop/origin `69561ca`. 추적 변경 없음, 사용자 미추적 AGENTS.md 보존. game/tools/tests/.github는 수정 빌드0332b5a와 동일.
+- 원래 재현 스크립트 종료0/위반0: 두 요청 모두 패널·ACTIVE=false, 이동 가능=true. 수정 코드와 추가 회귀를 검토했고 추가 수정이 필요한 결함 없음.
+- clean worktree `python3 tools/run_ci.py` 종료0/10단계 PASS: Python19, 이동360, 상호작용333. 반복2회 측정33종 차이0·고아0·엔진 오류0. 로그 build/ih-102-fix-codex-review/ci/.
+- PR #12/#13 merged, develop run41270032260 success 확인. GUI 새 조작 없음; 0332b5a 사용자 확인 기록을 구분해 사용했다. 실패 주입/변이는 Claude 기록으로 유지, 재실행하지 않음.
+- BUG-003/004 resolved와 IH-102 done 유지. 게임 코드/씬/엔진/CI는 변경하지 않고 리뷰/검증/작업/버그/주간 기록 및 README·HANDOFF의 완료된 수정 안내를 정리했다.
+- docs/ih-102-fix-verification에서 문서 커밋·필수 PR CI 후 develop 통합. 실제 SHA와 PR 결과는 Git 이력 및 최종 보고를 따른다.
+- 다음 설계 후보: v0.2.0 마일스톤 판정, IH-110 아이템·인벤토리 명세. main/v0.1.0·ADR Proposed 유지, 새 태그/릴리스 없음.
+
+## 2026-11-01 — v0.2.0 Character 판정
+
+- 시작 develop/origin35c70dd, 사용자 미추적 AGENTS.md 보존. main64928e5는 develop의 조상이고 기존 이력을 덮어쓸 필요가 없다. local/remote v0.2.0 없음, v0.1.0 보존 확인.
+- 기존 마일스톤의 작은 맵 이동/대상 조작, IH-101/102 수락 조건을 대조해 기능 판정 PASS. BUG-001~004 resolved.
+- 기존 독립 검사(Python19·이동360·상호작용333·전체10단계) 이후 실행 코드 변경 없음을 git diff로 확인했다. 같은 로컬 전체 검사는 반복하지 않고 문서 정적 검사 및 보호 규칙의 PR/main CI를 수행한다.
+- GUI는 기존 사용자0332b5a 확인 기록을 사용한다. 단일 게이트·배포 글꼴·라이선스·최종 조작값은 판정표에서 후속 범위로 구분했다. ADR-012/014 Proposed 유지.
+- 변경 문서: Character 판정표, MILESTONES/TASKS/README/CHANGELOG/ROADMAP/ADR 색인/주간 기록. 게임 코드·씬·CI 설정 미변경.
+- Git 계획: 문서 PR→develop→main PR, main CI 성공 후 annotated v0.2.0 태그와 원격 검증. 이후 main 이력/발행 기록을 develop에 동기화한다. 실제 SHA/PR/CI는 실행 후 기록한다.
+- 다음: IH-110 상세 설계. 제품 실행파일·GitHub Release·Steam 게시 없음.
