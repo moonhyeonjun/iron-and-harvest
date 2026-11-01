@@ -536,3 +536,10 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
   - 사용자 지시("니가 직접 조작")에 따라 Claude가 b29c6b1의 렌더 창을 스크립트로 조작하고 캡처를 확인했다: 절차 1~5, 재시작, v1 이관, 손상 복구 모두 기대값. 이 과정에서 HUD가 가방 패널을 가리는 문제를 찾아 layer 1로 고쳤다.
 - **발견**: BUG-012(IH-112 SaveUI가 가방 패널을 가림, open).
 - **결과**: IH-120 review, ADR-018 Proposed. main/태그/릴리스 없음. PR/CI/merge 결과는 후속 기록에 남긴다.
+
+### IH-120 통합 결과
+
+- [PR #44](https://github.com/moonhyeonjun/iron-and-harvest/pull/44) 7a8985d → develop, merge 5a749dcd7097bee8f01e274fd7955cf99a502aa2(mergeable_state=clean).
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41362631745/job/125016061992) success: Linux 14단계 360/333/521/347/531/334, 누수 경고 없음. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41363043516/job/125017305929) success.
+- 통합 tree = 7a8985d. main(6ed5f8c)·태그·릴리스 미변경.
+- 다음: Codex 후속 검토(IH-120 done·ADR-018 판정). BUG-012 처리 결정. IH-121 설계.

@@ -7,6 +7,7 @@
 - 저장 schema2(필수 calendar, 0→1→2 검증 이관, schema3 미래 fixture), SaveCoordinator 외부 blocker와 보고 중 busy, 기존 맵 passive calendar.
 - `tests/test_calendar.gd` 334검사, 공통 CI 14단계. IH-112 runner 예상값 조정(531).
 - IH-120은 review(Codex 후속 검토 대기).
+- [PR #44](https://github.com/moonhyeonjun/iron-and-harvest/pull/44)로 develop 통합(merge 5a749dc), PR/develop CI success.
 
 ## Unreleased — IH-120 달력 상세 설계
 

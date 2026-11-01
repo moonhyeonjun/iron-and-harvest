@@ -202,6 +202,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
   - 깨끗한 worktree CI 14단계 PASS(360/333/521/347/저장531/달력334).
   - AC-C16: 사용자 일부 확인 + 사용자 지시에 따른 Claude 조작 렌더 창 확인(절차 1~5).
   - [IH-120 검증 기록](IH-120-VALIDATION.md). review이며 Codex 후속 검토를 기다린다. ADR-018 Proposed. main/태그/릴리스 변경 없음.
+  - [PR #44](https://github.com/moonhyeonjun/iron-and-harvest/pull/44) 필수 CI 성공(Linux 14단계), merge 5a749dc, develop CI 성공.
 
 ## IH-121 — 심기·성장·수확
 

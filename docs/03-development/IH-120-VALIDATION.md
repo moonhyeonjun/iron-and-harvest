@@ -242,4 +242,10 @@ Claude가 창을 연속으로 띄울 때 `args="-- --fixture=..."`를 따옴표 
 
 ## 통합 기록
 
-PR·CI·merge 결과는 PR 이력과 후속 기록에 남긴다.
+- [PR #44](https://github.com/moonhyeonjun/iron-and-harvest/pull/44): `feature/calendar-system`(`7a8985d`) → develop. merge `5a749dcd7097bee8f01e274fd7955cf99a502aa2`. 병합 전 mergeable_state=clean, base `2e62a15`. 보호 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41362631745/job/125016061992): Ubuntu 24.04 / Godot 4.7.2에서 14단계 PASS(360/333/521/347/531/334), 누수 경고 없음. Linux에서도 다음을 확인했다.
+  - AC-C05: 30/60/144fps에서 tick = 물리 스텝, 정지 뒤 보충 없음
+  - AC-C09: 별도 프로세스 왕복
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41363043516/job/125017305929): develop push(`5a749dc`) success.
+- 통합 tree는 검증한 `7a8985d`와 같다. main(`6ed5f8c`)·태그·릴리스는 변경하지 않았다.
+- IH-120은 review이며 Codex 후속 검토를 기다린다. ADR-018 Proposed.
