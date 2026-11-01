@@ -1,6 +1,6 @@
 # IH-110 아이템 정의와 인벤토리 검증 — 2026-11-01
 
-**후속 판정(2026-11-01): Codex가 14302e5에서 기존 전체 CI 통과를 확인했으나 BUG-005/006을 추가 재현하여 IH-110을 review로 재개했다. [검토·수정 프롬프트](IH-110-REVIEW.md)를 따른다. 아래 Claude의 최초 검증·통합 기록은 당시 증거로 보존한다.**
+**후속 판정(2026-11-01): Codex가 14302e5에서 기존 전체 CI 통과를 확인했으나 BUG-005/006을 추가 재현하여 IH-110을 review로 재개했다. 아래 수정 검증과 [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 통합으로 **done**에 복귀했다. [검토·수정 프롬프트](IH-110-REVIEW.md)를 따른다. 아래 Claude의 최초 검증·통합 기록은 당시 증거로 보존한다.**
 
 ## BUG-005/006 수정 검증 (2026-11-01, Claude Code)
 
@@ -35,7 +35,7 @@
 
 GUI: **사용자**가 빌드 `8dfe8bb`, macOS 13.4에서 ① 가방 I 열기/닫기·한글·첫 칸 포커스·닫은 뒤 이동, ② 보관함 1개/스택 양방향 이동·합계 목재 15, ③ 살펴보기 중 I 거부·가방 중 E 무반응·닫은 뒤 E 정상, ④ 포커스된 버튼에서 I/Escape·Cmd+Tab 왕복·이동 키 유지 닫기를 확인하고 "1~4 모두 정상"으로 응답했다. 응답 시점까지 GUI 로그 오류는 0이었다. UI 삭제·서비스 종료·끝 개행 ID는 정상 화면 조작으로 만들 수 없어 자동 검사로만 확인했다.
 
-판정: 수정·로컬 검증 완료. IH-110은 PR 필수 CI와 develop 통합을 확인한 뒤 done으로 복귀한다.
+판정: **done**. [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22): `5f8bb51` → develop, merge `cbb836b40f37a0f29173e541005529229ff037e4`(병합 전 mergeable_state=clean, base `65cda09`, 보호 우회 없음). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41278706636/job/124766026102) success: Ubuntu에서 11단계 PASS, 새 회귀 결과가 로컬과 같다. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41278935113/job/124766685853) success. 통합 tree는 `5f8bb51`과 동일하다. main·태그·릴리스는 변경하지 않았다.
 
 ## 결론
 

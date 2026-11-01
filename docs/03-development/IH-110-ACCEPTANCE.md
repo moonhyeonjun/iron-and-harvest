@@ -1,6 +1,6 @@
 # IH-110 수락 조건
 
-**후속 회귀 보완 필요:** 14302e5의 기존 검사는 통과하지만 [BUG-005/006](IH-110-REVIEW.md)의 UI/서비스 수명과 끝 개행 ID 사례를 AC-N01/02/09/12에 추가해야 한다. 현재 IH-110 review이며 과거 PASS 기록과 새 미충족 조건을 구분한다.
+**후속 회귀 보완 필요:** 14302e5의 기존 검사는 통과하지만 [BUG-005/006](IH-110-REVIEW.md)의 UI/서비스 수명과 끝 개행 ID 사례를 AC-N01/02/09/12에 추가해야 한다. 2026-11-01 이 사례들을 추가했다. 수정 전 실패와 수정 후 PASS를 확인했고, [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 필수 CI와 develop 통합(merge cbb836b)을 거쳐 IH-110 **done**이다([검증 기록](IH-110-VALIDATION.md)).
 
 상태: **AC-N01~14 실행, 모두 pass**(2026-11-01, Claude Code 구현·자동 375검사, AC-N14는 사용자 GUI 확인, 빌드 `025c863`). [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 필수 CI 성공과 develop 통합(merge f26a77e)을 확인해 **전체 판정은 done**이다. 측정·명령·변이 검사·설계 차이는 [IH-110 검증 기록](IH-110-VALIDATION.md)에 있다. [명세](../02-technical-design/INVENTORY.md)가 계약의 단일 기준이며, 판정 기준은 낮추지 않았다.
 

@@ -11,6 +11,7 @@
 - Fixed BUG-005: 가방 열기 콜백 뒤·OPEN 중 UI/서비스 수명을 재검사한다. 거부 또는 1회 닫힘으로 게이트·interaction을 복구하고, 죽은 UI 호출과 늦은 재고 변경이 없다.
 - Fixed BUG-006: ID 검사가 끝 개행 포함 문자열 전체를 확인한다(자동 보정 없음).
 - test_inventory 회귀 추가(521검사).
+- [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22)로 develop 통합(merge cbb836b), PR/develop CI success. IH-110 done. main 미반영.
 
 ## Unreleased — IH-110 구현 (Claude Code, 2026-11-01)
 
