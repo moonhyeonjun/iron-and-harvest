@@ -179,6 +179,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
   - 키는 coordinator epoch를 쓰고, 보고 중에는 BUSY, 세션 정지 중 명령은 거부한다.
   - 저장 529검사, 변이 5종 검출, 깨끗한 worktree CI 13단계 PASS.
   - [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). PR 필수 CI·develop 통합·Codex 재검증 전까지, 그리고 AC-S16 손상복구 GUI 미확인으로 review를 유지한다.
+  - [PR #36](https://github.com/moonhyeonjun/iron-and-harvest/pull/36) 필수 CI 성공(13단계·저장 529), merge 5070bd8, develop CI 성공. Codex 재검증 대기.
 
 ## IH-120 — 달력·계절·하루 경계
 

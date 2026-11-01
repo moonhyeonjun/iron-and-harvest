@@ -59,9 +59,9 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
 
 | ID | 분류 | 상태 | 재현·영향 | 다음 조치 |
 |---|---|---|---|---|
-| BUG-009 | IH-112 / medium (P2) | fixed(Claude, 통합·Codex 재검증 대기) | SaveUI free/queue_free 후 F5가 ui.get_epoch를 호출해 signal11/exit250. F9도 동일 무검사 경로 | UI 수명/키 요청 정책 및 제거 뒤 후속 입력 회귀. [리뷰](IH-112-REVIEW.md) |
-| BUG-010 | IH-112 / medium (P2) | fixed(Claude, 통합·Codex 재검증 대기) | IDLE에서 STALE_SESSION 거부 보고 중 listener가 정상 epoch로 request_save하면 OK·A1 생성 | 보고 중임을 요청 차단 경계에 포함하고 거부/완료 재진입 모두 회귀. [리뷰](IH-112-REVIEW.md) |
-| BUG-011 | IH-112 / medium (P2) | fixed(Claude, 통합·Codex 재검증 대기) | STAGING 중 이전 InventoryController.request_open.call_deferred가 실행돼 FOCUS_LOST 취소 뒤 같은 세계에 OPEN·게이트 소유가 남음 | suspend/epoch를 실제 명령 진입에 적용, 성공/실패 뒤 지연 의도 검사. [리뷰](IH-112-REVIEW.md) |
+| BUG-009 | IH-112 / medium (P2) | fixed(develop 5070bd8, Codex 재검증 대기) | SaveUI free/queue_free 후 F5가 ui.get_epoch를 호출해 signal11/exit250. F9도 동일 무검사 경로 | UI 수명/키 요청 정책 및 제거 뒤 후속 입력 회귀. [리뷰](IH-112-REVIEW.md) |
+| BUG-010 | IH-112 / medium (P2) | fixed(develop 5070bd8, Codex 재검증 대기) | IDLE에서 STALE_SESSION 거부 보고 중 listener가 정상 epoch로 request_save하면 OK·A1 생성 | 보고 중임을 요청 차단 경계에 포함하고 거부/완료 재진입 모두 회귀. [리뷰](IH-112-REVIEW.md) |
+| BUG-011 | IH-112 / medium (P2) | fixed(develop 5070bd8, Codex 재검증 대기) | STAGING 중 이전 InventoryController.request_open.call_deferred가 실행돼 FOCUS_LOST 취소 뒤 같은 세계에 OPEN·게이트 소유가 남음 | suspend/epoch를 실제 명령 진입에 적용, 성공/실패 뒤 지연 의도 검사. [리뷰](IH-112-REVIEW.md) |
 
 최초 구현 중 미해결 제품 결함 없음 기록 이후 추가로 확인했다. 기존 자동425 PASS와 별도이며 IH-112 review를 유지한다. GUI 손상복구 미확인은 별개 조건이다.
 

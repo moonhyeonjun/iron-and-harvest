@@ -454,3 +454,10 @@
   - 제품 saves·GUI 시험 파일 미접촉. crash 실행이 남긴 runner 폴더 2개는 정리했다.
 - **GUI**: 새 GUI는 미실행이다(사용자 테스트 중단 존중, 재요청 안 함). AC-S16 손상복구 GUI 미확인을 유지한다.
 - **결과**: BUG-009~011 fixed(통합·Codex 재검증 대기), IH-112 review, ADR-017 Proposed. main/태그/릴리스 없음. PR/CI/merge 결과는 후속 기록에 남긴다.
+
+### BUG-009~011 통합 결과
+
+- [PR #36](https://github.com/moonhyeonjun/iron-and-harvest/pull/36) bb4d6fe → develop, merge 5070bd8f2701f40bae3e59653c345be686a08d42(mergeable_state=clean).
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307243315/job/124850039990) success: Linux 13단계 360/333/521/347/529, 누수 경고 없음. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307597804/job/124851080300) success.
+- 통합 tree = bb4d6fe. main(8901bac)·태그·릴리스 미변경.
+- 다음: Codex 재검증(BUG-009~011 resolved 판정). IH-112 done은 AC-S16 손상복구 GUI 조건의 처리 결정 뒤에 판정한다.
