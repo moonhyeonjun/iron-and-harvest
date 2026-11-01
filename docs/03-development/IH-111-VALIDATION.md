@@ -11,7 +11,7 @@ Claude Code가 [GATHERING 명세](../02-technical-design/GATHERING.md)에 따라
 
 AC-G01~13 자동 309검사는 PASS다. 공통 CI 12단계에서 기존 이동 360, 상호작용 333, 인벤토리 521검사 회귀도 통과했다. 명세의 최소 변이 6종과 추가 1종은 모두 검출됐다. AC-G14 GUI는 사용자가 실제 창 3개에서 확인했다.
 
-IH-111 상태는 **review**다. PR 필수 CI 성공과 develop 통합 확인 후 done으로 바꾼다. ADR-016은 **Proposed**를 유지한다. 수량(6/4/3)·좌표·표현은 검증 fixture이며 밸런스가 아니다. 도구·기력·작업 시간·재생·파일 저장·농사·전투·위임·범용 잠금은 구현하지 않았다. IH-102 상자는 살펴보기 전용이며, `can_interact`/`try_begin`/프롬프트/`session_opened`에서는 아무것도 지급하지 않는다.
+IH-111 상태는 **done**이다. [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26) 필수 CI 성공 후 develop에 통합하고 원격 CI를 확인했다(아래 통합 기록). ADR-016은 **Proposed**를 유지한다. 수량(6/4/3)·좌표·표현은 검증 fixture이며 밸런스가 아니다. 도구·기력·작업 시간·재생·파일 저장·농사·전투·위임·범용 잠금은 구현하지 않았다. IH-102 상자는 살펴보기 전용이며, `can_interact`/`try_begin`/프롬프트/`session_opened`에서는 아무것도 지급하지 않는다.
 
 ## 환경·대상
 
@@ -104,4 +104,11 @@ int로 타입 지정된 Resource 필드에 `.tres` 값 `2.5`, `true`, `"3"`이 �
 
 - Windows/Linux GUI, 배포 빌드, 한글 글꼴(DEBT-003)은 확인하지 않았다. DEBT-002(제3 게이트 작성자)는 해결하지 않았다.
 - 파일 저장(IH-112), 재생·도구·작업 시간·위임은 범위 밖이다.
-- PR 필수 CI와 develop 통합 기록은 이후 추가한다.
+- 통합 결과는 아래 기록에 있다.
+
+## 통합 기록
+
+- [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26): feature/gathering-system(`c036f90`) → develop, merge `42e3f4b230bd901a6fdab1122e592ed809822ccf`. 병합 전 mergeable_state=clean, base `fe6a293`. 보호 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283403152/job/124779743066): Ubuntu 24.04 / Godot 4.7.2에서 12단계 PASS. 네 gameplay suite 모두 `RESULT: PASS`, 엔진 오류 0, 종료 시 누수 경고 없음.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283663628/job/124780504085): develop push(`42e3f4b`) CI checks success.
+- 통합 tree는 검증한 `c036f90`과 동일(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.

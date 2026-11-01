@@ -1,6 +1,6 @@
 # IH-111 수락 조건
 
-상태: **AC-G01~14 실행, 모두 pass**(2026-11-01, Claude Code 구현·자동 309검사, AC-G14는 사용자 GUI 확인, 빌드 `7787c26`). PR 필수 CI·develop 통합 전에는 review다. 측정·명령·변이·설계 차이는 [IH-111 검증 기록](IH-111-VALIDATION.md)에 있다. 아래 기준은 원래 계약이며 기준을 낮추지 않았다. 원래 상태: 설계 ready, 2026-11-01. 계약은 [GATHERING](../02-technical-design/GATHERING.md), 전달은 [HANDOFF](IH-111-HANDOFF.md). 실제 runner/GUI 증거가 있을 때만 pass로 기록한다. 기존 PASS가 신규 채집 검증을 대신하지 않는다.
+상태: **AC-G01~14 실행, 모두 pass**(2026-11-01, Claude Code 구현·자동 309검사, AC-G14는 사용자 GUI 확인, 빌드 `7787c26`). [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26) 필수 CI 성공과 develop 통합(merge 42e3f4b)을 확인해 **전체 판정은 done**이다. 측정·명령·변이·설계 차이는 [IH-111 검증 기록](IH-111-VALIDATION.md)에 있다. 아래 기준은 원래 계약이며 기준을 낮추지 않았다. 원래 상태: 설계 ready, 2026-11-01. 계약은 [GATHERING](../02-technical-design/GATHERING.md), 전달은 [HANDOFF](IH-111-HANDOFF.md). 실제 runner/GUI 증거가 있을 때만 pass로 기록한다. 기존 PASS가 신규 채집 검증을 대신하지 않는다.
 
 | ID | 검사·수락 조건 | 방법 |
 |---|---|---|

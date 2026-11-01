@@ -30,6 +30,6 @@ IH-004 CI 완료 후 [IH-102 명세](../02-technical-design/INTERACTION.md)를 �
 
 ## IH-111 채집 구현 준비
 
-2026-11-01 Claude Code 구현·검증([검증 기록](../03-development/IH-111-VALIDATION.md), review).
+2026-11-01 Claude Code 구현·검증([검증 기록](../03-development/IH-111-VALIDATION.md), done).
 
 [상세 명세](../02-technical-design/GATHERING.md)는 나뭇가지·돌·산열매를 E 새 누름당1개 즉시 채집하는 최소 루프다. 가방이 차면 지점은 보존되고, 마지막 성공 때 소진 표시로 바뀐다. 같은 세션 뷰 재진입에 재생되지 않는다. 초기 벌목은 나무 베기가 아닌 바닥 나뭇가지 줍기로 범위를 줄인다. 도구/작업시간/기력/재생/파일 저장은 후속이다. 세 정의·초기량은 Proposed 검증 수치이며 아직 구현되지 않았다.

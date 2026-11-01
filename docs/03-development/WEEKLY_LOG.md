@@ -305,3 +305,9 @@
 - 검증: test_gathering 309검사 PASS(2회 차이0, 고아0, 엔진 오류0, 누수 경고0). 실패 주입 종료1. 표적 변이 7종 검출. 깨끗한 worktree CI 12단계 PASS(360/333/521/309).
 - GUI: 사용자, 빌드 7787c26, normal/full/rebind 창, "1~5 모두 정상", full·rebind exit0·오류0.
 - 결과: AC-G01~14 pass, IH-111 review. ADR-016 Proposed 유지. PR 필수 CI·develop 통합은 후속 기록. main/태그/릴리스 없음.
+
+### IH-111 통합 결과
+
+- [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26) c036f90 → develop, merge 42e3f4b230bd901a6fdab1122e592ed809822ccf(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283403152/job/124779743066) success(12단계, 네 suite RESULT: PASS·엔진 오류0·누수 경고 없음). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283663628/job/124780504085) success.
+- 통합 tree = c036f90. IH-111 done. ADR-016 Proposed 유지. main·태그·릴리스 미변경.
+- 다음: IH-112 초기 저장과 복원(지점 결속·숨은 stock 포함 snapshot), DEBT-004 결정, ADR-015/016 Accepted 판단.

@@ -33,6 +33,6 @@
 
 ## IH-111 구현 준비
 
-2026-11-01 Claude Code가 구현·검증했다([검증 기록](../03-development/IH-111-VALIDATION.md)). PR CI·통합 전 review다.
+2026-11-01 Claude Code가 구현·검증하고 [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26)로 develop에 통합했다(done, [검증 기록](../03-development/IH-111-VALIDATION.md)).
 
 [채집 상세 명세](GATHERING.md), [AC-G01~14](../03-development/IH-111-ACCEPTANCE.md), [인수인계](../03-development/IH-111-HANDOFF.md), [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md). 유한 숨은 재고의 원자 전송, 즉시 행동 실행/취소, 수명/재진입 계약을 정의했다. 상태 ready, 기능·신규 테스트·GUI는 미구현/미실행이다.
