@@ -1,0 +1,115 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/inventory/inventory_ui.gd" id="1_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.13, 0.12, 0.1, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.45, 0.3, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="InventoryUI" type="CanvasLayer"]
+layer = 3
+script = ExtResource("1_ui")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -128.0
+offset_right = 300.0
+offset_bottom = 136.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Layout" type="VBoxContainer" parent="Panel"]
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Panel/Layout"]
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+
+[node name="Columns" type="HBoxContainer" parent="Panel/Layout"]
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Bag" type="VBoxContainer" parent="Panel/Layout/Columns"]
+
+[node name="Label" type="Label" parent="Panel/Layout/Columns/Bag"]
+theme_override_font_sizes/font_size = 10
+
+[node name="Grid" type="GridContainer" parent="Panel/Layout/Columns/Bag"]
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+
+[node name="Store" type="VBoxContainer" parent="Panel/Layout/Columns"]
+
+[node name="Label" type="Label" parent="Panel/Layout/Columns/Store"]
+theme_override_font_sizes/font_size = 10
+
+[node name="Grid" type="GridContainer" parent="Panel/Layout/Columns/Store"]
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+
+[node name="Selection" type="Label" parent="Panel/Layout"]
+theme_override_font_sizes/font_size = 10
+
+[node name="Message" type="Label" parent="Panel/Layout"]
+theme_override_colors/font_color = Color(0.98, 0.86, 0.55, 1)
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="Panel/Layout"]
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="MoveOne" type="Button" parent="Panel/Layout/Actions"]
+theme_override_font_sizes/font_size = 10
+text = "1개 옮기기"
+
+[node name="MoveStack" type="Button" parent="Panel/Layout/Actions"]
+theme_override_font_sizes/font_size = 10
+text = "스택 옮기기"
+
+[node name="ViewToggle" type="Button" parent="Panel/Layout/Actions"]
+theme_override_font_sizes/font_size = 10
+text = "보관함 보기"
+
+[node name="Close" type="Button" parent="Panel/Layout/Actions"]
+theme_override_font_sizes/font_size = 10
+text = "닫기"
+
+[node name="Notice" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 22.0
+offset_right = 200.0
+offset_bottom = 40.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.98, 0.86, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.07, 0.06, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 11
+horizontal_alignment = 1
+
+[node name="NoticeTimer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true

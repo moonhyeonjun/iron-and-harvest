@@ -33,3 +33,5 @@ JSON / 바이너리 / Resource 직렬화
 IH-112부터 구현, 확장 시 fixture 유지.
 
 변경 시 이 문서를 삭제하지 않고 후속 ADR로 대체 관계를 기록한다.
+
+2026-11-01 후속 [ADR-017](ADR-017-versioned-save-restore.md)과 [SAVE_LOAD](../../02-technical-design/SAVE_LOAD.md)에서 IH-112 최소 파일/버전/세션 복원 계약을 제안했다. 이 문서의 초기 방향과 Proposed 상태를 보존한다.

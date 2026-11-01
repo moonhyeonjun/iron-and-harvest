@@ -53,3 +53,17 @@ Event는 event_id/type/date/actor_ids/target_ids/payload_version을 갖고 상�
 ## IH-102 상호작용 경계 제안
 
 [상세 명세](INTERACTION.md)는 기존 Player 아래 별도 InteractionController의 탐지·선택·재검증·세션과 Target의 행동 허용, UI의 표시 책임을 구분한다. 채집/재고/보상은 후속 도메인 책임이다. 입력 시 대상과 실행 시 대상이 다르거나 소멸하면 거부하며 다른 대상으로 자동 전환하지 않는다. IH-102에서 game/scripts/interaction(controller·target), game/scenes/interaction, game/ui/interaction, game/scenes/tests/interaction_test로 구현했다. Autoload·이벤트 버스·범용 행동 프레임워크는 만들지 않았다. 맵이 Controller와 UI를 연결한다.
+
+## IH-110 인벤토리 경계 제안
+
+[상세 명세](INVENTORY.md): Catalog는 검증된 정의의 스칼라 사본, InventoryService는 상태의 유일한 쓰기 소유자다. UI → InventoryController → 도메인 명령 → 양쪽 상태 commit → 단일 변경 신호 → UI 재조회 순서를 따른다. Node/입력/시간과 도메인을 분리하며 Autoload/범용 이벤트 버스를 추가하지 않는다. 가방/살펴보기의 배타성은 작은 씬 조율자가 맡고 DEBT-002의 일반 다중 잠금 문제는 해결로 표기하지 않는다. 채집 소진+지급, 건설 다중 재료, 저장 복원은 별도 거래 경계를 요구한다. IH-110에서 game/systems/inventory(ItemDef·ItemCatalog·InventoryState·InventoryService), game/data/items, game/scripts/inventory(InventoryController), game/ui/inventory, game/scenes/tests/inventory_test로 구현했다. 서비스는 Node·입력을 참조하지 않는다.
+
+## IH-111 채집 경계 제안
+
+IH-111에서 game/systems/gathering(GatherDef·GatherCatalog·GatherService), game/data/gathering, game/scripts/gathering(GatherTarget), game/scenes/gathering, game/ui/gathering, game/scenes/tests/gathering_test로 구현했다. 서비스는 Node·입력·시간을 참조하지 않는다([검증 기록](../03-development/IH-111-VALIDATION.md)).
+
+[상세 명세](GATHERING.md): 입력/Target 준비 → Interaction 최종 재검증 → RefCounted 단발 명령 → 기존 InventoryService.transfer → 양쪽 상태 설치 → UI/뷰 갱신. 지점별 숨은 재고를 원본으로 사용하여 별도 remaining과 재고의 이중 쓰기를 없앤다. INSTANT는 모달/게이트를 소유하지 않는다. 서비스는 세션 루트가 소유하고 지점 뷰 이탈은 재고를 초기화하지 않는다. IH-111 구현·수정·독립 재검증은 완료했고 ADR-016 Proposed를 유지한다.
+
+## IH-112 저장·세션 경계 제안
+
+[SAVE_LOAD](SAVE_LOAD.md): Codec은 순수 값·버전/검증, Store는 고정 A/B 파일 I/O, Coordinator/작은 bootstrap은 안정 snapshot과 후보 세션 검증/publish를 맡는다. 상태 복원은 새 서비스에만 하며 UI/월드의 live 값을 하나씩 덮어쓰지 않는다. 파일 commit과 세션 publish는 서로 다른 경계다. epoch는 파일에 저장하지 않고 이전 UI/명령의 새 세션 접근을 거부한다. 기존 Player bool 게이트에 제3 소유자를 추가하지 않는다. SaveCodec/Store/Coordinator·Gather restore·맵 훅으로 구현·검증했으며 IH-112 done, ADR-017 Accepted다. bootstrap은 별도 빈 모듈 대신 gathering 맵의 최소 훅을 사용한다. process_mode와 별개로 InventoryController의 직접/지연 명령도 세션 정지 가드를 확인한다.

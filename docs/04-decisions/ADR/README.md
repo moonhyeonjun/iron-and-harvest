@@ -23,3 +23,9 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 - [ADR-013 CI 관문](ADR-013-continuous-integration.md) — Accepted, IH-004 원격 성공/실패·병합 관문 검증 완료.
 
 - [ADR-014 상호작용 경계](ADR-014-interaction-boundary.md) — Proposed, IH-102 구현·BUG-003/004 수정·수락 검증 완료. 최종 제품 결정은 후속.
+
+- [ADR-015 아이템·인벤토리 계약](ADR-015-inventory-contract.md) — Proposed. IH-110 구현·BUG-005/006 수정·Codex 독립 재검증 완료(done). Accepted 전환은 별도 판단. ADR-003 전체를 대체하지 않음.
+
+- [ADR-016 유한 재고 전송과 즉시 채집 경계](ADR-016-atomic-gathering.md) — Proposed. IH-111 구현·BUG-007/008 수정·Codex 독립 재검증 완료(done). Accepted 전환은 별도 판단. [수정 검토](../../03-development/IH-111-REVIEW.md). ADR-014/015의 채집 연결을 구체화하며 전체를 대체하지 않음.
+
+- [ADR-017 버전 저장과 새 세션 복원](ADR-017-versioned-save-restore.md) — Accepted. IH-112 자동·독립 검증과 AC-S16 사용자 GUI 확인·최종 검토 완료(done). BUG-009~011 resolved. [수정 검토](../../03-development/IH-112-REVIEW.md). ADR-004의 장기 원칙을 초기 저장 범위에서 구체화한다.

@@ -1,6 +1,6 @@
 # 데이터 모델
 
-상태: Proposed. 현재 런타임 데이터 클래스/정의 파일은 없다. `data/design/economy-baseline.json`만 기존 실험 자료로 보존한다.
+상태: 장기 모델은 Proposed. IH-110 ItemDef/ItemCatalog/InventoryState/InventoryService와 .tres 정의는 구현·검증됐다. 나머지 모델의 구현 상태는 개별 명세를 따른다. `data/design/economy-baseline.json`만 기존 실험 자료로 보존한다.
 
 ## 분리 원칙
 
@@ -9,7 +9,7 @@ Definition(불변 콘텐츠) / State(세이브되는 세계) / View(표현) / Sa
 | 모델 | 최소 필드 초안 | 연결 |
 |---|---|---|
 | PlayerState | position, map_id, inventory_id, equipment | 지도/아이템 |
-| ItemDef / InventoryState | id, stack_limit / owner_id, items, reserved | 자원/거래 |
+| ItemDef / InventoryState | item_id, stack_limit / inventory_id, owner_id, capacity, revision, slots | IH-110 상세 계약; reserved는 후속 |
 | BuildingDef / BuildingState | id, cost, recipe / instance_id, state, workers | 건설/생산 |
 | RecipeDef | id, inputs, outputs, duration | 경제/시간 |
 | CharacterState | id, role, skills, traits, loyalty, household | 주민/임명 |
@@ -27,3 +27,15 @@ Definition(불변 콘텐츠) / State(세이브되는 세계) / View(표현) / Sa
 ## TBD
 
 정확한 스키마, JSON/Resource, 수정 버전, ID 이관 정책, RNG 직렬화, 가구/인물 지갑 범위. 구현 전 작은 예시와 실패 사례를 먼저 작성한다. 저장 호환은 [SAVE_SYSTEM](SAVE_SYSTEM.md)이 소유한다.
+
+## IH-110 구체화
+
+[상세 계약](INVENTORY.md)은 .tres 정의 카탈로그와 별도 슬롯 상태, 검증된 스칼라 복사, 안정 ID·expected revision·원자 거래·독립 snapshot을 제안한다. IH-110 구현·수정·독립 재검증은 완료했고 [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md)는 Proposed다. JSON/Resource 비교는 작은 샘플로 검증해 .tres를 선택했으며 다른 도메인의 포맷을 일괄 확정하지 않는다. 동일 콘텐츠의 JSON과 Resource를 이중 운영 원본으로 두지 않는다. 금화/식량 지표와 실제 품목 집계의 중복 소유를 피하고 예약·고유 장비 인스턴스는 별도 확장한다.
+
+## IH-111 구체화(구현·검증 완료)
+
+[GatherDef/PointBinding 계약](GATHERING.md)은 IH-111에서 구현·수정·독립 검증했다. 지점당1슬롯 InventoryState를 수량 원본으로 사용하고 remaining/depleted를 파생한다. 정의·결속은 검증한 스칼라 복사, Node/명령은 임시다. 별도 GatherNode.remaining/reset_at 상태를 선행 구현하지 않는다. stock ID는 bag/store와 같은 재고 네임스페이스에서 유일하며 point ID와 명시 결속한다.
+
+## IH-112 wire/복원 계약(미구현)
+
+[SAVE_LOAD](SAVE_LOAD.md)은 format/payload_json/sha256 envelope와 schema/content/generation, map/player/inventories/points를 제안한다. JSON 숫자는 bool 제외·finite·정수값/안전 범위 검사 후 내부 snapshot의 int로 정규화한다. 저장 재고5개를 새 컨텍스트에 등록하고 stock 결속을 복원한다. UI/준비 명령/epoch는 저장하지 않는다. 파일 버전과 런타임 epoch는 별개이며 실제 schema/fixture 검증은 IH-112 구현 때 수행한다.

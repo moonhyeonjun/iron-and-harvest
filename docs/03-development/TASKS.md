@@ -8,7 +8,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 
 현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 Claude Code가 구현하고 AC-01~12를 검증했으며 [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop에 통합했다(done). main 반영·v0.2.0 태그는 하지 않았다.
 
-v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마일스톤 PASS](CHARACTER-v0.2.0-VERIFICATION.md). main 승격·태그 발행은 필수 CI 이후 진행한다. IH-110은 상세 명세가 아직 없어 backlog를 유지한다.
+v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마일스톤 PASS](CHARACTER-v0.2.0-VERIFICATION.md). main 승격(PR #16)·CI 성공 후 v0.2.0 태그를8901bac에 발행·검증했다. IH-110은 Claude Code가 구현하고 AC-N01~14를 검증했다([IH-110 검증 기록](IH-110-VALIDATION.md)). [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19)로 develop에 통합했다. 이후 Codex가 BUG-005/006을 재현하여 review로 재개했다([검토·수정 프롬프트](IH-110-REVIEW.md)). BUG-005/006은 [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22)로 수정·통합해 done이다.
 
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
@@ -21,9 +21,9 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
 | IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:done | IH-002 |
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
-| IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
-| IH-111 | 채집과 자원 지점 | feature | priority:high | status:backlog | IH-110 |
-| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:backlog | IH-110, IH-111 |
+| IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
+| IH-111 | 채집과 자원 지점 | feature | priority:high | status:done | IH-110 |
+| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:done | IH-110, IH-111 |
 | IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
 | IH-130 | 건설·수리 프로젝트 | feature | priority:high | status:backlog | IH-120, IH-110 |
@@ -126,33 +126,65 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 
 ## IH-110 — 아이템 정의와 인벤토리
 
-- 목적: 아이템 정의와 인벤토리을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 추가·제거·이동, 데이터 포맷 결정.
-- 관련 문서: [설계](../01-game-design/ITEM_SYSTEM.md).
-- 예상 영향 범위: ItemDef/Inventory.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 가방 포화·수량 보존·잘못된 ID.
-- 현재 증거/미확정: JSON/Resource 검증 포함.
+- 목적: 가방 확인·유한 보관함 이동을 통해 이후 채집/소비의 수량 보존 경계를 만든다.
+- 요구사항: 정의 검증·포맷 비교, 고정 슬롯·스택, 원자 add/remove/transfer, revision·독립 snapshot, 배타적인 가방 UI.
+- 관련 문서: [아이템 기획](../01-game-design/ITEM_SYSTEM.md), [상세 계약](../02-technical-design/INVENTORY.md), [AC-N01~14](IH-110-ACCEPTANCE.md), [Claude 인수인계](IH-110-HANDOFF.md), [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md).
+- 예상 영향 범위: game/systems/inventory, data/items, scripts/inventory, ui/inventory, 테스트 맵/runner, CI 등록. 기존 Player/상호작용 회귀 보존.
+- 완료 조건: AC-N01~14·기존 회귀·GUI 확인·필수 PR CI 통과, 검증 기록과 ADR 판정, develop 통합/원격 확인.
+- 테스트 항목: 정의/별칭 격리·포화·부족·양방향 보존·stale/reentrant·snapshot 손상·모달 입력/수명·실제 GUI.
+- 현재 증거: feature/inventory-system(b7efab6, 05cd2b3, 2a085e2, 311a742, 025c863). AC-N01~13 자동 375검사 PASS, 변이 10종·엔진 오류 변이 검출, 로컬 CI 11단계 PASS(이동 360·상호작용 333 회귀 포함), AC-N14 사용자 GUI "1~5 모두 정상"(025c863). [IH-110 검증 기록](IH-110-VALIDATION.md). 12슬롯/7품목/스택10은 검증용 제안이며 ADR-015 Proposed. [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 필수 CI 성공, merge f26a77e, develop CI 성공 → done.
+- Codex 후속 검토: 14302e5의 CI 11단계 PASS, 추가 진단은 수명2·ID1 위반으로 종료1. BUG-005/006 open, review로 재개. [수정 수락 조건](IH-110-REVIEW.md)을 충족한 후 done 복귀를 판정한다.
+- BUG-005/006 수정(2026-11-01): fix/inventory-lifecycle-and-id-validation `5004419`(실패 회귀)·`fb5cd0c`(수정)·`a714c5a`/`8dfe8bb`(검사 보완). 재현 진단 종료1→0, runner 수정 전 충돌·25실패 → 수정 후 PASS, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS(이동 360·상호작용 333·인벤토리 521), 사용자 GUI "1~4 모두 정상"(8dfe8bb). [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 필수 CI 성공, merge cbb836b, develop CI 성공 → done.
+- Codex 수정 재검증(2026-11-01): a5cefeb의 원래 재현 종료0/위반0, 전체 CI 11단계/인벤토리521검사 PASS. BUG-005/006 resolved·IH-110 done 유지. [독립 검증](IH-110-VALIDATION.md).
+- 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. 후속 IH-111은 구현·수정·독립 재검증 done, IH-112는 상세 설계 ready다.
 
 ## IH-111 — 채집과 자원 지점
 
-- 목적: 채집과 자원 지점을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 채집으로 재고 변화·소진 상태.
-- 관련 문서: [설계](../01-game-design/LIFE_SYSTEM.md).
-- 예상 영향 범위: GatherNode/Inventory.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 연타 중복·포화 유실·소진 재진입.
-- 현재 증거/미확정: 수량/재생 규칙 TBD.
+- 목적: 유한 월드 물자를 직접 채집해 가방으로 옮기는 수집 루프를 검증한다.
+- 유형/우선순위/상태: feature / priority:high / status:done. 의존 IH-110 done.
+- 요구사항: 나뭇가지·돌·산열매, 새 E당1개, 숨은 stock→bag 원자 transfer, 소진 표시, full/stale/취소 보존, 같은 세션 뷰 재진입 보존.
+- 관련 문서: [생활](../01-game-design/LIFE_SYSTEM.md), [상세 설계](../02-technical-design/GATHERING.md), [수락 조건](IH-111-ACCEPTANCE.md), [Claude 전달 프롬프트](IH-111-HANDOFF.md), [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md).
+- 예상 영향: GatherDef/GatherService/GatherTarget, Interaction의 INSTANT 분기, 별도 GatheringTest/표시, 신규 runner/공통 CI 등록. Inventory transfer와 Player 정책 유지.
+- 완료 조건: AC-G01~14 자동·GUI, 기존 회귀, 실패 주입/변이, 검증 기록, 필수 CI/리뷰/develop 통합. 구현·최초 검증에 이어 추가 결함 수정과 Codex 독립 회귀 검증도 완료했다.
+- 미포함: 도구/시간/재생/파일 저장/위임/농사/범용 잠금. 수량·표현은 검증용 Proposed, 제품 밸런스 TBD.
+- 현재 증거: feature/gathering-system(14a2687, 24bf870, 5a5f5f5, 03c6a65, a56ab1d, 7787c26). AC-G01~13 자동 309검사 PASS, 변이 7종 검출, 깨끗한 worktree CI 12단계 PASS(이동 360·상호작용 333·인벤토리 521·채집 309), AC-G14 사용자 GUI "1~5 모두 정상"(7787c26). [IH-111 검증 기록](IH-111-VALIDATION.md). [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26) 필수 CI 성공, merge 42e3f4b, develop CI 성공 → done. ADR-016 Proposed.
+
+- Codex 후속 검토(c266d52): BUG-007/008 open으로 done→review. [재현·Claude 수정 프롬프트](IH-111-REVIEW.md)를 완료한 후 재판정한다. 기존 PASS/통합 기록은 보존한다.
+- Claude 수정(fix/gathering-hud-and-definition-validation, 28e5a80·56b7d5b·b5afd93):
+  - HUD 표시 수명 가드를 넣고, 내장/경로 없는 GatherDef를 거부한다.
+  - 채집 347검사 PASS, 변이 5종 검출, 사용자 GUI "1~5 모두 정상"(b5afd93).
+  - [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29) 필수 CI 성공, merge ed554c5, develop CI 성공. Codex 독립 재검증 전까지 review를 유지한다.
+
+- Codex 독립 재검증(2026-11-01, 1cb3471): 원래 진단4종 종료0, 공통 CI 종료0/12단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집347. 채집 반복2회 측정26종 차이0·고아0·엔진 오류0. BUG-007/008 resolved·IH-111 done 복귀. [결과](IH-111-VALIDATION.md#codex-독립-수정-재검증).
 
 ## IH-112 — 초기 저장과 복원
 
-- 목적: 초기 저장과 복원을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 위치·재고·지점 snapshot/복원.
-- 관련 문서: [설계](../02-technical-design/SAVE_SYSTEM.md).
-- 예상 영향 범위: Save/fixtures.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 손상·쓰기 실패·왕복·미래 버전.
-- 현재 증거/미확정: 스키마는 구현 때 확정.
+- 목적: 채집/보관/이동한 세계를 저장하고 재시작 뒤 같은 상태로 이어간다.
+- 유형/우선순위/상태: feature / priority:critical / status:done. 의존 IH-110/111 done.
+- 최종 판정(2026-11-01): AC-S01~16·수정 검증·PR #39/develop CI 성공을 확인했다. ADR-017 Accepted. 아래 review 기록은 이력이다. [v0.3.0 판정](GATHERING-v0.3.0-VERIFICATION.md).
+- 요구사항: 위치·방향·bag/store/stock5재고·결속3개, 단일 수동 A/B 슬롯, schema1/시험v0·checksum·정규화, 명시 복구본, 후보 세션 검증 후 publish·이전 epoch 차단.
+- 관련 문서: [저장 방향](../02-technical-design/SAVE_SYSTEM.md), [구현 명세](../02-technical-design/SAVE_LOAD.md), [AC-S01~16](IH-112-ACCEPTANCE.md), [Claude 전달 프롬프트](IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md).
+- 예상 영향: SaveCodec/Store/Coordinator/Bootstrap, Gather restore/읽기 경계, Player 복원, 모달·Interaction suspend/epoch, 전용 맵/UI/runner·CI 등록.
+- 완료 조건: AC-S01~16·실제 파일/중단·GUI·실패 주입/변이·기존 회귀·필수 CI/리뷰/develop 통합, 검증 기록.
+- 현재 증거: 2026-11-01 Codex 상세 설계 완료.
+- Claude Code 구현(feature/save-load-system: 9fce058, e213eff, 9985a63, 09e5273, 438ef89):
+  - AC-S01~15 자동 425검사 PASS, 변이 7종 검출, 별도 프로세스 재시작·SIGKILL 확인.
+  - 깨끗한 worktree CI 13단계 PASS(이동 360·상호작용 333·인벤토리 521·채집 347·저장 425).
+  - AC-S16: 사용자 GUI 절차 1~5 확인, 절차 6(최신 손상 → 복구본)은 사용자 GUI 미실행. 사용자가 이후 사용자 테스트를 중단했으므로 done이 아니다.
+  - [IH-112 검증 기록](IH-112-VALIDATION.md). ADR-017 Proposed.
+  - [PR #33](https://github.com/moonhyeonjun/iron-and-harvest/pull/33) 필수 CI 성공(Linux 13단계·저장 425), merge 3ab4795, develop CI 성공. AC-S16 절차 6 미실행으로 review를 유지한다.
+- 제외/TBD: 자동/종료 저장·슬롯 선택/삭제·Cloud·타 맵/달력/NPC. 수치/경로/파일 레이아웃은 Proposed, 실제4.7.2/OS 측정으로 구현 차이를 기록한다. v0.3.0 판정은 별도.
+
+- Codex 후속 검토(2026-11-01, b13292b): CI13단계·저장425검사 PASS, BUG-009~011 추가 재현으로 review 유지. [수정 프롬프트](IH-112-REVIEW.md)를 완료하고 재검증한다. GUI 손상복구 미확인과 사용자 추가 테스트 중단 기록은 별개로 유지한다.
+- Claude 수정(fix/save-input-and-session-boundaries: 450a988·8e18a75·bc0d44f):
+  - 키는 coordinator epoch를 쓰고, 보고 중에는 BUSY, 세션 정지 중 명령은 거부한다.
+  - 저장 529검사, 변이 5종 검출, 깨끗한 worktree CI 13단계 PASS.
+  - [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). PR 필수 CI·develop 통합·Codex 재검증 전까지, 그리고 AC-S16 손상복구 GUI 미확인으로 review를 유지한다.
+  - [PR #36](https://github.com/moonhyeonjun/iron-and-harvest/pull/36) 필수 CI 성공(13단계·저장 529), merge 5070bd8, develop CI 성공. Codex 재검증 대기.
+- AC-S16 손상복구 GUI(2026-11-01, 사용자 테스트 재개 지시):
+  - 사용자가 빌드 3d248d0, 새 시험 경로 `user://tests/ih112/gui_recovery_20261101`에서 확인했다.
+  - 손상 최신본(2세대 B)의 기본 F9 거부·세계 보존, 이전 1세대 명시 복구, 기준 일치, 복원 뒤 조작: "1~4 모두 정상". 로그 오류 0.
+  - [기록](IH-112-VALIDATION.md#ac-s16-손상-최신본-복구-gui--2026-11-01-재개). 상태는 review이며 IH-112 done·v0.3.0 판정은 Codex 후속 검토로 남긴다.
 
 ## IH-120 — 달력·계절·하루 경계
 
@@ -313,3 +345,11 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - 완료 조건: 테스트 통과, 기존 이력 보존, 원격 SHA와 로컬 비교, 실제 해시/결과 기록.
 - 테스트 항목: 정적 구조, 기존 unittest/경제 가정, diff, ref 일치, 작업 트리.
 - 현재 증거: 최초 커밋957dd3b·정책 커밋8ce8d1d, main/develop/작업 브랜치 push 성공·원격 SHA 일치. 상세는 GIT_BOOTSTRAP.
+
+## IH-112 Codex 수정 재검증 — 2026-11-01
+
+Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다. [검증 기록](IH-112-VALIDATION.md#codex-독립-수정-재검증). 구현/수정 프롬프트는 완료 이력이며 추가 코드 수정 요청은 없다.
+
+## v0.3.0 기능 판정 — 2026-11-01
+
+IH-110/111/112 done으로 Gathering 기능 완료 조건 PASS. main 승격·CI·태그 발행은 [판정 문서](GATHERING-v0.3.0-VERIFICATION.md)의 단계로 수행한다. IH-120은 다음 상세 설계 대상이며 아직 backlog다. 달력 구현을 시작하거나 ready로 임의 전환하지 않는다.

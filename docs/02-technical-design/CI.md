@@ -4,7 +4,7 @@
 
 ## 실행 계약
 
-`.github/workflows/ci.yml`은 develop/main 대상 pull_request와 두 브랜치의 push, workflow_dispatch에서 실행한다. 경로 필터가 없으므로 문서 PR에도 실행한다. PR은 기본 checkout 동작으로 합성 merge commit을 검사한다. push는 해당 branch commit을 검사한다. 같은 PR/ref의 이전 실행은 취소한다. 현재 workflow는 develop에 통합되었으며 기본브랜치 main의 파일은 유지했다. workflow_dispatch는 workflow가 기본브랜치에 있어야 하므로 다음 main 승격 후 사용한다. 현재 검증한 실행은 PR 및 develop push다.
+`.github/workflows/ci.yml`은 develop/main 대상 pull_request와 두 브랜치의 push, workflow_dispatch에서 실행한다. 경로 필터가 없으므로 문서 PR에도 실행한다. PR은 기본 checkout 동작으로 합성 merge commit을 검사한다. push는 해당 branch commit을 검사한다. 같은 PR/ref의 이전 실행은 취소한다. v0.2.0 승격(PR #16)으로 기본브랜치 main에도 workflow가 반영됐다. PR·develop push·main push 실행을 검증했다. workflow_dispatch 정의도 main에 존재하지만 수동 실행 자체는 아직 검증하지 않았다.
 
 단일 고정 이름 **CI checks**를 병합 관문으로 사용한다. Ubuntu24.04 x86_64, Python3.12, Godot4.7.2 stable official Standard. CI의 Linux headless 검증은 Linux 게임 배포 지원 선언이 아니다. macOS GUI 검증은 별도로 유지한다.
 
@@ -16,7 +16,7 @@ python3 tools/run_ci.py
 
 커밋된 깨끗한 작업 트리에서 실행한다. 로컬에서는 기존 Godot 탐색 또는 GODOT_BIN을 사용한다. 마지막 검사는 staged/unstaged/untracked 변경을 모두 검사하므로 기존 사용자 수정이 있으면 실패로 보고할 뿐 삭제하지 않는다. Godot Import가 소스나 UID를 새로 만들면 변경을 검토·커밋한 뒤 재실행한다. .godot와 build는 ignore한다.
 
-순서: Foundation 정적 검사 → Python 회귀 → 경제 설계 → 엔진 버전 → Import → 빈 Foundation smoke/실행 → IH-101 물리 suite → IH-102 상호작용 suite → 소스 트리 청결 검사. 첫 실패 뒤 후속 단계는 미실행으로 끝낸다. IH-101 suite는 내부2회와 cap30/60/120 비교를 포함한다. IH-102 suite(약25초)도 내부2회 반복과 엔진 오류 수집을 포함하며 `RESULT: PASS` 마커가 필수다. 단계 목록은 `ci_steps()`에 있고 Python 회귀가 두 gameplay suite의 등록·마커를 검사한다. 별도의4프로세스 매트릭스는 중복 실행하지 않는다.
+순서: Foundation 정적 검사 → Python 회귀 → 경제 설계 → 엔진 버전 → Import → 빈 Foundation smoke/실행 → IH-101 물리 suite → IH-102 상호작용 suite → IH-110 인벤토리 suite → IH-111 채집 suite → IH-112 저장·복원 suite → 소스 트리 청결 검사. 첫 실패 뒤 후속 단계는 미실행으로 끝낸다. IH-101 suite는 내부2회와 cap30/60/120 비교를 포함한다. IH-102 suite(약31초)도 내부2회 반복과 엔진 오류 수집을 포함하며 `RESULT: PASS` 마커가 필수다. IH-110 suite(약8초)도 내부 2회 반복·엔진 오류 수집·`RESULT: PASS` 마커를 갖는다. 단계 목록은 `ci_steps()`에 있고, Python 회귀가 다섯 gameplay suite의 등록·순서·마커를 검사한다. IH-111 suite(약19초)와 IH-112 suite(약25초)도 같은 규칙을 따른다. IH-112 suite는 시험 전용 `user://tests/ih112/`에 실제 파일을 쓰고 별도 Godot 자식 프로세스를 실행하며, 끝나면 자신이 만든 파일만 정리한다. 종료 시 `resources still in use` 같은 엔진 ERROR도 CI 실패이며, 2026-11-01 이 검사로 테스트 쪽 RefCounted 순환을 발견해 고쳤다. 별도의4프로세스 매트릭스는 중복 실행하지 않는다.
 
 ## 실패 판정·로그
 
@@ -42,7 +42,7 @@ develop/main의 required status check에 CI checks(app_id15368)를 등록했다.
 
 엔진 업데이트는 .godot-version, Linux 체크섬, ADR·환경 문서, 실제 CI를 함께 변경한다. Python patch와 Ubuntu 이미지 자체는 hosted runner 업데이트를 따르므로 완전한 bit-for-bit 재현 환경은 아니다. Action 업데이트도 고정 SHA/릴리스 내용 검토 후 PR로 수행한다.
 
-추가 게임 기능은 해당 runner를 명시적으로 등록한다. GUI 조작감·실제 창 포커스/리사이즈·Windows/Steam/성능·Export는 자동 PASS 범위 밖이다. IH-102 상세 설계는 IH-004 완료 이후 진행한다.
+추가 게임 기능은 해당 runner를 명시적으로 등록한다. GUI 조작감·실제 창 포커스/리사이즈·Windows/Steam/성능·Export는 자동 PASS 범위 밖이다. IH-102 구현·회귀를 포함한 v0.2.0 판정과 발행 결과는 [마일스톤 기록](../03-development/CHARACTER-v0.2.0-VERIFICATION.md)을 따른다.
 
 ## 공식 근거
 

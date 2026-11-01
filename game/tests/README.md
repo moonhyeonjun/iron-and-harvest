@@ -37,11 +37,52 @@ python3 tools/godot.py --headless --script res://tests/test_interaction.gd -- --
 
 실제 앱 전환, 키보드 감각, 비16:9 창 가독성은 GUI 수동 확인 대상이다.
 
+## test_inventory.gd — IH-110 아이템·인벤토리
+
+도메인 사례(AC-N01~09, N13)는 InventoryService를 직접 호출한다. 모든 실패 전후로 전체 snapshot·revision·이벤트 수를 비교하고, seed 1101의 400명령 수열을 독립 counts 모델로 확인한다. 장면 사례(AC-N10~12)는 실제 inventory_test 맵에서 키(Input parse+flush)와 마우스(viewport)를 사용한다. `fixtures/inventory/`의 JSON은 형식 비교용이며 런타임 원본이 아니다. 약8초.
+
+```sh
+python3 tools/godot.py --headless --script res://tests/test_inventory.gd
+python3 tools/godot.py --headless --script res://tests/test_inventory.gd -- --inject-failure
+```
+
+실제 창 조작·가독성(AC-N14)은 GUI 수동 확인 대상이다.
+
+## test_gathering.gd — IH-111 채집·자원 지점
+
+도메인 사례는 GatherService/InventoryService로 모든 재고(가방·보관함·지점 stock) snapshot, revision, 변경 이벤트, 독립 합계를 비교한다. 장면 사례는 gathering_test 맵에서 실제 E/I/Escape 입력과 `support/gather_probe_target.gd`(try_begin 안 콜백)로 재검증·취소·commit 후 수명·재진입·rebind를 확인한다. `fixtures/gathering/`은 엔진이 조용히 정수화하는 수량 리터럴 거부를 확인하는 fixture다. 약19초.
+
+```sh
+python3 tools/godot.py --headless --script res://tests/test_gathering.gd
+python3 tools/godot.py --headless --script res://tests/test_gathering.gd -- --inject-failure
+```
+
+## test_save_load.gd — IH-112 저장·복원
+
+실제 파일을 사용한다. 실행마다 고유한 시험 전용 루트(`user://tests/ih112/runner_<pid>_<usec>/`)를 쓰고, 끝나면 자신이 만든 고정 이름 파일과 빈 폴더만 지운다. 제품 `user://saves`와 GUI 시험 루트(`user://tests/ih112/gui`)는 건드리지 않는다.
+- codec 사례: 파일 전체 바이트를 decode한다.
+- store 사례: 실제 SaveFileAdapter를 쓰거나, 같은 실제 파일에 읽기/쓰기/flush/rename 실패와 짧은 쓰기를 주입하는 하위 클래스를 쓴다.
+- 장면 사례: SaveLoadTest에서 실제 F5/F9/E/I/이동 입력을 넣는다.
+- AC-S13: `support/save_child.gd`로 별도 Godot 프로세스를 실행한다. 저장→종료→다른 프로세스 불러오기와, 저장 단계별 SIGKILL을 검증한다.
+
+`fixtures/save/`는 정상 v1, 시험 v0, 미래 schema, content 2 파일이다. BUG-009~011 회귀(UI 없는 키, 보고 중 재진입, 정지 중 지연 명령)를 포함해 529검사, 약 25초.
+
+```sh
+python3 tools/godot.py --headless --script res://tests/test_save_load.gd
+python3 tools/godot.py --headless --script res://tests/test_save_load.gd -- --inject-failure
+```
+
 ## 테스트 맵 수동 실행
 
 ```sh
 python3 tools/godot.py res://scenes/tests/movement_test.tscn
 python3 tools/godot.py res://scenes/tests/interaction_test.tscn
+python3 tools/godot.py res://scenes/tests/inventory_test.tscn
+python3 tools/godot.py res://scenes/tests/inventory_test.tscn -- --fixture=full
+python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=full
+python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=rebind
+python3 tools/godot.py res://scenes/tests/save_load_test.tscn
+python3 tools/godot.py res://scenes/tests/save_load_test.tscn -- --fixture=corrupt-latest
 ```
 
 테스트 맵은 명시 경로로만 실행한다. export에서 tests 리소스를 제외하는 정책은 배포 단계에서 검증한다.

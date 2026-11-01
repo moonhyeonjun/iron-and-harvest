@@ -1,6 +1,6 @@
 # 저장·불러오기
 
-상태: 설계 Proposed, 저장 구현 없음. v0.3부터 상태가 생기는 범위에 맞춰 증분 구현하며 v0.8에서 통합 검증한다.
+상태: 장기 방향 Proposed. IH-112 최소 저장(단일 수동 A/B 슬롯)은 2026-11-01에 구현·최종 검증했고 done 상태다([검증](../03-development/IH-112-VALIDATION.md)). IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01 최초 설계 ready, 현재 done·ADR-017 Accepted). 아래 장기 대상 전체를 이번에 구현하지 않는다.
 
 ## 포함할 상태
 
@@ -8,7 +8,7 @@
 
 ## 포맷 초안
 
-SaveEnvelope(schema_version, content_version, build_id, engine_version, world, rng_states). 첫 스키마 버전은 실제 저장 구현 시 정의한다. 날짜별 결산 ID, 미해결 사건, 직접/위임 프로젝트를 복원해 재실행 이득을 막는다. 표시 문자열 대신 안정 ID를 저장한다.
+SaveEnvelope(schema_version, content_version, build_id, engine_version, world, rng_states). IH-112에서는 schema1/content1·단일 수동 슬롯 A/B 두 세대·원시 JSON payload 문자열과 checksum을 제안한다. 장기 envelope 확장은 별도 버전에서 한다. 날짜별 결산 ID, 미해결 사건, 직접/위임 프로젝트를 복원해 재실행 이득을 막는다. 표시 문자열 대신 안정 ID를 저장한다.
 
 사용자 데이터는 `user://`에 쓰며 배포 후 읽기 전용일 수 있는 `res://`에 쓰지 않는다. [Godot 저장 문서](https://docs.godotengine.org/en/stable/tutorials/io/saving_games.html)
 
@@ -24,4 +24,16 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 
 ## TBD
 
-파일 형식·슬롯 수·압축·자동저장 시점·지원 버전 범위·Steam Cloud. 기존 3슬롯+3자동저장은 확정하지 않는다.
+제품 슬롯 수·압축·자동저장 시점·장기 지원 버전 범위·Steam Cloud는 TBD다. IH-112는 UTF-8 JSON·수동 슬롯1개·schema1/시험v0만 제안한다. 기존 3슬롯+3자동저장은 확정하지 않는다.
+
+## IH-110과의 경계
+
+[인벤토리 명세](INVENTORY.md)는 ID·capacity·revision·slots의 순수 값 snapshot과 새 상태로의 메모리 왕복만 정의한다. 디스크 쓰기/SaveEnvelope/schema_version은 구현하지 않는다. 활성 ID 덮어쓰기·revision 되감기는 허용하지 않으며 IH-112가 새 세션 복원과 UI 요청 무효화를 함께 설계한다. JSON 숫자 변환/손상·미래 버전/아이템 ID migration은 저장 어댑터 책임으로 남는다.
+
+## IH-111과 IH-112 인계
+
+[채집 명세](GATHERING.md)는 PointBinding 목록과 숨은 지점 재고 snapshot을 저장 대상 후보로 지정한다. remaining/depleted를 중복 저장하지 않는다. 같은 세션 뷰 재바인딩은 파일 저장이 아니다. IH-112 복원은 초기 지급 없는 새 컨텍스트에서 정의/품목/owner/capacity/ID 참조를 검증하고 교체하는 방향이며, 실패 시 현재 상태를 보존한다. 준비 명령/뷰/WeakRef/request ID는 저장하지 않는다. 초기 포맷·schema1/시험v0 migration·후보 세션 publish는 SAVE_LOAD에서 제안했다. 실제 구현·호환 검증은 아직 없고 제품 장기 migration은 후속이다.
+
+## IH-112 현재 검토
+
+초기 파일 저장·복원은 구현됐고 수정 후 자동13단계·저장529검사를 통과했다. [BUG-009~011](../03-development/IH-112-REVIEW.md)은 Codex 독립 재검증으로 resolved다. AC-S16 사용자 GUI 확인과 최종 검토를 완료해 IH-112 done·ADR-017 Accepted다. 최초 설계/장기 방향과 현재 구현 판정을 구분한다.

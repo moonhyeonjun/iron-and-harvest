@@ -25,9 +25,15 @@ Godot 루트는 game/이며 res://는 이 디렉터리다. 루트 data/design은
 
 IH-101은 구현·검증·develop 통합 완료다. 후속 작업 전 [이동 명세](docs/02-technical-design/PLAYER_MOVEMENT.md), [수락 검사](docs/03-development/IH-101-ACCEPTANCE.md), [검증 결과](docs/03-development/IH-101-VALIDATION.md)를 읽는다. [인수인계](docs/03-development/IH-101-HANDOFF.md)는 최초 구현 계약으로 보존한다. 수치는 여전히 검증용 제안이다.
 
-## 다음 기능: IH-102
+## 완료 기능: IH-102
 
 IH-004 CI 완료 후 [상호작용 인수인계](docs/03-development/IH-102-HANDOFF.md), [명세](docs/02-technical-design/INTERACTION.md), [수락 조건](docs/03-development/IH-102-ACCEPTANCE.md)를 준비했다. 2026-11-01 Claude Code가 구현하고 AC-I01~12와 로컬 CI를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9)로 develop에 통합했다. 이후 Codex 추가 검토에서 BUG-003/004를 재현해 review로 재개했고, BUG-003/004를 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)(merge e5d7730)로 수정·통합하여 done으로 복귀했다([검토](docs/03-development/IH-102-REVIEW.md)). 기존 이동 회귀를 보존하며 test_interaction은 tools/run_ci.py에 등록되어 있다. main/develop은 CI checks가 필수이므로 문서도 PR로 검증한다.
+
+## 완료 기능: IH-110
+
+[인수인계](docs/03-development/IH-110-HANDOFF.md), [명세](docs/02-technical-design/INVENTORY.md), [수락 조건](docs/03-development/IH-110-ACCEPTANCE.md), [ADR-015](docs/04-decisions/ADR/ADR-015-inventory-contract.md)를 따른다. 2026-11-01 Claude Code가 구현하고 AC-N01~14를 검증했다([검증 기록](docs/03-development/IH-110-VALIDATION.md)). [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19)로 develop에 통합했다. Codex 추가 검토에서 BUG-005/006을 확인해 review로 재개했고, [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22)로 수정·통합해 done이다([검토](docs/03-development/IH-110-REVIEW.md)). Codex가 설계했다. 정의/수량 분리·전체 성공 거래·stale 요청·가방/살펴보기 배타성을 검증하며 실제 채집/저장은 후속이다. v0.2.0/main은 보존한다.
+
+Codex가 a5cefeb에서 BUG-005/006 원래 재현과 전체 CI를 재검증해 done을 유지했다. 완료된 IH-110 구현/수정 프롬프트를 반복 실행하지 않는다. IH-111 채집·자원 지점은 2026-11-01 Claude Code가 구현·검증했다([검증 기록](docs/03-development/IH-111-VALIDATION.md)). [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26)로 develop에 통합했다. Codex가 c266d52에서 BUG-007/008을 재현해 review로 재개했다. BUG-007/008은 PR #29로 수정·통합됐고 Codex가 1cb3471에서 원래 진단4종과 전체 CI를 재검증해 resolved·IH-111 done으로 복귀했다. [검토 이력](docs/03-development/IH-111-REVIEW.md)의 수정 프롬프트는 완료됐다. [명세](docs/02-technical-design/GATHERING.md), [수락 조건](docs/03-development/IH-111-ACCEPTANCE.md), [전달 프롬프트](docs/03-development/IH-111-HANDOFF.md)를 준비했다. 최초 구현/수정 프롬프트를 반복 실행하지 않는다. IH-112 초기 저장·복원의 BUG-009~011은 수정·Codex 독립 재검증(진단5종·CI13단계·저장529)으로 resolved다. AC-S16 손상복구 사용자 GUI 확인과 Codex 최종 검토를 마쳐 IH-112 done이다. [수정 프롬프트](docs/03-development/IH-112-REVIEW.md)는 완료됐으니 반복 실행하지 않는다. [상세 명세](docs/02-technical-design/SAVE_LOAD.md), [수락 조건](docs/03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](docs/03-development/IH-112-HANDOFF.md)를 준비했다. 최초 구현 프롬프트는 완료 이력이다. 사용자 테스트 재개가 최신 방침이며 기존 중단/부분 확인은 이력이다. ADR-017 Accepted다. 다음 상세 설계는 IH-120 달력·계절·하루 경계이며 아직 구현하지 않는다. ADR-016 Proposed다. Codex는 설계, Claude Code는 이 명세에 따라 구현한다.
 
 ## 작업 절차
 

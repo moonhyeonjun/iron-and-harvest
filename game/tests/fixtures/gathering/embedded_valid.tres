@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="GatherCatalog" format=3]
+
+[ext_resource type="Script" path="res://systems/gathering/gather_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://systems/gathering/gather_def.gd" id="2_def"]
+
+[sub_resource type="Resource" id="GatherDef_embedded"]
+script = ExtResource("2_def")
+definition_id = &"gather_embedded"
+display_name = "내장 시험"
+action_label = "줍기"
+item_id = &"wood"
+initial_quantity = 2
+
+[resource]
+script = ExtResource("1_catalog")
+definitions = Array[ExtResource("2_def")]([SubResource("GatherDef_embedded")])

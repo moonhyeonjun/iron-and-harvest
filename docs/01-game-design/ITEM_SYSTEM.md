@@ -8,7 +8,7 @@
 
 범주: 자원·작물·요리 재료·광물·목재·도구·무기·방어구·유물·고서·씨앗·설계도·마법 재료. MVP는 생산·채집에 필요한 최소 품목부터 시작한다.
 
-ItemDef(id, name_key, category, stack_limit, effects), ItemStack(item_id, quantity), InventoryState(owner_id, slots_or_counts, reservations). 개인 가방과 영지 창고 사이 이동은 보존 거래로 처리한다. 동일 물자의 이중 소유·예약 초과·중복 지급을 방지한다.
+장기 모델은 ItemDef/ItemStack/InventoryState다. **IH-110의 최소 계약은 [INVENTORY](../02-technical-design/INVENTORY.md)**: 정의와 상태 분리, 고정 슬롯·정수 스택·원자 추가/제거/이동·읽기 사본·가방 UI. effects/예약/실제 영지 창고는 후속 범위다. 개인 가방과 검증용 보관함의 이동은 수량 보존 거래로 처리한다. 장기적으로 동일 물자의 이중 소유·예약 초과·중복 지급을 방지한다.
 
 ## 관계·우선순위
 
@@ -21,3 +21,11 @@ v0.3 가방/채집, v0.4 씨앗/작물, v0.5 건설/생산 재료. [경제](ECON
 ## TBD
 
 품목 수/스택/슬롯/무게/품질/내구도/거래가/희귀도. 이전 20종·24슬롯·99스택은 Proposed다. 철광석과 철의 구분도 생산 설계에서 검증한다.
+
+## IH-110 구현 준비
+
+2026-11-01 상세 설계 완료, 같은 날 Claude Code 구현·검증([검증 기록](../03-development/IH-110-VALIDATION.md), done). 검증용 bag/store 각12슬롯, 목재·석재·철·밀·산열매·밀 씨앗·도끼7종을 제안했다. 도끼는 stack_limit1 소지품이고 사용 효과는 없다. Resource 카탈로그를 작은 JSON 예제와 비교해 .tres를 런타임 원본으로 구현했다([ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md)). 전체 성공/실패·오래된 명령 거부·살펴보기와 가방의 배타적 UI를 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)로 판정한다. 파일 저장 왕복은 IH-112, 현재는 메모리 스냅샷 왕복만 포함한다. 가방 크기/품목/스택은 제품 수치 확정이 아니다.
+
+## IH-111 자원 공급 경계
+
+[채집 설계](../02-technical-design/GATHERING.md)는 기존 wood/stone/berry를 재사용한다. 미채집 물자는 지점의 숨은 재고이며 채집 성공 시 가방으로 전송한다. 새 품목/금화/도구 사용을 추가하지 않는다. 지점 잔량과 bag/store 합의 보존을 검증하며 숨은 재고를 영지 소유 물자로 집계하지 않는다.

@@ -33,3 +33,5 @@ JSON / Godot Resource / 혼합
 IH-110에서 작은 ItemDef 샘플과 검증으로 선택.
 
 변경 시 이 문서를 삭제하지 않고 후속 ADR로 대체 관계를 기록한다.
+
+후속 구체화: [ADR-015](ADR-015-inventory-contract.md)는 IH-110의 Resource 기본안과 비교 검증 관문을 제안한다. 아직 구현/검증 전이므로 이 ADR의 Proposed 상태와 다른 데이터 도메인의 미확정 상태를 유지한다.

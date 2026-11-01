@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/tests/save_load_test.gd" id="1_scene"]
+[ext_resource type="Script" path="res://scripts/save/save_coordinator.gd" id="2_coordinator"]
+[ext_resource type="PackedScene" path="res://ui/save/save_ui.tscn" id="3_ui"]
+
+[node name="SaveLoadTest" type="Node"]
+script = ExtResource("1_scene")
+
+[node name="SessionHost" type="Node2D" parent="."]
+
+[node name="SaveCoordinator" type="Node" parent="."]
+script = ExtResource("2_coordinator")
+
+[node name="SaveUI" parent="." instance=ExtResource("3_ui")]
