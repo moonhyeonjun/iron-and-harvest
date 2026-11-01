@@ -65,11 +65,25 @@ python3 tools/godot.py --headless --script res://tests/test_gathering.gd -- --in
 - 장면 사례: SaveLoadTest에서 실제 F5/F9/E/I/이동 입력을 넣는다.
 - AC-S13: `support/save_child.gd`로 별도 Godot 프로세스를 실행한다. 저장→종료→다른 프로세스 불러오기와, 저장 단계별 SIGKILL을 검증한다.
 
-`fixtures/save/`는 정상 v1, 시험 v0, 미래 schema, content 2 파일이다. BUG-009~011 회귀(UI 없는 키, 보고 중 재진입, 정지 중 지연 명령)를 포함해 529검사, 약 25초.
+`fixtures/save/`는 정상 v1, 시험 v0, 미래 schema, content 2 파일이다. BUG-009~011 회귀(UI 없는 키, 보고 중 재진입, 정지 중 지연 명령)를 포함한다. IH-120 schema2 이후 531검사(schema3 미래 fixture, schema2_future는 INVALID_SAVE 경계로 조정), 약 25초.
 
 ```sh
 python3 tools/godot.py --headless --script res://tests/test_save_load.gd
 python3 tools/godot.py --headless --script res://tests/test_save_load.gd -- --inject-failure
+```
+
+## test_calendar.gd — IH-120 달력·계절·하루 경계
+
+다음 세 가지를 검사한다.
+- 도메인: CalendarRules/CalendarService를 직접 호출한다. 날짜 기대값은 테스트가 손으로 쓴 표와 연·계절·일 중첩 반복으로 만들고, 서비스의 공식은 쓰지 않는다.
+- 장면: 실제 calendar_test(SaveLoadTest+CalendarController+CalendarHUD)에 P/N/F5/F9/E/I/이동 입력을 넣는다.
+- 저장: schema2와 v0/v1 이관을 실제 파일로 검사한다. AC-C09는 `support/calendar_child.gd`로 별도 프로세스에서 저장→다른 프로세스 불러오기를 확인한다.
+
+시험 파일은 고유 `user://tests/ih120/runner_*`에만 쓰고, 끝나면 자신이 만든 고정 이름 파일만 지운다. 334검사, 약 28초.
+
+```sh
+python3 tools/godot.py --headless --script res://tests/test_calendar.gd
+python3 tools/godot.py --headless --script res://tests/test_calendar.gd -- --inject-failure
 ```
 
 ## 테스트 맵 수동 실행
@@ -83,6 +97,8 @@ python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=full
 python3 tools/godot.py res://scenes/tests/gathering_test.tscn -- --fixture=rebind
 python3 tools/godot.py res://scenes/tests/save_load_test.tscn
 python3 tools/godot.py res://scenes/tests/save_load_test.tscn -- --fixture=corrupt-latest
+python3 tools/godot.py res://scenes/tests/calendar_test.tscn
+python3 tools/godot.py res://scenes/tests/calendar_test.tscn -- --fixture=calendar-boundary
 ```
 
 테스트 맵은 명시 경로로만 실행한다. export에서 tests 리소스를 제외하는 정책은 배포 단계에서 검증한다.
