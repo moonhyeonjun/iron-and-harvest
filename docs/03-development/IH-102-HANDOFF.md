@@ -4,7 +4,7 @@
 
 ## 현재 후속 작업
 
-2026-11-01 Codex 리뷰에서 BUG-003/004를 확인해 review로 재개했고, [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 **done**이다. 아래 최초 구현 프롬프트를 다시 실행하지 말고 [검토·수정 프롬프트](IH-102-REVIEW.md)의 후속 작업을 먼저 수행한다.
+2026-11-01 Codex 리뷰에서 BUG-003/004를 확인해 review로 재개했고, [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 **done**이다. 아래 최초 구현 프롬프트와 [검토·수정 프롬프트](IH-102-REVIEW.md)는 완료된 작업의 이력이다. 후속 개발에는 최신 TASKS와 별도 작업 명세를 사용한다.
 
 ## 읽기 순서와 기준
 

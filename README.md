@@ -59,4 +59,4 @@ Codex는 설계/기술 기반 검증, Claude Code는 이후 게임 기능 구현
 
 ## 다음 작업
 
-IH-004 CI는 정상/실패·통합 검증을 완료했다([검증 기록](docs/03-development/IH-004-VALIDATION.md)). IH-102 상호작용(안내판/상자 살펴보기)은 Claude Code가 구현하고 AC-I01~12를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/interaction_test.tscn`으로 실행한다. 아이템·채집·저장은 아직 없다. 다음은 [BUG-003/004 수정 프롬프트](docs/03-development/IH-102-REVIEW.md)에 따른 Claude Code 수정·회귀 검사다. Codex는 명세·기술 검토를 맡는다. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.
+IH-004 CI는 정상/실패·통합 검증을 완료했다([검증 기록](docs/03-development/IH-004-VALIDATION.md)). IH-102 상호작용(안내판/상자 살펴보기)은 Claude Code가 구현하고 AC-I01~12를 검증했다([검증 기록](docs/03-development/IH-102-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/interaction_test.tscn`으로 실행한다. 아이템·채집·저장은 아직 없다. BUG-003/004 수정은 통합됐으며 [검토 기록](docs/03-development/IH-102-REVIEW.md)을 따른다. 다음 설계 후보는 v0.2.0 마일스톤 판정과 IH-110 아이템·인벤토리 명세다. Codex는 명세·기술 검토를 맡는다. LICENSE의 배포 조건은 소유자 결정 대기다. Git/GitHub 작업은 별도 승인 없이 수행하되 이력을 보존하고 원격 반영을 검증한다. 파괴적 작업에 안전한 대안이 없으면 사용자에게 확인한다.
