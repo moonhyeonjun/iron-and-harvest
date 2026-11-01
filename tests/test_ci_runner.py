@@ -43,6 +43,24 @@ class CIRunnerTests(unittest.TestCase):
         result = self.check_command("print('\\x1b[31mERROR: broken\\x1b[0m')", engine=True)
         self.assertIn("engine error in log", result["failures"])
 
+    def test_gameplay_suites_are_registered_with_markers(self):
+        steps = {name: (command, options) for name, command, options in ci.ci_steps("python3")}
+        names = [name for name, _, _ in ci.ci_steps("python3")]
+        for name, script in (("player-acceptance", "res://tests/test_player_movement.gd"),
+                             ("interaction-acceptance", "res://tests/test_interaction.gd")):
+            command, options = steps[name]
+            self.assertIn(script, command)
+            self.assertEqual(options, {"engine": True, "marker": "RESULT: PASS"})
+            self.assertNotIn("--inject-failure", command)
+        self.assertLess(names.index("player-acceptance"), names.index("interaction-acceptance"))
+        self.assertEqual(names[-1], "source-tree-clean")
+
+    def test_failed_suite_output_cannot_pass(self):
+        # Mirrors an injected runner failure: exit 1, an ERROR line and no PASS marker.
+        result = self.check_command("print('ERROR: FAIL AC-I12: deliberate'); print('RESULT: FAIL (1)'); raise SystemExit(1)",
+                                    engine=True, marker="RESULT: PASS")
+        self.assertEqual(set(result["failures"]), {"nonzero exit", "engine error in log", "missing completion marker"})
+
 
 if __name__ == "__main__":
     unittest.main()
