@@ -470,3 +470,19 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
 - 문서: 리뷰·검증·수락·인수인계·BUGS/TASKS/CHANGELOG·README/CLAUDE·기술 진입점/ADR 목록 갱신. 게임 코드/씬/테스트/CI 변경 없음. 로그 build/ih-112-fix-codex-review/.
 - AGENTS.md와 기존 링크4개 문제 보존·미커밋, 별도 worktree 검증. 문서 변경의 커밋/PR/CI/merge 실제 결과는 PR 이력 및 완료 보고로 연결한다.
 - 다음: 남은 AC-S16 처리 방침에 따른 IH-112 완료/마일스톤 판정. 사용자 테스트 재요청이나 자동 통과 전환은 하지 않는다.
+
+## 2026-11-01 — IH-112 AC-S16 손상복구 GUI 재개 확인 (Claude Code)
+
+- **방침**: 사용자가 사용자 테스트 재개를 명시했다. 앞서 기록한 중단 지시는 이력으로 남기고, 재개를 최신 방침으로 따른다. 범위는 미확인 1항목(최신 손상 → 명시 복구본)이다.
+- **기준**: develop 3d248d0(develop CI success, 게임 코드는 bb4d6fe와 동일). 사용자 미추적 AGENTS.md 보존. 문서 브랜치 `docs/ih-112-gui-recovery`.
+- **준비**: 새 시험 경로 `user://tests/ih112/gui_recovery_20261101`(기존 gui/·제품 saves 미접촉).
+  - 1세대 A: (300,410) 왼쪽, 가방 목재 9, 보관함 비어 있음, 지점 5/4/3.
+  - 2세대 B: (520,560) 오른쪽, 보관함 목재 4, 산열매 소진.
+- **fixture**: corrupt-latest가 B만 손상(checksum 불일치)시켰고, A는 SHA 그대로 유효함을 창 사용자 조작 전에 확인했다.
+- **사용자 GUI 결과** "1~4 모두 정상":
+  - 손상 안내와 세계 보존
+  - 복구 표시
+  - 명시 복구로 1세대 복원, 기준 일치
+  - 복원 뒤 이동·채집·전송
+- **로그**: RECOVERY_AVAILABLE(a=valid, b=CHECKSUM_MISMATCH) → load OK gen=1 recovered=true. 오류 0. 파일은 변하지 않았다. 창이 열려 있어 종료 코드는 미수집이다.
+- **결과**: AC-S16 미확인 항목 해소. IH-112 review 유지(done·v0.3.0은 Codex 후속 검토). main/태그/릴리스 없음.
