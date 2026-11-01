@@ -61,7 +61,8 @@ func _ready() -> void:
 			errors.append(built.detail)
 	if not errors.is_empty():
 		setup_errors = errors
-		hud.show_error("시험 맵 구성 오류: 상호작용을 막았습니다.\n" + "\n".join(errors))
+		if _hud_usable():
+			hud.show_error("시험 맵 구성 오류: 상호작용을 막았습니다.\n" + "\n".join(errors))
 		return
 	_bind_points()
 	controller.setup(inventory, player, interaction, ui, BAG_ID, STORE_ID)
@@ -139,17 +140,24 @@ func _bind_points() -> void:
 		target.bind_service(gather, BAG_ID)
 
 
+## The HUD is display only: if it was freed, detached or is being deleted the message is
+## skipped and nothing else changes (BUG-007). The committed transfer is never affected.
+func _hud_usable() -> bool:
+	return is_instance_valid(hud) and hud.is_inside_tree() and not hud.is_queued_for_deletion()
+
+
 func _on_gathered(_request_id: int, target_id: StringName, result: RefCounted) -> void:
-	var item: Dictionary = inventory.get_item_info(StringName(result.get("item_id")))
-	var info: GatherService.Result = gather.query(target_id)
-	var left: String = " (남은 %d)" % info.value.remaining if info.ok else ""
-	hud.show_toast("%s 1개를 얻었습니다%s" % [item.get("fallback_name", "?"), left])
+	if _hud_usable():
+		var item: Dictionary = inventory.get_item_info(StringName(result.get("item_id")))
+		var info: GatherService.Result = gather.query(target_id)
+		var left: String = " (남은 %d)" % info.value.remaining if info.ok else ""
+		hud.show_toast("%s 1개를 얻었습니다%s" % [item.get("fallback_name", "?"), left])
 	if fixture == "rebind" and rebind_report.is_empty():
 		_rebind_fixture.call_deferred()
 
 
 func _on_rejected(_request_id: int, reason: StringName) -> void:
-	if MESSAGES.has(reason):
+	if MESSAGES.has(reason) and _hud_usable():
 		hud.show_toast(MESSAGES[reason])
 
 
@@ -157,7 +165,8 @@ func _rebind_fixture() -> void:
 	var before: Dictionary = _point_values()
 	rebind_points()
 	rebind_report = {"before": before, "after": _point_values()}
-	hud.show_toast("지점 뷰를 다시 연결했습니다: %s → %s" % [_short(before), _short(rebind_report.after)])
+	if _hud_usable():
+		hud.show_toast("지점 뷰를 다시 연결했습니다: %s → %s" % [_short(before), _short(rebind_report.after)])
 
 
 func _point_values() -> Dictionary:
@@ -176,7 +185,7 @@ func _short(values: Dictionary) -> String:
 
 
 func _update_hud() -> void:
-	if gather == null or gather.is_closed() or inventory.is_closed():
+	if gather == null or gather.is_closed() or inventory.is_closed() or not _hud_usable():
 		return
 	var point_parts: PackedStringArray = []
 	var held: Dictionary = {}
