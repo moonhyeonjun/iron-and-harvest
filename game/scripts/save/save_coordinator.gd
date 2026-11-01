@@ -56,11 +56,15 @@ var _load: Dictionary = {}
 ## True while a result is being reported: a request made from a listener is refused and
 ## only returned, never reported again (no recursion through the signal).
 var _emitting: bool = false
+var _external_blocker: Callable = Callable()
 
 
 ## host: parent of the world; world: the current map; world_scene: map to stage on load;
 ## restorer: payload -> {"ok", "context"|"detail"} building a candidate's services.
-func setup(host: Node, world: Node, world_scene: PackedScene, store: SaveStore, restorer: Callable) -> void:
+func setup(host: Node, world: Node, world_scene: PackedScene, store: SaveStore, restorer: Callable,
+		external_blocker: Callable = Callable()) -> void:
+	if external_blocker.is_valid():
+		_external_blocker = external_blocker
 	_host = host
 	_world = world
 	_world_scene = world_scene
@@ -81,8 +85,17 @@ func get_state() -> State:
 	return _state
 
 
+## Busy while an operation runs and while any result (or refusal) is being reported, so
+## an outside clock never starts work from inside a report (IH-120).
 func is_busy() -> bool:
-	return _state != State.IDLE
+	return _state != State.IDLE or _emitting
+
+
+## Optional outside blocker (IH-120): a Callable returning &"" or a refusal code, asked at
+## every save/load start. Empty by default, so existing maps behave as before. It must not
+## call back into this coordinator.
+func set_external_blocker(blocker: Callable) -> void:
+	_external_blocker = blocker
 
 
 func get_store() -> SaveStore:
@@ -247,7 +260,7 @@ func _fail_load(code: StringName, detail: String, cause: StringName = &"") -> vo
 			if (candidate as Node).is_inside_tree():
 				(candidate as Node).get_parent().remove_child(candidate)
 			(candidate as Node).free()
-		for key: String in ["gather", "inventory"]:
+		for key: String in ["gather", "inventory", "calendar"]:
 			var service: RefCounted = context.get(key)
 			if service != null:
 				service.call("close")
@@ -271,6 +284,10 @@ func _request_blocker(epoch: int) -> StringName:
 		return REMOVED
 	if not _window_focused:
 		return FOCUS_LOST
+	if _external_blocker.is_valid():
+		var outside: StringName = _external_blocker.call()
+		if not outside.is_empty():
+			return outside
 	var world_blocker: StringName = _world.call("save_blocker")
 	return world_blocker if not world_blocker.is_empty() else OK
 

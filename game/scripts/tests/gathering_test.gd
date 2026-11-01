@@ -35,6 +35,11 @@ const PLAYER_ID: String = "player_01"
 const STORE_OWNER: String = "fixture_store_01"
 const BUSY_REASON: StringName = &"BUSY"
 const NOT_READY: StringName = &"NOT_READY"
+## IH-120: every session owns a calendar. This map only creates, saves and restores it
+## (passive: nothing ticks it here); a CalendarController outside the world drives time.
+const CALENDAR_RULES_PATH: String = "res://data/calendar/calendar_rules.json"
+const DEFAULT_CALENDAR_RULE: String = "calendar_test_v1"
+const TRUSTED_CALENDAR_RULES: Array = ["calendar_test_v1", "calendar_boundary_fixture_v1"]
 
 ## "normal", "full" or "rebind". Tests may set it before the map enters the tree.
 var fixture: String = ""
@@ -46,6 +51,9 @@ var restore_context: Dictionary = {}
 var start_inactive: bool = false
 ## Only a map that is the whole scene names the window; a hosted map leaves it alone.
 var owns_window_title: bool = true
+## Calendar profile of a NEW game (a restore takes the saved, verified profile).
+var calendar_rule_id: String = DEFAULT_CALENDAR_RULE
+var calendar: CalendarService
 var inventory: InventoryService
 var gather: GatherService
 var setup_errors: PackedStringArray = []
@@ -77,7 +85,9 @@ func _ready() -> void:
 	if not restore_context.is_empty():
 		inventory = restore_context.get("inventory")
 		gather = restore_context.get("gather")
-		if inventory == null or gather == null or inventory.is_closed() or gather.is_closed():
+		calendar = restore_context.get("calendar")
+		if inventory == null or gather == null or calendar == null or inventory.is_closed() or gather.is_closed() \
+				or calendar.is_closed():
 			errors.append("restore context has no open services")
 		elif errors.is_empty():
 			player.restore_state(restore_context.position, restore_context.facing)
@@ -89,6 +99,12 @@ func _ready() -> void:
 			gather = built.value.gather
 		else:
 			errors.append(built.detail)
+		var profile: Dictionary = calendar_profile(calendar_rule_id)
+		var created: CalendarService.Result = CalendarService.create(profile) if not profile.is_empty() else null
+		if created != null and created.ok:
+			calendar = created.value
+		else:
+			errors.append("calendar profile '%s' unavailable" % calendar_rule_id)
 	if not errors.is_empty():
 		setup_errors = errors
 		if _hud_usable():
@@ -97,7 +113,7 @@ func _ready() -> void:
 	_bind_points()
 	controller.setup(inventory, player, interaction, ui, BAG_ID, STORE_ID)
 	# A staged candidate refuses session commands until it is published (BUG-011).
-	controller.set_session_suspended(start_inactive)
+	set_session_suspended(start_inactive)
 	($FixtureHud/StoreButton as Button).pressed.connect(func() -> void:
 		controller.request_open(InventoryController.View.STORE))
 	interaction.instant_completed.connect(_on_gathered)
@@ -124,6 +140,8 @@ func activate() -> void:
 func set_session_suspended(suspended: bool) -> void:
 	if is_instance_valid(controller):
 		controller.set_session_suspended(suspended)
+	if calendar != null:
+		calendar.set_session_suspended(suspended)
 
 
 func _exit_tree() -> void:
@@ -131,6 +149,8 @@ func _exit_tree() -> void:
 		gather.close()
 	if inventory != null:
 		inventory.close()
+	if calendar != null:
+		calendar.close()
 
 
 # --- IH-112 save/load hooks ------------------------------------------------------------
@@ -139,12 +159,12 @@ func _exit_tree() -> void:
 ## no open panel, no queued/running interaction, no prepared or running gather and no
 ## inventory commit. Nothing is cancelled or closed to make it quiescent.
 func save_blocker() -> StringName:
-	if not setup_errors.is_empty() or inventory == null or gather == null:
+	if not setup_errors.is_empty() or inventory == null or gather == null or calendar == null:
 		return NOT_READY
-	if inventory.is_closed() or gather.is_closed() or not is_inside_tree() or is_queued_for_deletion():
+	if inventory.is_closed() or gather.is_closed() or calendar.is_closed() or not is_inside_tree() or is_queued_for_deletion():
 		return NOT_READY
 	if controller.get_state() != InventoryController.State.CLOSED or not interaction.is_quiescent() \
-			or inventory.is_busy() or gather.is_busy() or gather.has_pending_command():
+			or inventory.is_busy() or gather.is_busy() or gather.has_pending_command() or calendar.is_busy():
 		return BUSY_REASON
 	return &""
 
@@ -167,11 +187,27 @@ func capture_payload() -> Dictionary:
 			"facing": FACING_NAMES[player.get_facing()]},
 		"inventories": inventories,
 		"points": gather.export_bindings(),
+		"calendar": calendar.get_snapshot().value,
 	}
 
 
+## Trusted calendar profiles, read and verified once (the file is the single source).
+static func calendar_rules() -> CalendarRules.Result:
+	return CalendarRules.parse(FileAccess.get_file_as_string(CALENDAR_RULES_PATH), TRUSTED_CALENDAR_RULES)
+
+
+## A verified profile copy, or {} when the rules or the ID are not usable.
+static func calendar_profile(rule_id: String) -> Dictionary:
+	var rules: CalendarRules.Result = calendar_rules()
+	if not rules.ok:
+		return {}
+	var profile: CalendarRules.Result = (rules.value as CalendarRules).get_profile(rule_id)
+	return profile.value if profile.ok else {}
+
+
 ## What a save of this map must contain, from the trusted local definitions (IH-112).
-static func save_manifest() -> Dictionary:
+## IH-120: the calendar must be of `rule_id`'s profile.
+static func save_manifest(rule_id: String = DEFAULT_CALENDAR_RULE) -> Dictionary:
 	var items_service: InventoryService = InventoryService.new(ITEM_CATALOG)
 	var items: Dictionary = {}
 	var records: Dictionary = {}
@@ -192,7 +228,7 @@ static func save_manifest() -> Dictionary:
 		points.append(binding.duplicate())
 	points.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.point_id < b.point_id)
 	return {"map_id": MAP_ID, "player_id": PLAYER_ID, "bag_id": String(BAG_ID), "bounds": MAP_BOUNDS,
-		"inventories": inventories, "points": points, "items": items}
+		"inventories": inventories, "points": points, "items": items, "calendar_profile": calendar_profile(rule_id)}
 
 
 ## RESTORE services for a verified payload: every saved inventory registered once in a new
@@ -203,11 +239,19 @@ static func restore_session(payload: Dictionary) -> Dictionary:
 		payload.inventories, BAG_ID, BINDINGS)
 	if not restored.ok:
 		return {"ok": false, "detail": restored.detail}
+	# The calendar comes back exactly as saved: no event, no revision change.
+	var profile: Dictionary = calendar_profile(String(payload.calendar.rule_id))
+	var calendar_restored: CalendarService.Result = CalendarService.restore(payload.calendar, profile)
+	if not calendar_restored.ok:
+		restored.value.gather.close()
+		restored.value.inventory.close()
+		return {"ok": false, "detail": "calendar: " + calendar_restored.detail}
 	var facing: PlayerController.Facing = PlayerController.Facing.DOWN
 	for key: PlayerController.Facing in FACING_NAMES:
 		if FACING_NAMES[key] == payload.player.facing:
 			facing = key
 	return {"ok": true, "context": {"inventory": restored.value.inventory, "gather": restored.value.gather,
+		"calendar": calendar_restored.value,
 		"position": Vector2(payload.player.position.x, payload.player.position.y), "facing": facing}}
 
 
