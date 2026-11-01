@@ -1,6 +1,6 @@
 # 저장·불러오기
 
-상태: 장기 방향 Proposed, 저장 구현 없음. IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01, ready). 아래 장기 대상 전체를 이번에 구현하지 않는다.
+상태: 장기 방향 Proposed. IH-112 최소 저장(단일 수동 A/B 슬롯)은 2026-11-01에 구현했고 review 상태다([검증](../03-development/IH-112-VALIDATION.md)). IH-112의 구현 가능한 최소 계약은 [SAVE_LOAD](SAVE_LOAD.md), [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), [인수인계](../03-development/IH-112-HANDOFF.md)에 구체화했다(2026-11-01, ready). 아래 장기 대상 전체를 이번에 구현하지 않는다.
 
 ## 포함할 상태
 

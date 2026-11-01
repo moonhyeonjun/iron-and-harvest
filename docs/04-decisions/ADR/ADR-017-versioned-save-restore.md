@@ -1,6 +1,6 @@
 # ADR-017: 버전 저장과 검증 후 새 세션 복원
 
-- 상태: **Proposed** (설계만 완료, 구현·수락 검증 전)
+- 상태: **Proposed** (2026-11-01 구현·자동 검증 완료, AC-S16 부분, Accepted 판단 전)
 - 날짜: 2026-11-01
 - 관련: IH-112, [SAVE_LOAD](../../02-technical-design/SAVE_LOAD.md), [ADR-004](ADR-004-save-system.md), [ADR-015](ADR-015-inventory-contract.md), [ADR-016](ADR-016-atomic-gathering.md)
 
@@ -31,3 +31,20 @@ A/B 선택·checksum·후보 세션 때문에 단일 덮어쓰기보다 코드�
 SaveCodec/Store/Coordinator, 최소 bootstrap/복원 API·SaveLoadTest·UI·CI 회귀가 필요하다. ADR-004의 envelope/migration/검증 후 교체 원칙을 IH-112 범위에서 구체화하며 기존 ADR을 삭제하거나 Accepted로 소급 변경하지 않는다.
 
 AC-S01~16, 기존 회귀·실패/중단 시험·실제 GUI·필수 PR CI를 증거로 구현 완료와 Accepted 전환을 각각 판단한다. 현재 ready는 구현 완료가 아니다.
+
+## 구현 검증 결과 (2026-11-01)
+
+Claude Code가 이 제안대로 구현했다. 확인한 내용은 다음과 같다([검증 기록](../../03-development/IH-112-VALIDATION.md)).
+- A/B 두 세대, payload 문자열 SHA-256, 숫자 정규화
+- schema1과 시험 v0
+- pending 검증 뒤 rename, 명시 복구
+- 초기 지급 없는 restore, 후보 검증 뒤 publish, epoch 차단
+- AC-S01~15 자동 425검사, 변이 7종, 별도 프로세스 SIGKILL
+
+실측에 따른 구현 차이:
+- 위치만 왕복 허용 오차를 둔다.
+- 엄격한 UTF-8 검사를 선행한다.
+- 손상+없음과 checksum이 맞는 콘텐츠 불일치는 보존·거부한다.
+- live 월드의 물리는 유지하고 process만 정지한다.
+
+전원 차단, Windows, 다중 writer는 미검증이다. AC-S16 절차 6이 사용자 GUI 미실행이므로 상태는 Proposed를 유지한다.

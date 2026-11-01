@@ -1,0 +1,60 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/save/save_ui.gd" id="1_ui"]
+
+[node name="SaveUI" type="CanvasLayer"]
+layer = 4
+script = ExtResource("1_ui")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -196.0
+offset_top = 46.0
+offset_right = -8.0
+offset_bottom = 150.0
+grow_horizontal = 0
+mouse_filter = 1
+
+[node name="Layout" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Root" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+autowrap_mode = 3
+
+[node name="Slot" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Layout"]
+layout_mode = 2
+
+[node name="Save" type="Button" parent="Panel/Layout/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "저장 (F5)"
+
+[node name="Load" type="Button" parent="Panel/Layout/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "불러오기 (F9)"
+
+[node name="Recover" type="Button" parent="Panel/Layout"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "이전 세대로 복구"
+
+[node name="Message" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3

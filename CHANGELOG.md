@@ -1,5 +1,14 @@
 # 변경 이력
 
+## Unreleased — IH-112 초기 저장·복원 (Claude Code, 2026-11-01)
+
+- SaveCodec(envelope+payload 문자열 SHA-256, 숫자 정규화, manifest 대조, schema1/시험 v0 이관), SaveStore(A/B 두 세대, pending 검증 뒤 rename, 상태표·명시 복구), SaveFileAdapter.
+- GatherService.restore(초기 지급 없는 복원)와 읽기 전용 정지 상태 검사, PlayerController.restore_state.
+- SaveCoordinator(동기 capture, 월드 suspend, inactive 후보 staging, 발 위치 검사, epoch publish, 실패 시 이전 세계 복귀).
+- SaveLoadTest/SaveUI(F5/F9, 명시 복구 버튼, 시험 저장 루트).
+- `tests/test_save_load.gd`(425검사, 실제 파일·별도 프로세스·SIGKILL), fixture 4종, 공통 CI 13단계 등록.
+- AC-S16 GUI는 부분 확인(절차 6 미실행)이라 IH-112는 review다.
+
 ## Unreleased — IH-112 상세 설계
 
 - A/B 수동 저장·버전/숫자/checksum 검증·명시 복구 선택·초기 지급 없는 후보 세션 복원 명세를 작성했다. AC-S01~16, Claude 전달 프롬프트, ADR-017 Proposed와 관련 기획/기술/작업 진입점을 갱신했다.

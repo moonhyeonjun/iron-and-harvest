@@ -1,6 +1,10 @@
 # IH-112 저장·복원 수락 조건
 
-상태: **설계 ready / 구현·신규 검사 미실행**, 2026-11-01. [SAVE_LOAD](../02-technical-design/SAVE_LOAD.md)의 계약을 검사한다. 아래 항목은 테스트 계획이며 아직 pass가 아니다. [전달 프롬프트](IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md)를 함께 따른다.
+상태: **구현·자동 검증 완료 / AC-S16 부분 / review**, 2026-11-01 Claude Code.
+- AC-S01~15: 자동 425검사 pass. 변이 7종 검출, 별도 프로세스 재시작·SIGKILL 확인, 깨끗한 worktree CI 13단계 PASS.
+- AC-S16: 사용자 GUI 절차 1~5 확인(빌드 `438ef89`). 절차 6은 사용자 GUI 미실행(사용자가 이후 사용자 테스트 중단을 지시). 따라서 IH-112 done이 아니다.
+
+결과와 측정은 [검증 기록](IH-112-VALIDATION.md)에 있다. 원래 상태는 설계 ready였다. [SAVE_LOAD](../02-technical-design/SAVE_LOAD.md)의 계약을 검사한다. 아래 기준은 원래 계약이며 낮추지 않았다. [전달 프롬프트](IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md)를 함께 따른다.
 
 | ID | 완료 조건·관찰 | 방법 |
 |---|---|---|
