@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="GatherCatalog" format=3]
+
+[ext_resource type="Script" path="res://systems/gathering/gather_def.gd" id="1_otmen"]
+[ext_resource type="Resource" path="res://data/gathering/gather_branches.tres" id="2_r6b6b"]
+[ext_resource type="Resource" path="res://data/gathering/gather_stones.tres" id="3_mdc4d"]
+[ext_resource type="Resource" path="res://data/gathering/gather_berries.tres" id="4_vkdlw"]
+[ext_resource type="Script" path="res://systems/gathering/gather_catalog.gd" id="5_2q86s"]
+
+[resource]
+script = ExtResource("5_2q86s")
+definitions = Array[ExtResource("1_otmen")]([ExtResource("2_r6b6b"), ExtResource("3_mdc4d"), ExtResource("4_vkdlw")])

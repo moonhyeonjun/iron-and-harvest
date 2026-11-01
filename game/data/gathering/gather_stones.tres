@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="GatherDef" format=3]
+
+[ext_resource type="Script" path="res://systems/gathering/gather_def.gd" id="1_7h2jn"]
+
+[resource]
+script = ExtResource("1_7h2jn")
+definition_id = &"gather_stones"
+display_name = "돌"
+action_label = "줍기"
+item_id = &"stone"
+initial_quantity = 4
