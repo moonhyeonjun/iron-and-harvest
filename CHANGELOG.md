@@ -1,5 +1,9 @@
 # 변경 이력
 
+## Unreleased — IH-111 Codex 수정 재검증
+
+- BUG-007/008의 원래 진단4종 종료0·전체 CI12단계·채집347검사 PASS를 확인했다. resolved·IH-111 done 복귀, 검증·인수인계 안내 갱신. 게임 코드 변경 없음.
+
 ## Unreleased — IH-111 BUG-007/008 수정 (Claude Code, 2026-11-01)
 
 - BUG-007: 채집 시험 맵이 해제·트리 밖·삭제 예약 HUD에 쓰지 않는다(표시만 생략, 거래 유지). HUD 지점 줄에 fixture 이름을 표시한다.

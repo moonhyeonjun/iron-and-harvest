@@ -1,6 +1,6 @@
 # IH-111 수락 조건
 
-**현재 판정: review.** Codex 후속 재현에서 AC-G01의 내장 정의 타입 검사, AC-G09/11의 실제 GatheringHUD 수명 검사가 미충족임을 확인했다. [BUG-007/008 수정 수락 조건](IH-111-REVIEW.md)을 추가하고 재검증해야 done으로 복귀한다. 아래 pass 표기는 최초 자동/GUI 검사 이력이다.
+**현재 판정: done.** Codex가 1cb3471에서 원래 진단4종 종료0와 CI12단계·채집347검사 PASS를 독립 확인했다. BUG-007/008 resolved, AC-G01/G09/11의 수정 수락 조건을 충족했다([독립 재검증](IH-111-VALIDATION.md#codex-독립-수정-재검증)). 아래 최초 검증과 Claude 수정 기록은 이력으로 보존한다.
 
 2026-11-01 Claude 수정(`b5afd93`)에서 위 조건을 회귀로 추가했다. AC-G01은 내장 정의 거부와 경로 없는 정의 opt-in을, AC-G09는 실제 GatheringHUD free/queue_free/remove_child 뒤 후속 E·전송·full·rebind를 검사한다. 347검사 PASS, 변이 5종 검출, 사용자 GUI normal/full/rebind "1~5 모두 정상"(`b5afd93`)이다([수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01)). [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29)로 develop 통합(merge ed554c5, PR/develop CI success). done 복귀는 Codex 독립 재검증 뒤 판정한다.
 

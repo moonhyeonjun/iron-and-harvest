@@ -1,6 +1,10 @@
 # IH-111 채집·자원 지점 검증 — 2026-11-01
 
-## Codex 후속 판정 — review
+## 현재 판정 — done
+
+Codex가 `1cb3471`에서 원래 진단4종과 전체 CI를 독립 재검증했다. **BUG-007/008 resolved, IH-111 done**. 결과는 [독립 수정 재검증](#codex-독립-수정-재검증)을 따른다. 아래 최초 구현·리뷰·Claude 수정 기록은 당시 증거로 보존한다.
+
+## Codex 최초 후속 판정 — review(수정 전)
 
 2026-11-01 `c266d52`에서 BUG-007(채집 HUD 해제 후 호출·충돌), BUG-008(내장 정의의 비정수 수량 허용)을 추가 재현했다. **IH-111 done→review**, 두 결함 open. [재현·수정 수락 조건·Claude 프롬프트](IH-111-REVIEW.md)를 따른다. 아래는 Claude의 최초 구현/검증/통합 기록으로 보존한다. 기존 suite PASS/GUI 확인은 새 경계의 통과를 뜻하지 않는다.
 
@@ -224,3 +228,23 @@ int로 타입 지정된 Resource 필드에 `.tres` 값 `2.5`, `true`, `"3"`이 �
 - [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41293774055/job/124810245717): develop push(`ed554c5`) CI checks success.
 - 통합 tree는 검증한 `1010bde`과 동일하다(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.
 - BUG-007/008은 fixed·통합 완료 상태다. resolved와 IH-111 done 복귀는 Codex 독립 재검증 뒤 판정한다.
+
+## Codex 독립 수정 재검증
+
+- 날짜/대상: 2026-11-01, develop/origin `1cb3471887d44f494fb075c48b52c7ddf1c79daa`, macOS13.4/M1, Godot4.7.2 Standard/GDScript/Compatibility.
+- 같은 SHA 원격 CI41294351856 success 확인. 사용자 미추적 AGENTS.md 보존. 독립 detached worktree에서 공통 검사를 실행했으며 게임 코드/씬/테스트/CI 설정은 변경하지 않았다.
+- `python3 tools/run_ci.py`: 공통 CI 종료0/12단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집347. 채집 반복2회 측정26종 차이0·고아0·엔진 오류0.
+- 원래 진단 파일을 수정하지 않고 복사해 각각 실행했다. `python3 tools/godot.py --headless --script res://build/review/<아래 이름>.gd`:
+
+| 진단 | 종료 | 실제 관찰 |
+|---|---:|---|
+| probe | 0 | HUD free/queue_free 뒤 bag9/stock5, 엔진 오류0, RESULT: PASS |
+| queue_probe | 0 | 삭제 예약 후 첫 거래 보존·오류0, RESULT: PASS |
+| queue_next_probe | 0 | HUD 실제 해제 후 다음 E까지 충돌/엔진 오류0, RESULT: PASS |
+| catalog_probe | 0 | 내장 2.5/true/숫자 문자열 모두 compile=false/build=INVALID_SETUP, 엔진 오류0, RESULT: PASS |
+
+- 코드/회귀 검토: HUD의 성공·실패·지연 갱신·rebind·setup 표시를 수명 검사하고 도메인 결과는 보존한다. AC-G09는 실제 HUD free/queue_free/remove_child 뒤 후속 E·전송·full·rebind를 검사한다. AC-G01은 내장5종, 경로 없는 정의 기본 거부/명시 opt-in, 정상 외부 정의 성공을 검사한다. 추가 수정 요청 없음.
+- GUI/표적 변이는 이번에 새로 실행하지 않았다. Claude의 빌드b5afd93 사용자 normal/full/rebind 확인·변이5종 검출 기록과 구분한다. 해당 빌드와 현재 game/tools/tests/.github 파일은 모두 동일하다.
+- 로그: build/ih-111-fix-codex-review/ (ci.log, ci/, probe/queue_probe/queue_next_probe/catalog_probe.log). 진단은 무시 경로에 두어 제품 소스에 편입하지 않았다.
+- 최종 판정: BUG-007/008 resolved·IH-111 done. ADR-016 Proposed, DEBT-002/003/004 유지. 파일 저장은 미구현이며 다음 작업 후보는 IH-112 상세 설계다. main/태그/릴리스는 변경하지 않는다.
+- 이 검증 문서는 보호된 PR CI 후 develop에 통합한다. 실제 문서 커밋/merge/CI/원격 결과는 PR 이력과 완료 보고에 기록한다.

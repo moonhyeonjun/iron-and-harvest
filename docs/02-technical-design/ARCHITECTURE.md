@@ -62,4 +62,4 @@ Event는 event_id/type/date/actor_ids/target_ids/payload_version을 갖고 상�
 
 IH-111에서 game/systems/gathering(GatherDef·GatherCatalog·GatherService), game/data/gathering, game/scripts/gathering(GatherTarget), game/scenes/gathering, game/ui/gathering, game/scenes/tests/gathering_test로 구현했다. 서비스는 Node·입력·시간을 참조하지 않는다([검증 기록](../03-development/IH-111-VALIDATION.md)).
 
-[상세 명세](GATHERING.md): 입력/Target 준비 → Interaction 최종 재검증 → RefCounted 단발 명령 → 기존 InventoryService.transfer → 양쪽 상태 설치 → UI/뷰 갱신. 지점별 숨은 재고를 원본으로 사용하여 별도 remaining과 재고의 이중 쓰기를 없앤다. INSTANT는 모달/게이트를 소유하지 않는다. 서비스는 세션 루트가 소유하고 지점 뷰 이탈은 재고를 초기화하지 않는다. 아직 미구현이며 ADR-016 Proposed다.
+[상세 명세](GATHERING.md): 입력/Target 준비 → Interaction 최종 재검증 → RefCounted 단발 명령 → 기존 InventoryService.transfer → 양쪽 상태 설치 → UI/뷰 갱신. 지점별 숨은 재고를 원본으로 사용하여 별도 remaining과 재고의 이중 쓰기를 없앤다. INSTANT는 모달/게이트를 소유하지 않는다. 서비스는 세션 루트가 소유하고 지점 뷰 이탈은 재고를 초기화하지 않는다. IH-111 구현·수정·독립 재검증은 완료했고 ADR-016 Proposed를 유지한다.
