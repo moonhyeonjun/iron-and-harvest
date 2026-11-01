@@ -1,8 +1,8 @@
 # Claude Code 인수인계 — IH-112
 
-**BUG-009~011 수정 완료(Claude Code, 2026-11-01, Codex 재검증 대기).** [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). 수정 프롬프트는 완료됐으니 다시 실행하지 않는다. 수정 전 안내: [Codex 리뷰의 수정 전달용 프롬프트](IH-112-REVIEW.md)를 사용한다. 아래 최초 구현 프롬프트는 완료 이력이며 다시 실행하지 않는다. IH-112 review 및 AC-S16 부분 확인을 유지한다.
+**BUG-009~011 수정·Codex 독립 재검증 완료(resolved, 2026-11-01).** 진단5종·CI13단계·저장529검사 PASS. IH-112 review는 AC-S16 손상복구 GUI 미확인으로 유지한다. [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). 수정 프롬프트는 완료됐으니 다시 실행하지 않는다. [Codex 수정 프롬프트](IH-112-REVIEW.md)는 과거 계약으로 보존한다. 아래 최초 구현 프롬프트는 완료 이력이며 다시 실행하지 않는다. IH-112 review 및 AC-S16 부분 확인을 유지한다.
 
-상태: **구현됨 / review**(2026-11-01 Claude Code, [검증 기록](IH-112-VALIDATION.md). AC-S16 절차 6은 사용자 GUI 미실행). 원래 상태는 상세 설계 완료 / 구현 ready였다(2026-11-01). IH-110/111은 구현·수정·독립 재검증 done. Codex는 이번에 설계 문서만 작성했다. 파일 저장/신규 runner/GUI는 아직 없고 ADR-017은 Proposed다.
+상태: **구현됨 / review**(2026-11-01 Claude Code, [검증 기록](IH-112-VALIDATION.md). AC-S16 절차 6은 사용자 GUI 미실행). 원래 상태는 상세 설계 완료 / 구현 ready였다(2026-11-01). IH-110/111은 구현·수정·독립 재검증 done. 설계 당시에는 파일 저장/신규 runner/GUI가 없었다. 현재는 구현·수정·독립 자동 검증이 완료됐으며 ADR-017은 Proposed다.
 
 ## 읽기·변경 범위·순서
 

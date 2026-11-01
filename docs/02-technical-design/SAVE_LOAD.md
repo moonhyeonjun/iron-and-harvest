@@ -1,6 +1,6 @@
 # IH-112 초기 저장·복원 구현 명세
 
-상태: **Proposed / 구현됨(review)**, 2026-11-01. Claude Code가 구현하고 AC-S01~15를 자동 검증했다. AC-S16은 부분 확인이다([검증 기록](../03-development/IH-112-VALIDATION.md), 아래 '구현 결과·차이'). 원래 상태는 구현 준비 명세였다. 기준 develop `8913c0d`, IH-110/111 done. 기능과 자동 검사는 구현됐으나 Codex가 BUG-009~011을 추가 재현했다. [수정 리뷰](../03-development/IH-112-REVIEW.md)를 따르며 review를 유지한다. Codex는 설계/검증, Claude Code는 구현을 맡는다. Godot4.7.2 Standard/GDScript/Compatibility 유지. [저장 방향](SAVE_SYSTEM.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md), [수락 조건](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md)를 따른다.
+상태: **Proposed / 구현됨(review)**, 2026-11-01. Claude Code가 구현하고 AC-S01~15를 자동 검증했다. AC-S16은 부분 확인이다([검증 기록](../03-development/IH-112-VALIDATION.md), 아래 '구현 결과·차이'). 원래 상태는 구현 준비 명세였다. 기준 develop `8913c0d`, IH-110/111 done. BUG-009~011은 수정·Codex 독립 재검증(진단5종·CI13단계·저장529)으로 resolved다. AC-S16 손상복구 GUI 미확인으로 review를 유지한다. [수정 리뷰](../03-development/IH-112-REVIEW.md)의 프롬프트는 완료 이력이다. Codex는 설계/검증, Claude Code는 구현을 맡는다. Godot4.7.2 Standard/GDScript/Compatibility 유지. [저장 방향](SAVE_SYSTEM.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md), [수락 조건](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md)를 따른다.
 
 ## 목적·범위
 

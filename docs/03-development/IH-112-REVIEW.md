@@ -2,7 +2,9 @@
 
 ## 현재 판정
 
-대상 develop/origin `b13292b`. **BUG-009/010/011(P2) 재현, IH-112 review 유지**. 기존 구현·자동 PASS·부분 GUI 확인은 이력으로 보존한다. 수정 회귀와 독립 재검증이 필요하며, AC-S16의 손상 최신본 GUI 복구는 별도 미확인이다. ADR-017 Proposed, v0.3.0 판정/태그는 이번에 하지 않는다. Codex는 게임 코드·씬·CI를 수정하지 않고 검토·전달 문서만 작성했다.
+Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다.
+
+아래 최초 재현과 수정 프롬프트는 완료 이력이다. 반복 실행할 수정 요청은 없다. [독립 재검증](IH-112-VALIDATION.md#codex-독립-수정-재검증)을 따른다.
 
 ## Claude 수정 결과 (2026-11-01)
 
@@ -14,9 +16,9 @@
   - Codex 진단 5종: 수정 전 exit 250/250/1/1/1 → 수정 후 모두 exit 0·PASS.
   - runner 529검사 PASS, 변이 5종 검출.
   - 깨끗한 worktree CI 13단계 PASS(360/333/521/347/529).
-- 새 GUI는 미실행이다(사용자 테스트 중단 존중). AC-S16 손상복구 GUI도 미확인이다. Codex 독립 재검증 대기. [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01)
+- 새 GUI는 미실행이다(사용자 테스트 중단 존중). AC-S16 손상복구 GUI도 미확인이다. 위 결과는 Claude 검증 기록이며 Codex 독립 재검증도 완료했다. [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01)
 
-## 기준과 검증 범위
+## 최초 검토의 기준과 검증 범위
 
 - PR #33 merge3ab4795, 기록 PR #34 mergeb13292b. 동일 SHA develop CI41303127354 success 확인.
 - 별도 clean detached worktree에서 공통 CI 종료0/13단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집347·저장425. 저장 반복2회 측정15종 차이0·고아0·엔진 오류0. INF fixture의 예정된 overflow 경고4건은 기존 runner 정책으로 별도 계수됐다.
@@ -87,7 +89,7 @@ python3 tools/godot.py --headless --script res://build/review/probe.gd -- --case
 
 ui_free/ui_queue는250, reject/suspend는1이었다. 후자의 engine error 목록은0이며 실패 assertion이 의도대로 출력됐다. 원본 script와 네 로그를 build/ih-112-codex-review/에 보존한다. 핵심 재현은 위 절차와 실제 API만으로 runner 회귀에 옮길 수 있다.
 
-## Claude Code 수정 전달용 프롬프트
+## Claude Code 수정 전달용 프롬프트 (완료 이력)
 
 ```text
 IH-112 Codex 리뷰의 BUG-009/010/011을 수정하라.

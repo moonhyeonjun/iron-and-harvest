@@ -461,3 +461,12 @@
 - [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307243315/job/124850039990) success: Linux 13단계 360/333/521/347/529, 누수 경고 없음. [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307597804/job/124851080300) success.
 - 통합 tree = bb4d6fe. main(8901bac)·태그·릴리스 미변경.
 - 다음: Codex 재검증(BUG-009~011 resolved 판정). IH-112 done은 AC-S16 손상복구 GUI 조건의 처리 결정 뒤에 판정한다.
+
+## 2026-11-01 — IH-112 Codex 독립 수정 재검증
+
+Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다.
+
+- 원래 진단5종 PASS: UI free/queue_free, 거부 보고, focus 취소, 실제 충돌 위치 실패. 진단 engine error0. 공통 CI exit0, Python19·경제7·360/333/521/347/529 PASS. 새 GUI/변이는 미실행이며 Claude 결과와 구분한다.
+- 문서: 리뷰·검증·수락·인수인계·BUGS/TASKS/CHANGELOG·README/CLAUDE·기술 진입점/ADR 목록 갱신. 게임 코드/씬/테스트/CI 변경 없음. 로그 build/ih-112-fix-codex-review/.
+- AGENTS.md와 기존 링크4개 문제 보존·미커밋, 별도 worktree 검증. 문서 변경의 커밋/PR/CI/merge 실제 결과는 PR 이력 및 완료 보고로 연결한다.
+- 다음: 남은 AC-S16 처리 방침에 따른 IH-112 완료/마일스톤 판정. 사용자 테스트 재요청이나 자동 통과 전환은 하지 않는다.

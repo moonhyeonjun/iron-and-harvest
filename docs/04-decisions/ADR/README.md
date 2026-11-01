@@ -28,4 +28,4 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 
 - [ADR-016 유한 재고 전송과 즉시 채집 경계](ADR-016-atomic-gathering.md) — Proposed. IH-111 구현·BUG-007/008 수정·Codex 독립 재검증 완료(done). Accepted 전환은 별도 판단. [수정 검토](../../03-development/IH-111-REVIEW.md). ADR-014/015의 채집 연결을 구체화하며 전체를 대체하지 않음.
 
-- [ADR-017 버전 저장과 새 세션 복원](ADR-017-versioned-save-restore.md) — Proposed. IH-112 구현·자동 검증 후 BUG-009~011과 GUI 부분 확인으로 review. [수정 검토](../../03-development/IH-112-REVIEW.md). ADR-004의 장기 원칙을 초기 저장 범위에서 구체화한다.
+- [ADR-017 버전 저장과 새 세션 복원](ADR-017-versioned-save-restore.md) — Proposed. IH-112 수정·Codex 독립 재검증으로 BUG-009~011 resolved. GUI 부분 확인으로 review 유지. [수정 검토](../../03-development/IH-112-REVIEW.md). ADR-004의 장기 원칙을 초기 저장 범위에서 구체화한다.
