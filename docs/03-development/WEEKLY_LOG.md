@@ -213,3 +213,18 @@
 - main의 workflow 반영에 맞춰 CI 운영 문서를 갱신했다. workflow_dispatch 정의는 있지만 수동 실행 검증을 주장하지 않는다.
 - docs/v0.2.0-publication에서 실제 발행 기록과 main 이력을 develop에 PR로 동기화한다. 태그 이후 문서 기록을 위해 태그를 이동하지 않는다.
 - 게임 코드/씬 변경 없음, 제품 실행파일·GitHub Release/Steam 게시 없음. IH-110 상세 설계가 다음 작업이며 아직 backlog다.
+
+## 2026-11-01 — IH-110 상세 설계 (Codex)
+
+- 시작 develop/origin `2b4b9aa`, 이전 develop push CI run41273410068 success 확인. 사용자 미추적 AGENTS.md 보존, 추적 변경 없음.
+- docs/ih-110-inventory-design에서 명세·AC-N01~14·Claude 인수인계·ADR-015 Proposed 및 기획/기술/작업 진입점을 작성했다. IH-110 ready, 기능 구현/신규 AC는 미실행.
+- 계약: Resource 기본안/JSON 샘플 비교, 고정 슬롯·원자 add/remove/transfer·revision·독립 snapshot, 가방/살펴보기 배타적 조율, 유한 fixture. 최종 품목/슬롯/수치는 TBD. 채집·파일 저장·범용 잠금은 범위 밖이다.
+- 기존 코드의 try_begin 이후 취소 가능성과 단일 bool 이동 게이트를 확인하여 지급 분리/모달 배타성/콜백 취소 관문을 명세에 포함했다. DEBT-002는 해결로 바꾸지 않는다.
+- 문서 정적 검사·diff 검토 후 보호된 PR CI를 통과하여 develop에 통합한다. 실제 검증/커밋/PR 결과는 후속 기록과 Git 이력으로 확인한다. main/v0.2.0/게임 코드·씬·CI 설정은 변경하지 않는다.
+- 다음: Claude Code가 IH-110-HANDOFF의 프롬프트로 구현하고 신규 검증 보고에 자동/GUI 결과를 남긴다.
+
+### IH-110 설계 검증
+
+- 사용자 작업 트리 `python3 tools/validate_foundation.py`: 종료1, 미추적 AGENTS.md의 기존 .Codex/rules 링크4개만 실패. 사용자 파일은 변경/커밋하지 않는다.
+- 동일16개 문서 변경을 반영한 별도 detached worktree에서 정적 검사 종료0: 필수42파일·디렉터리·Markdown 링크/펜스·리소스 경로·작업 그래프·ignore 규칙 PASS. `git diff --check` 통과.
+- 게임/도구/테스트/CI 파일 변경 없음. 신규 인벤토리 검사와 GUI는 미실행이며 기존 회귀는 필수 PR CI에서 확인한다.

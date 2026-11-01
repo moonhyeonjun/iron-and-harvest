@@ -2,6 +2,11 @@
 
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
+## Unreleased — 설계
+
+- IH-110 아이템·인벤토리 상세 명세, AC-N01~14, Claude Code 인수인계, ADR-015 Proposed 작성.
+- 정의 포맷 비교·고정 슬롯·원자 수량 변경/이동·revision·snapshot·가방 모달 계약 제안. TASKS ready, 게임 기능/CI 설정 변경 없음, 신규 AC 미실행.
+
 ## v0.2.0 Character — 2026-11-01
 
 - 기능 마일스톤 판정 PASS: IH-101 이동·충돌·카메라, IH-102 대상 선택·살펴보기·안전한 종료. [판정/승격 기준](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md).

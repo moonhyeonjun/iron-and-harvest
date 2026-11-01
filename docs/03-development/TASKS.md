@@ -8,7 +8,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 
 현재 IH-001은 파일/정적검사 리뷰를 완료했고, IH-002도 Godot4.7.2 Import/Headless/GUI와 GDScript smoke 검증을 완료했다. Foundation 기술 관문은 충족했다. v0.1.0 원격 태그와 대상d176bd7을 재확인했다. [Foundation 확정 기록](FOUNDATION-v0.1.0-VERIFICATION.md)을 따른다. IH-101은 Claude Code가 구현하고 AC-01~12를 검증했으며 [PR #4](https://github.com/moonhyeonjun/iron-and-harvest/pull/4)로 develop에 통합했다(done). main 반영·v0.2.0 태그는 하지 않았다.
 
-v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마일스톤 PASS](CHARACTER-v0.2.0-VERIFICATION.md). main 승격(PR #16)·CI 성공 후 v0.2.0 태그를8901bac에 발행·검증했다. IH-110은 상세 명세가 아직 없어 backlog를 유지한다.
+v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마일스톤 PASS](CHARACTER-v0.2.0-VERIFICATION.md). main 승격(PR #16)·CI 성공 후 v0.2.0 태그를8901bac에 발행·검증했다. IH-110은 [상세 명세](../02-technical-design/INVENTORY.md)·[수락 조건](IH-110-ACCEPTANCE.md)·[인수인계](IH-110-HANDOFF.md)를 준비해 ready다. 기능 구현/신규 검사는 아직 없다.
 
 | ID | 제목 | 유형 | 우선순위 | 상태 | 의존성 |
 |---|---|---|---|---|---|
@@ -21,7 +21,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-007 | Git 자율 운영 정책·최초 동기화 | documentation | priority:high | status:done | IH-001 |
 | IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:done | IH-002 |
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
-| IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:backlog | IH-102 |
+| IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:ready | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:backlog | IH-110 |
 | IH-112 | 초기 저장과 복원 | feature | priority:critical | status:backlog | IH-110, IH-111 |
 | IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
@@ -126,13 +126,14 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 
 ## IH-110 — 아이템 정의와 인벤토리
 
-- 목적: 아이템 정의와 인벤토리을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 추가·제거·이동, 데이터 포맷 결정.
-- 관련 문서: [설계](../01-game-design/ITEM_SYSTEM.md).
-- 예상 영향 범위: ItemDef/Inventory.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 가방 포화·수량 보존·잘못된 ID.
-- 현재 증거/미확정: JSON/Resource 검증 포함.
+- 목적: 가방 확인·유한 보관함 이동을 통해 이후 채집/소비의 수량 보존 경계를 만든다.
+- 요구사항: 정의 검증·포맷 비교, 고정 슬롯·스택, 원자 add/remove/transfer, revision·독립 snapshot, 배타적인 가방 UI.
+- 관련 문서: [아이템 기획](../01-game-design/ITEM_SYSTEM.md), [상세 계약](../02-technical-design/INVENTORY.md), [AC-N01~14](IH-110-ACCEPTANCE.md), [Claude 인수인계](IH-110-HANDOFF.md), [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md).
+- 예상 영향 범위: game/systems/inventory, data/items, scripts/inventory, ui/inventory, 테스트 맵/runner, CI 등록. 기존 Player/상호작용 회귀 보존.
+- 완료 조건: AC-N01~14·기존 회귀·GUI 확인·필수 PR CI 통과, 검증 기록과 ADR 판정, develop 통합/원격 확인.
+- 테스트 항목: 정의/별칭 격리·포화·부족·양방향 보존·stale/reentrant·snapshot 손상·모달 입력/수명·실제 GUI.
+- 현재 증거: 2026-11-01 Codex 상세 설계 완료, ready. 기능 미구현/전 AC 미실행. 12슬롯/7품목/스택10은 검증용 제안이며 ADR-015 Proposed.
+- 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. IH-111/112는 backlog 유지.
 
 ## IH-111 — 채집과 자원 지점
 

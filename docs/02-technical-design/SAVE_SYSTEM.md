@@ -25,3 +25,7 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 ## TBD
 
 파일 형식·슬롯 수·압축·자동저장 시점·지원 버전 범위·Steam Cloud. 기존 3슬롯+3자동저장은 확정하지 않는다.
+
+## IH-110과의 경계
+
+[인벤토리 명세](INVENTORY.md)는 ID·capacity·revision·slots의 순수 값 snapshot과 새 상태로의 메모리 왕복만 정의한다. 디스크 쓰기/SaveEnvelope/schema_version은 구현하지 않는다. 활성 ID 덮어쓰기·revision 되감기는 허용하지 않으며 IH-112가 새 세션 복원과 UI 요청 무효화를 함께 설계한다. JSON 숫자 변환/손상·미래 버전/아이템 ID migration은 저장 어댑터 책임으로 남는다.
