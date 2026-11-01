@@ -31,3 +31,5 @@ v0.2.0은 이동·살펴보기까지 구현했다. 다음 채집에서 가방 �
 ## 구현 검증 결과 (2026-11-01)
 
 Claude Code가 이 제안대로 구현했다. 작은 형식 비교에서 JSON은 stack_limit을 float로 읽고 숫자·키·문법 검사를 별도로 구현해야 했다. 반면 .tres는 타입을 유지했고, 공유 캐시 위험은 스칼라 복사로 막혔다(AC-N02). 그래서 **런타임 원본은 .tres + 명시 catalog.tres** 하나로 정했다. 원자성·stale·재진입·snapshot 격리·모달 배타성은 AC-N01~14와 변이 10종 검출로 확인했다([검증 기록](../../03-development/IH-110-VALIDATION.md)). 상태는 Proposed를 유지하며, Accepted 전환과 최종 수치(TBD)는 별도 판단한다. DEBT-002는 해결되지 않았다. [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19)로 develop에 통합했다(IH-110 done).
+
+후속 검토(2026-11-01): [Codex 리뷰](../../03-development/IH-110-REVIEW.md)에서 BUG-005/006을 추가 재현해 IH-110은 review로 재개했다. 기존 검증 기록은 보존하며 Accepted 판정은 수정·회귀 확인 뒤로 보류한다.
