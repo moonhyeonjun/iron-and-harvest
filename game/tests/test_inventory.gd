@@ -950,6 +950,9 @@ func _n12_ui_service_lifecycle() -> bool:
 		var ui: InventoryUI = _ui
 		var service: InventoryService = _service
 		await _tap(KEY_I)
+		# Store view, so a late intent could otherwise reach InventoryService.transfer.
+		_controller.request_open(IC.View.STORE)
+		await _ticks(1)
 		var open_session: int = _controller.get_session_id()
 		var before: Array = [service.snapshot("player_bag").value, service.snapshot("test_store").value]
 		var events_before: int = _events.size()
