@@ -28,3 +28,12 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
 이슈 추가 형식: ID, 심각도/우선순위, 환경/빌드/커밋(없으면 없음), 재현, 기대/실제, 로그, 영향, 우회, 담당 작업, 회귀 검사. 추측과 확인된 재현을 구분한다. 해결 시 실제 검증 기록을 연결한다.
 
 2026-11-01 Codex가 `a5cefeb`에서 원래 재현 종료0/위반0, 전체 CI 11단계(인벤토리521검사) PASS를 확인해 BUG-005/006 resolved를 유지했다([독립 검증](IH-110-VALIDATION.md)). 추가 수정 요청 없음. GUI는 기존8dfe8bb 사용자 확인 기록이다.
+
+## IH-111 Codex 후속 검토(c266d52)
+
+| ID | 분류 | 상태 | 재현/영향 | 다음 조치 |
+|---|---|---|---|---|
+| BUG-007 | IH-111 / medium (P2) | open | Inventory 변경 콜백에서 GatheringHUD.free 후 _on_gathered146행의 hud.show_toast가 signal11/exit250. queue_free는 첫 거래 bag9/stock5 성공 후 다음 E에서 같은 충돌 | HUD 쓰기·지연 갱신·rebind의 수명 가드, 실제 HUD 제거 후 후속 입력 회귀. [리뷰](IH-111-REVIEW.md) |
+| BUG-008 | IH-111 / medium (P2) | open | 내장 GatherDef(path에 ::)의 initial_quantity 2.5/true/"3"이 각각2/1/3으로 로드되고 compile=true/build=OK | 검증 불가 원본 fail-closed 또는 모든 지원 경로의 원본 타입 검증, 내장 fixture 회귀. [리뷰](IH-111-REVIEW.md) |
+
+위 두 건은 최초 구현 중 미발견 기록 이후 추가로 확인했다. IH-111 review 재개. DEBT-004의 기존 ItemDef 제한과 BUG-008의 GatherDef 우회를 구분한다.

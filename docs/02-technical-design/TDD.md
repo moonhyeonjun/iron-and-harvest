@@ -25,7 +25,7 @@
 
 ## 우선순위와 완료
 
-엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory는 IH-110에서 구현·검증했고 Calendar/Production은 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 IH-110 BUG-005/006 수정과 Codex 독립 재검증도 완료했다. IH-111 채집 상세 설계를 준비했고 실제 구현은 Claude Code가 진행한다. Interaction 리뷰 수정은 완료했다.
+엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory는 IH-110에서 구현·검증했고 Calendar/Production은 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 IH-110 BUG-005/006 수정과 Codex 독립 재검증도 완료했다. IH-111은 구현 후 Codex 추가 검토에서 BUG-007/008이 발견돼 review다. 실제 수정은 Claude Code가 진행한다. Interaction 리뷰 수정은 완료했다.
 
 ## TBD
 
@@ -33,6 +33,6 @@
 
 ## IH-111 구현 준비
 
-2026-11-01 Claude Code가 구현·검증하고 [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26)로 develop에 통합했다(done, [검증 기록](../03-development/IH-111-VALIDATION.md)).
+2026-11-01 Claude Code가 구현·검증하고 [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26)로 develop에 통합했다(최초 done, [검증 기록](../03-development/IH-111-VALIDATION.md)).
 
-[채집 상세 명세](GATHERING.md), [AC-G01~14](../03-development/IH-111-ACCEPTANCE.md), [인수인계](../03-development/IH-111-HANDOFF.md), [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md). 유한 숨은 재고의 원자 전송, 즉시 행동 실행/취소, 수명/재진입 계약을 정의했다. 상태 ready, 기능·신규 테스트·GUI는 미구현/미실행이다.
+[채집 상세 명세](GATHERING.md), [AC-G01~14](../03-development/IH-111-ACCEPTANCE.md), [인수인계](../03-development/IH-111-HANDOFF.md), [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md). 유한 숨은 재고의 원자 전송, 즉시 행동 실행/취소, 수명/재진입 계약을 정의했다. 현재 기능은 구현됐으나 BUG-007/008 추가 재현으로 review다. [수정 계약](../03-development/IH-111-REVIEW.md)을 충족해야 done으로 복귀한다.

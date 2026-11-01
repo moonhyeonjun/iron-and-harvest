@@ -1,5 +1,9 @@
 # IH-111 채집·자원 지점 검증 — 2026-11-01
 
+## Codex 후속 판정 — review
+
+2026-11-01 `c266d52`에서 BUG-007(채집 HUD 해제 후 호출·충돌), BUG-008(내장 정의의 비정수 수량 허용)을 추가 재현했다. **IH-111 done→review**, 두 결함 open. [재현·수정 수락 조건·Claude 프롬프트](IH-111-REVIEW.md)를 따른다. 아래는 Claude의 최초 구현/검증/통합 기록으로 보존한다. 기존 suite PASS/GUI 확인은 새 경계의 통과를 뜻하지 않는다.
+
 ## 결론
 
 Claude Code가 [GATHERING 명세](../02-technical-design/GATHERING.md)에 따라 다음을 구현했다.
