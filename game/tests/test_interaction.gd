@@ -445,6 +445,31 @@ func _i06_revalidation() -> bool:
 		_log("AC-I06", "%s: begin_calls=%d end_calls=%d result=%s gate_unchanged=%s panel=%s" % [
 			case[0], calls, ends, rejected3[0].reason if rejected3.size() > 0 else "-", _player.is_control_effective(), _panel_visible()])
 		await _end_case("AC-I06")
+	# BUG-003: a same-ID candidate becomes usable after E captured the shown target.
+	for change: Array in [["available", {"available": false}, "available", true], ["visible", {"visible": false}, "visible", true]]:
+		await _place(BASE, "down")
+		var shown_journal: Array = []
+		var twin_journal: Array = []
+		_target("twin", BASE + Vector2(0, 20), {"journal": shown_journal})
+		var twin: InteractionTarget = _target("twin", BASE + Vector2(2, 22), (change[1] as Dictionary).merged({"journal": twin_journal}))
+		await _ticks(3)
+		var shown: StringName = _controller.get_selected_target_id()
+		var mark4: int = _rec.size()
+		_interact_event()
+		twin.set(change[2], change[3])
+		await physics_frame
+		var rejected4: Array = _since(mark4, "rejected")
+		await _ticks(2)
+		var ok4: bool = shown == &"twin" and rejected4.size() == 1 and rejected4[0].reason == C.INVALID_TARGET \
+			and _since(mark4, "opened").is_empty() and shown_journal.is_empty() and twin_journal.is_empty() \
+			and _player.is_control_effective() and not _panel_visible() and _controller.get_selected_target_id().is_empty()
+		_check("AC-I04", ok4, "duplicate made %s after E: shown %s rejected %s begin %d/%d" % [
+			change[0], shown, rejected4, shown_journal.size(), twin_journal.size()])
+		_metrics["AC-I04 late duplicate %s" % change[0]] = String(rejected4[0].reason) if rejected4.size() > 0 else "-"
+		_log("AC-I04", "duplicate made %s after E: shown=%s result=%s begin_calls=%d/%d opened=0 selection_after='%s'" % [
+			change[0], shown, rejected4[0].reason if rejected4.size() > 0 else "-", shown_journal.count("begin"),
+			twin_journal.count("begin"), _controller.get_selected_target_id()])
+		await _end_case("AC-I04")
 	return true
 
 
@@ -594,7 +619,54 @@ func _i08_consumed_and_blocked() -> bool:
 		typed, requests, prompt_hidden, blocked[0].reason if blocked.size() > 0 else "-", still_locked, disabled_hidden,
 		refused[0].reason if refused.size() > 0 else "-", closed[0].reason if closed.size() > 0 else "-"])
 	await _end_case("AC-I08")
+	# BUG-004: interaction disabled from inside try_begin (and re-enabled before it returns).
+	var disable: Callable = func() -> void: _controller.set_interaction_enabled(false)
+	var toggle: Callable = func() -> void:
+		_controller.set_interaction_enabled(false)
+		_controller.set_interaction_enabled(true)
+	var restore: Callable = func() -> void: _controller.set_interaction_enabled(true)
+	await _resolving_cancel("AC-I08", "disable_in_begin", disable, C.DISABLED, restore)
+	await _resolving_cancel("AC-I08", "disable_enable_in_begin", toggle, C.DISABLED, restore)
 	return true
+
+
+## Runs one E whose target changes the controller from inside try_begin. The request must
+## end rejected once with `expected`, the target told end(cancelled) once, nothing opened,
+## no gate taken and no other target started; after `restore` a new E works normally.
+func _resolving_cancel(ac: String, label: String, action: Callable, expected: StringName, restore: Callable) -> void:
+	await _place(BASE, "down")
+	var journal: Array = []
+	var bystander: Array = []
+	var probe: InteractionTarget = _target("resolving", BASE + Vector2(0, 20), {"journal": journal, "on_begin": action})
+	_target("bystander", BASE + Vector2(0, 28), {"journal": bystander})
+	await _ticks(3)
+	var mark: int = _rec.size()
+	_interact_event()
+	await physics_frame
+	var rejected: Array = _since(mark, "rejected")
+	var state_idle: bool = _controller.get_state() == InteractionController.State.IDLE
+	var panel_hidden: bool = not _panel_visible()
+	await _ticks(3)
+	var nothing_opened: bool = _since(mark, "opened").is_empty()
+	restore.call()
+	probe.set("on_begin", Callable())
+	await _ticks(3)
+	var gate_free: bool = _player.is_control_effective()
+	var mark2: int = _rec.size()
+	await _press_interact()
+	var reopened: Array = _since(mark2, "opened")
+	var fresh_id: bool = reopened.size() == 1 and rejected.size() == 1 and reopened[0].id > rejected[0].id
+	_check(ac, rejected.size() == 1 and rejected[0].reason == expected and journal.slice(0, 2) == ["begin", "end"]
+		and str(probe.get("end_cancelled").slice(0, 1)) == str([true]) and state_idle and panel_hidden and nothing_opened
+		and bystander.is_empty() and gate_free and fresh_id,
+		"%s: rejected %s journal %s idle %s panel_hidden %s opened0 %s bystander %s gate_free %s fresh %s" % [
+			label, rejected, journal, state_idle, panel_hidden, nothing_opened, bystander, gate_free, fresh_id])
+	_metrics["%s %s" % [ac, label]] = String(rejected[0].reason) if rejected.size() > 0 else "-"
+	_log(ac, "%s: result=%s end_calls_before_retry=%d opened=0 panel_hidden=%s bystander_begin=%d gate_free=%s retry_opened_new_id=%s" % [
+		label, rejected[0].reason if rejected.size() > 0 else "-", journal.slice(0, 2).count("end"), panel_hidden,
+		bystander.count("begin"), gate_free, fresh_id])
+	await _close_active_with_escape()
+	await _end_case(ac)
 
 
 # --- AC-I09 ----------------------------------------------------------------------
@@ -730,6 +802,55 @@ func _i10_lifecycle() -> bool:
 	var reentered: StringName = _controller.get_selected_target_id()
 	_check("AC-I10", reentered == &"sign_entrance", "selection after map re-entry %s" % reentered)
 	await _end_case("AC-I10")
+	# BUG-003 during a session: the active target's ID becomes duplicated or changes.
+	for change: String in ["duplicate", "renamed"]:
+		await _place(BASE, "down")
+		var active: InteractionTarget = _target("held_id", BASE + Vector2(0, 20))
+		var twin: InteractionTarget = _target("held_id", BASE + Vector2(2, 22), {"available": false})
+		await _ticks(3)
+		await _press_interact()
+		var mark5: int = _rec.size()
+		if change == "duplicate":
+			twin.available = true
+		else:
+			active.target_id = &"renamed_id"
+		await physics_frame
+		var closed5: Array = _since(mark5, "closed")
+		await physics_frame
+		_check("AC-I10", closed5.size() == 1 and closed5[0].reason == C.INVALID_TARGET and active.get("end_calls") == 1
+			and twin.get("begin_calls") == 0 and not _panel_visible() and _player.is_control_effective(),
+			"active ID %s: closed %s end %d" % [change, closed5, active.get("end_calls")])
+		_metrics["AC-I10 active id %s" % change] = String(closed5[0].reason) if closed5.size() > 0 else "-"
+		_log("AC-I10", "active ID %s: closed=%s end_calls=%d twin_begin=%d gate_released=%s" % [change,
+			closed5[0].reason if closed5.size() > 0 else "-", active.get("end_calls"), twin.get("begin_calls"), _player.is_control_effective()])
+		await _end_case("AC-I10")
+	# BUG-004 variants: focus lost or the controller leaving the tree inside try_begin.
+	var lose_focus: Callable = func() -> void: root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	var regain_focus: Callable = func() -> void: root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	await _resolving_cancel("AC-I10", "focus_out_in_begin", lose_focus, C.FOCUS_LOST, regain_focus)
+	var detach: Callable = func() -> void: _player.remove_child(_controller)
+	var reattach: Callable = func() -> void: _player.add_child(_controller)
+	await _resolving_cancel("AC-I10", "tree_exit_in_begin", detach, C.REMOVED, reattach)
+	# queue_free of the controller inside try_begin: no session, target told once.
+	await _place(BASE, "down")
+	var free_journal: Array = []
+	var doomed: InteractionController = _controller
+	_target("doomed", BASE + Vector2(0, 20), {"journal": free_journal, "on_begin": func() -> void: doomed.queue_free()})
+	await _ticks(3)
+	var mark6: int = _rec.size()
+	_interact_event()
+	await physics_frame
+	var rejected6: Array = _since(mark6, "rejected")
+	var opened6: int = _since(mark6, "opened").size()
+	await _ticks(2)
+	_check("AC-I10", rejected6.size() == 1 and rejected6[0].reason == C.REMOVED and opened6 == 0
+		and free_journal == ["begin", "end"] and not _panel_visible() and _player.is_control_effective(),
+		"controller queue_free inside try_begin: %s journal %s" % [rejected6, free_journal])
+	_metrics["AC-I10 queue_free_in_begin"] = String(rejected6[0].reason) if rejected6.size() > 0 else "-"
+	_log("AC-I10", "queue_free_in_begin: result=%s journal=%s opened=%d gate_free=%s" % [
+		rejected6[0].reason if rejected6.size() > 0 else "-", free_journal, opened6, _player.is_control_effective()])
+	await _unload_map()
+	await _load_map()
 	# The controller is removed during a session: target notified, own gate released.
 	await _place(BASE, "down")
 	var removal_probe: InteractionTarget = _target("removal", BASE + Vector2(0, 20))
