@@ -365,3 +365,18 @@
 - 다음 설계 후보: IH-112 초기 저장·복원. ADR-016 Proposed와 기존 부채는 유지한다.
 
 - 검증 문서14개를 별도 worktree에 반영해 정적 검사 PASS, diff --check PASS를 확인했다. 사용자 루트 검사는 AGENTS.md의 기존 링크4개만 실패하며 해당 파일을 수정/커밋하지 않았다.
+
+## 2026-11-01 — IH-112 초기 저장·복원 상세 설계(Codex)
+
+- 기준 develop/origin8913c0d, 원격 CI41295810029 success. 기존 tracked/staged 변경 없음, 사용자 미추적 AGENTS.md 보존. docs/ih-112-save-load-design에서 문서만 변경한다.
+- 기존 Player/모달·Interaction 실행 수명, Inventory snapshot/정수 검사, Gather build/stock 초기 지급을 검토했다. JSON/FileAccess/DirAccess 공식 API를 확인하고 실제4.7.2/OS 측정을 구현 관문으로 둔다.
+- SAVE_LOAD·AC-S01~16·HANDOFF·ADR-017 작성. 단일 수동 슬롯 A/B 두 세대, 버전/정규화/checksum, 손상 시 명시 복구, 초기 지급 없는 restore·후보 세션 publish·epoch를 제안한다.
+- TASKS IH-112 backlog→ready(상세 설계), IH-110/111 done 유지. 게임/씬/테스트/CI/main/태그 변경 없음. 신규 저장 기능·검사·GUI는 미구현/미실행이다.
+- 문서 정적/diff와 필수 PR CI로 검증한다. 실제 결과는 아래 후속 기록과 PR 이력에 남긴다.
+- 다음: Claude Code가 IH-112-HANDOFF 프롬프트로 구현·AC 검증, 이후 Codex 기술 검토. v0.3.0 판정은 구현·통합 이후 별도 작업이다.
+
+### IH-112 설계 검증
+
+- 사용자 루트 정적 검사: 기존 미추적 AGENTS.md의 .Codex/rules 링크4개만 실패(종료1). 사용자 파일은 수정/커밋하지 않는다.
+- 변경16문서만 복사한 detached worktree 정적 검사 종료0: 필수42파일/디렉터리/Markdown 링크·펜스/리소스 경로/작업 그래프/ignore PASS. git diff --check PASS.
+- 게임 코드/씬/도구/테스트/CI 설정 변경 없음. 신규 저장 자동/GUI는 미실행이며 기존 회귀는 필수 PR CI로 확인한다. 실제 커밋/CI/merge/원격 결과는 PR 이력과 완료 보고에 기록한다.
