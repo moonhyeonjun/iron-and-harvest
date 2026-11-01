@@ -1,6 +1,6 @@
 # 로드맵
 
-v0.1.0 Foundation 태그가 존재하며, v0.2.0 Character는 [기능 완료 판정](../03-development/CHARACTER-v0.2.0-VERIFICATION.md)을 통과했다. 원격 태그 발행은 main CI 검증 후 수행한다. 사용자 지정 버전 순서는 [마일스톤](../03-development/MILESTONES.md)을 따른다. 버전 번호는 달력 날짜나 구현 시작으로 확정하지 않는다.
+v0.1.0 Foundation 태그가 존재하며, v0.2.0 Character는 [기능 완료 판정](../03-development/CHARACTER-v0.2.0-VERIFICATION.md)을 통과했다. main CI 성공 후 v0.2.0 태그를 main8901bac에 발행·검증했다. v0.3.0 이후는 목표 버전이며 제품 출시와 구분한다. 사용자 지정 버전 순서는 [마일스톤](../03-development/MILESTONES.md)을 따른다. 버전 번호는 달력 날짜나 구현 시작으로 확정하지 않는다.
 
 ## 단계
 

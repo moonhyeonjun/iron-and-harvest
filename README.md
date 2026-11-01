@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-v0.2.0 Character의 [기능 완료 조건을 충족했다](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md). 이동·상호작용 테스트 맵을 갖춘 개발 기준점이며, main 승격/태그는 해당 문서의 CI 관문을 거쳐 발행한다.
+**v0.2.0 Character 확정** — main `8901bac`에 annotated 태그를 생성하고 원격 반영을 검증했다. [판정·발행 기록](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md). 이동·상호작용 테스트 맵을 갖춘 개발 기준점이며 게임 출시판이 아니다.
 
 2026-11-01: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 기본 실행 씬은 빈 Foundation이며, 이동·상호작용은 별도 테스트 맵에서 실행한다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 플레이어 이동·충돌은 Claude Code가 구현하고 AC-01~12를 검증했다([검증 기록](docs/03-development/IH-101-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/movement_test.tscn`으로 실행하며 기본 진입점은 Foundation 그대로다. IH-102 상호작용은 구현·develop 통합 후 [Codex 리뷰](docs/03-development/IH-102-REVIEW.md)에서 BUG-003/004를 확인해 review로 재개했고, [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 채집·인벤토리·저장은 아직 없다.
 

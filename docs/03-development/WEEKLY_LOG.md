@@ -204,3 +204,12 @@
 - 변경 문서: Character 판정표, MILESTONES/TASKS/README/CHANGELOG/ROADMAP/ADR 색인/주간 기록. 게임 코드·씬·CI 설정 미변경.
 - Git 계획: 문서 PR→develop→main PR, main CI 성공 후 annotated v0.2.0 태그와 원격 검증. 이후 main 이력/발행 기록을 develop에 동기화한다. 실제 SHA/PR/CI는 실행 후 기록한다.
 - 다음: IH-110 상세 설계. 제품 실행파일·GitHub Release·Steam 게시 없음.
+
+### v0.2.0 발행 결과
+
+- 문서66aa9b7 → PR #15(필수 CI run41272503689 success) → develop61b2813. develop push run41272701901 success.
+- PR #16(develop→main) CI run41272706472 success, main merge `8901bac890393defbfdf438bc2e5b36d7c94b2a3`. 원본61b2813과 tree 동일. main push run41272930692 success.
+- annotated `v0.2.0`: 객체 `6a322acfa3b5f825f1877b9ebe0ac82eda39b2c6`, 대상 `8901bac890393defbfdf438bc2e5b36d7c94b2a3`. 생성·push 후 ls-remote의 객체/peeled ref와 로컬 tag 타입/대상을 대조해 일치 확인. 기존 v0.1.0 보존.
+- main의 workflow 반영에 맞춰 CI 운영 문서를 갱신했다. workflow_dispatch 정의는 있지만 수동 실행 검증을 주장하지 않는다.
+- docs/v0.2.0-publication에서 실제 발행 기록과 main 이력을 develop에 PR로 동기화한다. 태그 이후 문서 기록을 위해 태그를 이동하지 않는다.
+- 게임 코드/씬 변경 없음, 제품 실행파일·GitHub Release/Steam 게시 없음. IH-110 상세 설계가 다음 작업이며 아직 backlog다.
