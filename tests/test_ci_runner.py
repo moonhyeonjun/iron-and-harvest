@@ -48,13 +48,15 @@ class CIRunnerTests(unittest.TestCase):
         names = [name for name, _, _ in ci.ci_steps("python3")]
         for name, script in (("player-acceptance", "res://tests/test_player_movement.gd"),
                              ("interaction-acceptance", "res://tests/test_interaction.gd"),
-                             ("inventory-acceptance", "res://tests/test_inventory.gd")):
+                             ("inventory-acceptance", "res://tests/test_inventory.gd"),
+                             ("gathering-acceptance", "res://tests/test_gathering.gd")):
             command, options = steps[name]
             self.assertIn(script, command)
             self.assertEqual(options, {"engine": True, "marker": "RESULT: PASS"})
             self.assertNotIn("--inject-failure", command)
         self.assertLess(names.index("player-acceptance"), names.index("interaction-acceptance"))
         self.assertLess(names.index("interaction-acceptance"), names.index("inventory-acceptance"))
+        self.assertLess(names.index("inventory-acceptance"), names.index("gathering-acceptance"))
         self.assertEqual(names[-1], "source-tree-clean")
 
     def test_failed_suite_output_cannot_pass(self):

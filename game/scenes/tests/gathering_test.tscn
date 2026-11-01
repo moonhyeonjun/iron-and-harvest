@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/tests/gathering_test.gd" id="1_map"]
+[ext_resource type="PackedScene" path="res://scenes/tests/interaction_test.tscn" id="2_interaction"]
+[ext_resource type="PackedScene" path="res://scenes/gathering/gathering_points.tscn" id="3_points"]
+[ext_resource type="Script" path="res://scripts/inventory/inventory_controller.gd" id="4_controller"]
+[ext_resource type="PackedScene" path="res://ui/inventory/inventory_ui.tscn" id="5_ui"]
+[ext_resource type="PackedScene" path="res://ui/gathering/gathering_hud.tscn" id="6_hud"]
+
+[node name="GatheringTest" type="Node2D"]
+script = ExtResource("1_map")
+
+[node name="Interaction" parent="." instance=ExtResource("2_interaction")]
+
+[node name="GatheringPoints" parent="." instance=ExtResource("3_points")]
+
+[node name="InventoryController" type="Node" parent="."]
+script = ExtResource("4_controller")
+
+[node name="InventoryUI" parent="." instance=ExtResource("5_ui")]
+
+[node name="FixtureHud" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="StoreButton" type="Button" parent="FixtureHud"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_top = 22.0
+offset_right = -8.0
+offset_bottom = 42.0
+grow_horizontal = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 10
+text = "검증용 보관함"
+
+[node name="GatheringHUD" parent="." instance=ExtResource("6_hud")]

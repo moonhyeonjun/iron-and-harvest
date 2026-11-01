@@ -1,6 +1,6 @@
 # IH-111 채집·자원 지점 상세 설계
 
-상태: **Proposed / 구현 준비 완료**, 2026-11-01. 기준 develop `de0c163`(IH-110 BUG-005/006 독립 재검증 완료). 신규 클래스·씬·API는 아직 없다. Godot4.7.2 Standard/GDScript/Compatibility 유지. Codex는 설계, Claude Code는 구현·검증한다. [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md), [수락 조건](../03-development/IH-111-ACCEPTANCE.md), [인수인계](../03-development/IH-111-HANDOFF.md)를 함께 따른다.
+상태: **Proposed / IH-111 구현·검증(review)**, 2026-11-01. 기준 develop `de0c163`(IH-110 BUG-005/006 독립 재검증 완료). 아래 계약대로 구현했으며 차이는 문서 끝과 [검증 기록](../03-development/IH-111-VALIDATION.md)에 있다. Godot4.7.2 Standard/GDScript/Compatibility 유지. Codex는 설계, Claude Code는 구현·검증한다. [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md), [수락 조건](../03-development/IH-111-ACCEPTANCE.md), [인수인계](../03-development/IH-111-HANDOFF.md)를 함께 따른다.
 
 ## 최소 플레이 경험과 범위
 
@@ -136,4 +136,11 @@ IH-112에는 PointBinding과 숨은 stock을 포함한 Inventory snapshot을 넘
 
 `--fixture=full`: bag wood10+stone10×11, store 빈12슬롯. E 실패→bag의 wood10을 store로 전송→E 성공. `--fixture=rebind`: 최초 성공 후 GatheringPoints만1회 제거/복원하고 HUD에 전후 수량 표시. 새 제품 단축키/재생 버튼은 만들지 않는다.
 
-[AC-G01~14](../03-development/IH-111-ACCEPTANCE.md), 기존 회귀, 실패 주입, GUI, 필수 PR CI로 구현 완료를 판정한다. 현재 설계 ready이며 신규 검증은 미실행이다. 최종 감각·아트·밸런스, 도구/시간/재생/위임/다중 보상·영속 중복 방지는 TBD다.
+[AC-G01~14](../03-development/IH-111-ACCEPTANCE.md), 기존 회귀, 실패 주입, GUI, 필수 PR CI로 구현 완료를 판정한다. 2026-11-01 AC-G01~14 pass(자동 309검사, 사용자 GUI). PR 필수 CI·develop 통합 전 review다. 최종 감각·아트·밸런스, 도구/시간/재생/위임/다중 보상·영속 중복 방지는 TBD다.
+
+## 구현 결과·차이 (2026-11-01)
+
+- 측정 결과, 엔진은 타입 있는 int 필드에 `.tres`의 `2.5`/`true`/`"3"`을 오류 없이 정수화한다. 그래서 GatherCatalog가 원본 텍스트의 `initial_quantity` 정수 리터럴을 확인한다. 명시 목록용 `gather_catalog.gd`를 추가했다.
+- `GatherService.build(...)`는 정의·결속·bag/store/stock 등록을 모두 성공할 때만 서비스를 반환한다(실패 시 INVALID_SETUP). `GatherCommand.commit/cancel`은 서비스의 `execute/release`로 위임한다. 캡처 값은 서비스가 보관하고, 명령은 서비스를 WeakRef로 참조한다. stock에 다른 품목이나 초기보다 많은 수량이 있으면 INVALID_STOCK이다.
+- Interaction은 EXECUTING 상태와 `instant_completed`를 추가했다. 실행·보고 중 E는 조용히 소비한다. RESOLVING 중 Escape는 취소이며 INSPECT에도 적용된다. 콜백으로 트리에서 빠지면 그 틱의 선택 갱신을 생략한다.
+- GatherTarget은 `_process`에서 잔량을 조회해 표시만 갱신한다. 지점 뷰는 `scenes/gathering/gathering_points.tscn`로 분리했다(좌표: 나뭇가지 (250,360), 돌 (250,470), 산열매 (360,300)). HUD 합계는 가방+보관함+지점이다.

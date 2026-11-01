@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="GatherDef" format=3]
+
+[ext_resource type="Script" path="res://systems/gathering/gather_def.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+definition_id = &"fixture_missing_quantity"
+display_name = "시험"
+action_label = "줍기"
+item_id = &"wood"
