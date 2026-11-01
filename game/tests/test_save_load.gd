@@ -260,7 +260,7 @@ func _s02_numbers() -> bool:
 		["quantity -2", func(p: Dictionary) -> void: _inv_of(p, "player_bag").slots[3].quantity = -2, SaveCodec.NUMBER_OUT_OF_RANGE],
 		["quantity 2.5", func(p: Dictionary) -> void: _inv_of(p, "player_bag").slots[3].quantity = 2.5, SaveCodec.INVALID_SAVE],
 		["quantity over stack", func(p: Dictionary) -> void: _inv_of(p, "player_bag").slots[0].quantity = 11, SaveCodec.INVALID_SAVE],
-		["schema 1.0", func(p: Dictionary) -> void: p.schema_version = 1.0, SaveCodec.OK],
+		["schema 2.0", func(p: Dictionary) -> void: p.schema_version = 2.0, SaveCodec.OK],
 		["content true", func(p: Dictionary) -> void: p.content_version = true, SaveCodec.INVALID_SAVE],
 		["position int", func(p: Dictionary) -> void: p.player.position.x = 300, SaveCodec.OK],
 		["position \"1\"", func(p: Dictionary) -> void: p.player.position.x = "1", SaveCodec.INVALID_SAVE],
@@ -535,7 +535,9 @@ func _s06_selection() -> bool:
 	var g2: String = _bank_text(2)
 	var g2_other: String = _bank_text(2, func(p: Dictionary) -> void: _inv_of(p, "test_store").slots[5] = {"item_id": "stone", "quantity": 1})
 	var corrupt: String = _damaged(g2)
-	var future: String = _fixture("schema2_future.json")
+	# IH-120: schema 2 is current; the future case is the schema-3 fixture. The IH-112
+	# schema2_future fixture is kept as history and now reads as damage (no calendar).
+	var future: String = _fixture("schema3_future.json")
 	var content2: String = _fixture("content2.json")
 	# [name, a, b, inspect code, latest, recovery, default load code, recovery load code, save code, save bank, save gen]
 	var rows: Array = [
@@ -640,11 +642,12 @@ func _s07_migration() -> bool:
 	var v1: SaveCodec.Result = SaveCodec.decode(_fixture("v1_valid.json").to_utf8_buffer(), _manifest)
 	var migrated: SaveCodec.Result = SaveCodec.decode(v0_text.to_utf8_buffer(), _manifest)
 	var raw: Dictionary = JSON.parse_string(JSON.parse_string(v0_text).payload_json)
-	_check("AC-S07", migrated.ok and migrated.migrated_from == 0 and migrated.value.schema_version == 1
+	_check("AC-S07", migrated.ok and migrated.migrated_from == 0 and migrated.value.schema_version == 2
+		and migrated.value.calendar == {"rule_id": "calendar_test_v1", "day_index": 0, "tick_in_day": 0, "revision": 0}
 		and migrated.value.player.facing == "down" and migrated.value.generation == 2 and raw.generation == 2.0
 		and not (raw.player as Dictionary).has("facing")
 		and JSON.stringify(migrated.value.inventories, "", true) == JSON.stringify(v1.value.inventories, "", true),
-		"v0 -> v1: facing down, generation 2, every slot/quantity/revision kept")
+		"v0 -> v1 -> v2: facing down, default calendar, generation 2, every slot/quantity/revision kept")
 	var dir: String = _dir("s07")
 	_write_bank(dir, "a", v0_text)
 	var before: Dictionary = _bank_bytes(dir)
@@ -654,11 +657,12 @@ func _s07_migration() -> bool:
 		"loading v0 never rewrites the file")
 	var saved: SaveStore.Result = store.save_slot(_without_versions(loaded.payload))
 	var written: Dictionary = JSON.parse_string(JSON.parse_string(_read_text(dir + "/slot_01.b.json")).payload_json)
-	_check("AC-S07", saved.ok and saved.source_bank == "b" and saved.generation == 3 and written.schema_version == 1.0
-		and written.player.facing == "down" and _bank_bytes(dir).a == before.a, "the next save writes v1 (b3), v0 file kept")
+	_check("AC-S07", saved.ok and saved.source_bank == "b" and saved.generation == 3 and written.schema_version == 2.0
+		and written.player.facing == "down" and _bank_bytes(dir).a == before.a, "the next save writes schema 2 (b3), v0 file kept")
 	var base: Dictionary = _base_payload()
 	var refused: Dictionary = {}
-	for case: Array in [["schema 2", _fixture("schema2_future.json").to_utf8_buffer(), SaveCodec.UNSUPPORTED_SCHEMA],
+	for case: Array in [["schema 3", _fixture("schema3_future.json").to_utf8_buffer(), SaveCodec.UNSUPPORTED_SCHEMA],
+			["IH-112 schema2 fixture (no calendar)", _fixture("schema2_future.json").to_utf8_buffer(), SaveCodec.INVALID_SAVE],
 			["content 2", _fixture("content2.json").to_utf8_buffer(), SaveCodec.CONTENT_MISMATCH],
 			["schema -1", _envelope(_with(base, "schema_version", -1)).to_utf8_buffer(), SaveCodec.UNSUPPORTED_SCHEMA],
 			["schema 99", _envelope(_with(base, "schema_version", 99)).to_utf8_buffer(), SaveCodec.UNSUPPORTED_SCHEMA],
@@ -670,7 +674,7 @@ func _s07_migration() -> bool:
 	# An incompatible bank next to a valid one is neither loaded around nor overwritten.
 	var dir_f: String = _dir("s07_future")
 	_write_bank(dir_f, "a", _bank_text(1))
-	_write_bank(dir_f, "b", _fixture("schema2_future.json"))
+	_write_bank(dir_f, "b", _fixture("schema3_future.json"))
 	var kept: Dictionary = _bank_bytes(dir_f)
 	var future_store: SaveStore = SaveStore.new(dir_f, _manifest)
 	var no_load: SaveStore.Result = future_store.load_slot()

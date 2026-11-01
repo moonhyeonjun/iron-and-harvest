@@ -5,8 +5,10 @@
 | 파일 | 내용 | 기대 |
 |---|---|---|
 | `v1_valid.json` | schema1/content1/generation3. branch 5(rev1), berry 소진 null(rev3), 가방 wood6·berry3, 보관함 wood3, 위치 x=228.12345(float32) 오른쪽 | 정상 로드 |
+| (공통) | IH-120부터 v1·v0는 메모리에서 schema2로 이관된다(기본 달력 day0/tick0/rev0). 파일은 바꾸지 않는다 | |
 | `v0_valid.json` | 같은 재고, generation2, player.facing 없음(시험 전용 schema0) | facing=down으로 이관, 수량/revision/generation 유지, 원본 불변 |
-| `schema2_future.json` | schema2와 알 수 없는 키 `weather` | UNSUPPORTED_SCHEMA → 은행 INCOMPATIBLE, 덮어쓰기 거부 |
+| `schema2_future.json` | schema2와 알 수 없는 키 `weather`(IH-112 당시 미래 버전 증거, 보존) | IH-112: UNSUPPORTED_SCHEMA. **IH-120 이후 schema2가 현재이므로 calendar 누락으로 INVALID_SAVE**(손상) |
+| `schema3_future.json` | schema3, calendar와 알 수 없는 키 `weather` | UNSUPPORTED_SCHEMA → 은행 INCOMPATIBLE, 덮어쓰기 거부(IH-120 이후의 미래 버전 검사) |
 | `content2.json` | content_version 2 | CONTENT_MISMATCH → 은행 INCOMPATIBLE |
 
 생성: 2026-11-01. 실제 GatherService/InventoryService 거래 결과를 SaveCodec.encode로 기록했다(v0/미래 파일은 같은 payload에서 버전 필드만 바꾸고 hash를 다시 계산했다). 실제 출시된 구버전 저장이 있다는 뜻이 아니다.
