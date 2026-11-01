@@ -1,5 +1,13 @@
 # 변경 이력
 
+## Unreleased — IH-120 달력·계절·하루 경계 (Claude Code, 2026-11-02)
+
+- CalendarRules/CalendarService(정수 상태, 파생 날짜, 06:00 경계, 원자 전진과 1회 알림), 달력 정의 JSON(검증용 제안 수치).
+- CalendarController(교체 월드 밖, 물리 스텝당 1tick, 정지 사유 합성, P 시간 정지, N 다음 새벽 pending), CalendarHUD, calendar_test 장면.
+- 저장 schema2(필수 calendar, 0→1→2 검증 이관, schema3 미래 fixture), SaveCoordinator 외부 blocker와 보고 중 busy, 기존 맵 passive calendar.
+- `tests/test_calendar.gd` 334검사, 공통 CI 14단계. IH-112 runner 예상값 조정(531).
+- IH-120은 review(Codex 후속 검토 대기).
+
 ## Unreleased — IH-120 달력 상세 설계
 
 - 정수 달력·새벽 경계·정지/다음새벽 입력·schema2 이관 명세, AC-C01~16, Claude 인수인계, ADR-018 Proposed를 작성했다. IH-120 ready이며 구현·신규 검사/GUI는 아직 없다.

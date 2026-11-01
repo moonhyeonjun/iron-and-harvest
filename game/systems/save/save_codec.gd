@@ -20,7 +20,8 @@ const UNSUPPORTED_SCHEMA: StringName = &"UNSUPPORTED_SCHEMA"
 const CONTENT_MISMATCH: StringName = &"CONTENT_MISMATCH"
 
 const FORMAT: String = "iron-and-harvest-save"
-const SCHEMA_VERSION: int = 1
+## 2 since IH-120: adds the required calendar object.
+const SCHEMA_VERSION: int = 2
 ## schema 0 exists only as a test fixture: v1 without player.facing.
 const OLDEST_SCHEMA: int = 0
 const CONTENT_VERSION: int = 1
@@ -32,6 +33,11 @@ const MAX_FILE_BYTES: int = 1048576
 const POSITION_TOLERANCE: float = 0.0001
 const ENVELOPE_KEYS: Array = ["format", "payload_json", "sha256"]
 const PAYLOAD_KEYS: Array = ["content_version", "generation", "inventories", "map_id", "player", "points", "schema_version"]
+const PAYLOAD_KEYS_V2: Array = ["calendar", "content_version", "generation", "inventories", "map_id", "player", "points", "schema_version"]
+const CALENDAR_KEYS: Array = ["day_index", "revision", "rule_id", "tick_in_day"]
+## schema 1 -> 2 adds this profile at its first moment. A save of another profile is never
+## produced by migration (a fast-fixture root refuses such a file as content mismatch).
+const MIGRATION_RULE_ID: String = "calendar_test_v1"
 const PLAYER_KEYS: Array = ["facing", "inventory_id", "player_id", "position"]
 const POSITION_KEYS: Array = ["x", "y"]
 const SNAPSHOT_KEYS: Array = ["capacity", "inventory_id", "owner_id", "revision", "slots"]
@@ -63,12 +69,12 @@ static func is_incompatible(code: StringName) -> bool:
 	return code == UNSUPPORTED_SCHEMA or code == CONTENT_MISMATCH
 
 
-## Validates a v1 payload (generation included) and returns the envelope text. The text is
+## Validates a current (schema 2) payload, generation included, and returns the envelope text. The text is
 ## decoded again before it is returned: every value must come back identical, except the
 ## position, which must come back within POSITION_TOLERANCE (measured on 4.7.2: the JSON
 ## reader can change the last digit of a 17-digit double, e.g. ...351563 -> ...351565).
 static func encode(payload: Dictionary, manifest: Dictionary) -> Result:
-	var checked: Result = _validate_v1(payload, manifest)
+	var checked: Result = _validate(payload, manifest, SCHEMA_VERSION)
 	if not checked.ok:
 		return checked
 	var payload_json: String = JSON.stringify(checked.value, "", true, true)
@@ -121,14 +127,20 @@ static func decode(bytes: PackedByteArray, manifest: Dictionary) -> Result:
 		return Result.make(content.code, "content_version: %s" % content.detail)
 	if content.value != CONTENT_VERSION:
 		return Result.make(CONTENT_MISMATCH, "content_version %d (supported %d)" % [content.value, CONTENT_VERSION])
-	var migrated_from: int = -1
+	# Migration runs one exact step at a time on copies: 0 -> 1 (facing), then the whole v1
+	# contract is checked before 1 -> 2 adds the default calendar. The file is never written.
+	var migrated_from: int = -1 if schema.value == SCHEMA_VERSION else schema.value
 	if schema.value == 0:
-		var migrated: Result = migrate_v0(payload)
-		if not migrated.ok:
-			return migrated
-		payload = migrated.value
-		migrated_from = 0
-	var result: Result = _validate_v1(payload, manifest)
+		var to_v1: Result = migrate_v0(payload)
+		if not to_v1.ok:
+			return to_v1
+		payload = to_v1.value
+	if schema.value <= 1:
+		var v1: Result = _validate(payload, manifest, 1)
+		if not v1.ok:
+			return v1
+		payload = migrate_v1(v1.value).value
+	var result: Result = _validate(payload, manifest, SCHEMA_VERSION)
 	result.migrated_from = migrated_from if result.ok else -1
 	return result
 
@@ -141,20 +153,33 @@ static func migrate_v0(payload: Dictionary) -> Result:
 	if typeof(player) != TYPE_DICTIONARY or (player as Dictionary).has("facing"):
 		return Result.make(INVALID_SAVE, "v0 player must be an object without facing")
 	player["facing"] = "down"
-	copy["schema_version"] = SCHEMA_VERSION
+	# Exactly schema 1, never the latest: the result must still pass the v1 contract.
+	copy["schema_version"] = 1
 	var result: Result = Result.make(OK)
 	result.value = copy
 	return result
 
 
-## The whole v1 contract against the trusted manifest; returns a normalized deep copy.
-static func _validate_v1(payload: Dictionary, manifest: Dictionary) -> Result:
-	if not _has_keys(payload, PAYLOAD_KEYS):
+## A verified v1 payload -> v2 copy: the default calendar at day 0, tick 0, revision 0.
+## Nothing else changes; no time is guessed for a save that had none.
+static func migrate_v1(payload: Dictionary) -> Result:
+	var copy: Dictionary = payload.duplicate(true)
+	copy["calendar"] = {"rule_id": MIGRATION_RULE_ID, "day_index": 0, "tick_in_day": 0, "revision": 0}
+	copy["schema_version"] = 2
+	var result: Result = Result.make(OK)
+	result.value = copy
+	return result
+
+
+## The whole contract of `schema` (1 or 2) against the trusted manifest; returns a
+## normalized deep copy.
+static func _validate(payload: Dictionary, manifest: Dictionary, schema: int) -> Result:
+	if not _has_keys(payload, PAYLOAD_KEYS_V2 if schema >= 2 else PAYLOAD_KEYS):
 		return Result.make(INVALID_SAVE, "payload keys %s" % [_sorted_keys(payload)])
 	var out: Dictionary = {}
 	for key: String in ["schema_version", "content_version"]:
 		var number: Dictionary = _int(payload[key], 0, MAX_SAFE_INT)
-		var expected: int = SCHEMA_VERSION if key == "schema_version" else CONTENT_VERSION
+		var expected: int = schema if key == "schema_version" else CONTENT_VERSION
 		if not number.ok or number.value != expected:
 			return Result.make(UNSUPPORTED_SCHEMA if key == "schema_version" else CONTENT_MISMATCH, "%s must be %d" % [key, expected])
 		out[key] = number.value
@@ -179,6 +204,34 @@ static func _validate_v1(payload: Dictionary, manifest: Dictionary) -> Result:
 	if not points.ok:
 		return points
 	out["points"] = points.value
+	if schema >= 2:
+		var calendar: Result = _calendar(payload.calendar, manifest)
+		if not calendar.ok:
+			return calendar
+		out["calendar"] = calendar.value
+	var result: Result = Result.make(OK)
+	result.value = out
+	return result
+
+
+## The calendar state of the manifest's trusted profile: exact keys, ints in the profile's
+## ranges. A file can never choose the day length or season length.
+static func _calendar(calendar: Variant, manifest: Dictionary) -> Result:
+	if typeof(calendar) != TYPE_DICTIONARY or not _has_keys(calendar, CALENDAR_KEYS):
+		return Result.make(INVALID_SAVE, "calendar keys must be %s" % [CALENDAR_KEYS])
+	if typeof(calendar.rule_id) != TYPE_STRING:
+		return Result.make(INVALID_SAVE, "calendar rule_id type")
+	var profile: Dictionary = manifest.get("calendar_profile", {})
+	if profile.is_empty() or calendar.rule_id != profile.rule_id:
+		return Result.make(CONTENT_MISMATCH, "calendar rule '%s' is not this map's profile" % String(calendar.rule_id).c_escape())
+	var limits: Dictionary = {"day_index": CalendarRules.max_day_index(profile),
+		"tick_in_day": int(profile.ticks_per_day) - 1, "revision": MAX_SAFE_INT}
+	var out: Dictionary = {"rule_id": calendar.rule_id}
+	for key: String in limits:
+		var number: Dictionary = _int(calendar[key], 0, limits[key])
+		if not number.ok:
+			return Result.make(number.code, "calendar %s: %s" % [key, number.detail])
+		out[key] = number.value
 	var result: Result = Result.make(OK)
 	result.value = out
 	return result
@@ -298,6 +351,11 @@ static func _points(list: Variant, manifest: Dictionary) -> Result:
 	var result: Result = Result.make(OK)
 	result.value = out
 	return result
+
+
+## The shared number contract for other trusted JSON (calendar rules, IH-120).
+static func json_int(value: Variant, low: int, high: int) -> Dictionary:
+	return _int(value, low, high)
 
 
 ## {ok, value: int, code, detail}. JSON numbers arrive as float: allowed only when finite,

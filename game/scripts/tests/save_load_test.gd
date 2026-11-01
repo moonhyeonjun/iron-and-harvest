@@ -11,10 +11,15 @@ extends Node
 const WORLD_SCENE: PackedScene = preload("res://scenes/tests/gathering_test.tscn")
 const GatheringMap: Script = preload("res://scripts/tests/gathering_test.gd")
 const TEST_ROOT_PREFIX: String = "user://tests/ih112/"
+## IH-120 calendar tests use their own namespace.
+const TEST_ROOT_PREFIXES: Array = ["user://tests/ih112/", "user://tests/ih120/"]
 const DEFAULT_ROOT: String = "user://tests/ih112/gui"
 
 ## Tests set it before the scene enters the tree; must be under TEST_ROOT_PREFIX.
 var save_root: String = ""
+## Calendar profile of the new game and of the save manifest (IH-120). Set before the
+## scene enters the tree; the default keeps the IH-112 behaviour.
+var calendar_rule_id: String = GatheringMap.DEFAULT_CALENDAR_RULE
 var store: SaveStore
 var setup_error: String = ""
 var _last_key_frame: int = -1
@@ -33,18 +38,19 @@ func _ready() -> void:
 			fixture = argument.trim_prefix("--fixture=")
 	if save_root.is_empty():
 		save_root = DEFAULT_ROOT
-	if not save_root.begins_with(TEST_ROOT_PREFIX) or save_root.contains(".."):
-		setup_error = "save root must be under %s" % TEST_ROOT_PREFIX
+	if not TEST_ROOT_PREFIXES.any(func(prefix: String) -> bool: return save_root.begins_with(prefix)) or save_root.contains(".."):
+		setup_error = "save root must be under %s" % " or ".join(TEST_ROOT_PREFIXES)
 		save_root = DEFAULT_ROOT
 	# The fixture is named in the title and the panel so manual windows can be told apart.
 	get_window().title = "IH-112 save/load test%s" % (" (corrupt-latest)" if fixture == "corrupt-latest" else "")
-	store = SaveStore.new(save_root, GatheringMap.save_manifest())
+	store = SaveStore.new(save_root, GatheringMap.save_manifest(calendar_rule_id))
 	var fixture_note: String = ""
 	if fixture == "corrupt-latest":
 		fixture_note = corrupt_latest_bank()
 		print("IH-112 fixture: ", fixture_note)
 	var world: Node = WORLD_SCENE.instantiate()
 	world.set("owns_window_title", false)
+	world.set("calendar_rule_id", calendar_rule_id)
 	host.add_child(world)
 	coordinator.setup(host, world, WORLD_SCENE, store, GatheringMap.restore_session)
 	ui.save_requested.connect(func(epoch: int) -> void: coordinator.request_save(epoch))

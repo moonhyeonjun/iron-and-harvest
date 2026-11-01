@@ -77,6 +77,8 @@ def ci_steps(python):
          {"engine": True, "marker": "RESULT: PASS"}),
         ("save-load-acceptance", godot + ["--headless", "--script", "res://tests/test_save_load.gd"],
          {"engine": True, "marker": "RESULT: PASS"}),
+        ("calendar-acceptance", godot + ["--headless", "--script", "res://tests/test_calendar.gd"],
+         {"engine": True, "marker": "RESULT: PASS"}),
         ("source-tree-clean", [python, "-c",
          "import subprocess,sys; r=subprocess.run(['git','status','--porcelain','--untracked-files=all'],capture_output=True,text=True,check=True); print(r.stdout,end=''); sys.exit(bool(r.stdout))"], {}),
     ]

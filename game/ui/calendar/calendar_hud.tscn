@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/calendar/calendar_hud.gd" id="1_hud"]
+
+[node name="CalendarHUD" type="CanvasLayer"]
+layer = 1
+script = ExtResource("1_hud")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -160.0
+offset_right = 212.0
+offset_bottom = -64.0
+grow_vertical = 0
+mouse_filter = 1
+
+[node name="Layout" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Date" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+
+[node name="Status" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Layout"]
+layout_mode = 2
+
+[node name="Pause" type="Button" parent="Panel/Layout/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 8
+text = "시간 정지 (P)"
+
+[node name="Next" type="Button" parent="Panel/Layout/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 8
+text = "다음 새벽 (N, 시험용)"
+
+[node name="Info" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+autowrap_mode = 3
+
+[node name="Message" type="Label" parent="Panel/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+autowrap_mode = 3

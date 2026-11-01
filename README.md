@@ -80,6 +80,9 @@ Codex는 a5cefeb에서 IH-110 수정 재현 위반0·전체 CI 11단계(인벤�
 - AC-S01~15 자동 검증 완료. BUG-009~011은 수정·Codex 독립 재검증(진단5종·CI13단계·저장529)으로 resolved다. AC-S16 손상복구 사용자 GUI 확인까지 완료해 IH-112 done이다. [수정 검토 이력](docs/03-development/IH-112-REVIEW.md)의 프롬프트는 완료됐다. ADR-017 Accepted다. [v0.3.0 판정·발행](docs/03-development/GATHERING-v0.3.0-VERIFICATION.md) 완료, main 승격·CI·태그 원격 반영을 확인했다.
 - 시험 장면: `python3 tools/godot.py res://scenes/tests/save_load_test.tscn`(F5 저장, F9 불러오기, 시험 저장 루트 `user://tests/ih112/gui`). 제품 저장 경로는 쓰지 않는다.
 
-## 구현 준비: IH-120 달력·계절·하루 경계
+## 구현됨(review): IH-120 달력·계절·하루 경계
 
-[상세 명세](docs/02-technical-design/CALENDAR.md), [AC-C01~16](docs/03-development/IH-120-ACCEPTANCE.md), [Claude 전달 프롬프트](docs/03-development/IH-120-HANDOFF.md)를 준비했다. 정수 달력·새벽 경계·정지 정책과 schema2 저장 이관을 제안하며 상태는 ready/ADR-018 Proposed다. 게임 코드·신규 runner·Calendar GUI는 아직 없다. 기본14일×4계절·10분/하루는 검증용 제안이며 제품 수치·농사/결산은 후속이다.
+[상세 명세](docs/02-technical-design/CALENDAR.md), [AC-C01~16](docs/03-development/IH-120-ACCEPTANCE.md), [Claude 전달 프롬프트](docs/03-development/IH-120-HANDOFF.md)를 따른다. 2026-11-02 Claude Code가 구현했다([검증 기록](docs/03-development/IH-120-VALIDATION.md)).
+- 정수 달력과 06:00 경계, 정지 사유 합성, P/N, schema2 저장 이관.
+- 시험 장면: `python3 tools/godot.py res://scenes/tests/calendar_test.tscn` (빠른 프로필은 `-- --fixture=calendar-boundary`). 시험 저장은 `user://tests/ih120/`에만 한다.
+- 기본 14일×4계절, 10분/하루는 검증용 제안이다. review이며 ADR-018 Proposed다.

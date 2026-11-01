@@ -1,0 +1,22 @@
+{
+	"profiles": [
+		{
+			"rule_id": "calendar_test_v1",
+			"physics_hz": 60,
+			"ticks_per_day": 36000,
+			"days_per_season": 14,
+			"seasons": ["spring", "summer", "autumn", "winter"],
+			"day_start_minute": 360,
+			"max_year": 9999
+		},
+		{
+			"rule_id": "calendar_boundary_fixture_v1",
+			"physics_hz": 60,
+			"ticks_per_day": 120,
+			"days_per_season": 2,
+			"seasons": ["spring", "summer", "autumn", "winter"],
+			"day_start_minute": 360,
+			"max_year": 9999
+		}
+	]
+}

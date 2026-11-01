@@ -50,7 +50,8 @@ class CIRunnerTests(unittest.TestCase):
                              ("interaction-acceptance", "res://tests/test_interaction.gd"),
                              ("inventory-acceptance", "res://tests/test_inventory.gd"),
                              ("gathering-acceptance", "res://tests/test_gathering.gd"),
-                             ("save-load-acceptance", "res://tests/test_save_load.gd")):
+                             ("save-load-acceptance", "res://tests/test_save_load.gd"),
+                             ("calendar-acceptance", "res://tests/test_calendar.gd")):
             command, options = steps[name]
             self.assertIn(script, command)
             self.assertEqual(options, {"engine": True, "marker": "RESULT: PASS"})
@@ -59,6 +60,7 @@ class CIRunnerTests(unittest.TestCase):
         self.assertLess(names.index("interaction-acceptance"), names.index("inventory-acceptance"))
         self.assertLess(names.index("inventory-acceptance"), names.index("gathering-acceptance"))
         self.assertLess(names.index("gathering-acceptance"), names.index("save-load-acceptance"))
+        self.assertLess(names.index("save-load-acceptance"), names.index("calendar-acceptance"))
         self.assertEqual(names[-1], "source-tree-clean")
 
     def test_failed_suite_output_cannot_pass(self):

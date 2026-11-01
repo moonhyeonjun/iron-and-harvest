@@ -1,6 +1,11 @@
 # IH-120 달력·계절·하루 경계 수락 조건
 
-상태: **설계 ready / 구현·신규 검사·GUI 미실행**, 2026-11-01. [CALENDAR](../02-technical-design/CALENDAR.md)·[ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md)·[인수인계](IH-120-HANDOFF.md)가 계약이다. 기준 IH-112 done, schema1 지원은 현재 코드이며 아래 schema2는 구현 목표다. 아래 표는 완료 증거가 아닌 검사 요구사항이다.
+상태: **구현·자동 검증 완료 / review**, 2026-11-02 Claude Code. [검증 기록](IH-120-VALIDATION.md)
+- AC-C01~15: 334검사 pass. 변이 8종 검출, 별도 프로세스 확인, 깨끗한 worktree CI 14단계 PASS.
+- AC-C16: 사용자가 실제 창에서 일부 항목을 확인했다(`177ff53`). 이후 사용자 지시에 따라 Claude가 렌더 창을 스크립트로 조작하고 캡처를 확인해 절차 1~5를 확인했다(`b29c6b1`). 사용자 직접 확인과 구분해 기록했다.
+- IH-120 done과 ADR-018 Accepted는 Codex 후속 검토 대상이다.
+
+원래 상태: 설계 ready / 구현·신규 검사·GUI 미실행, 2026-11-01. [CALENDAR](../02-technical-design/CALENDAR.md)·[ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md)·[인수인계](IH-120-HANDOFF.md)가 계약이다. 기준 IH-112 done, schema1 지원은 현재 코드이며 아래 schema2는 구현 목표다. 아래 표는 완료 증거가 아닌 검사 요구사항이다.
 
 | ID | 요구·실패 경계·관찰 | 방법 |
 |---|---|---|

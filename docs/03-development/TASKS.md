@@ -24,7 +24,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:done | IH-110 |
 | IH-112 | 초기 저장과 복원 | feature | priority:critical | status:done | IH-110, IH-111 |
-| IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:ready | IH-112 |
+| IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:review | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
 | IH-130 | 건설·수리 프로젝트 | feature | priority:high | status:backlog | IH-120, IH-110 |
 | IH-131 | 기초 노동 배치와 위임 | feature | priority:high | status:backlog | IH-130 |
@@ -189,14 +189,19 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 ## IH-120 — 달력·계절·하루 경계
 
 - 목적: 같은 세계의 날짜·계절을 진행하고 저장/복원과 다음 날 경계를 일관되게 제공한다.
-- 유형/우선순위/상태: feature / priority:high / status:ready. 의존 IH-112 done.
+- 유형/우선순위/상태: feature / priority:high / status:review. 의존 IH-112 done.
 - 요구사항: 단일 day_index/tick/revision·파생 날짜, 물리스텝 시간, 자연/다음새벽 동일 전진, 정지 사유 합성·epoch/pending/보고 가드, schema2·v0/1 이관, HUD/전용 시험 맵.
 - 관련: [명세](../02-technical-design/CALENDAR.md), [AC-C01~16](IH-120-ACCEPTANCE.md), [Claude 인수인계](IH-120-HANDOFF.md), [ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md), [세계](../01-game-design/WORLD_SYSTEM.md).
 - 예상 영향: CalendarRules/Service·Controller/HUD, gathering의 capture/restore/manifest/suspend/close, Codec2·SaveCoordinator/SaveLoadTest 최소 hook, fixture·runner/CI·문서.
 - 완료 조건: C01~16·실제 파일/구버전/실패·변이/반복·기존 회귀·사용자 GUI·필수 PR CI/리뷰/develop 통합, 검증 기록. ready는 구현 완료가 아니다.
 - 우선순위: 순수 상태/경계 → schema2·이관 → passive World 연결 → 실시간/정지/입력 → 파일/수명/회귀·CI → GUI/인수 검증.
 - 제외/TBD: 작물/생산 결산·노화/월간·수면·배속/오프라인. 14일×4계절·10분/하루·06:00 시작은 검증용 제안, 제품 시간과 생애 대응은 미확정.
-- 현재 증거: 2026-11-01 상세 설계/인수인계 작성. 게임 코드·신규 runner·Calendar GUI는 미실행. 구현 때 IH-120-VALIDATION.md를 생성한다. main/태그/릴리스 변경 없음.
+- 현재 증거: 2026-11-01 상세 설계/인수인계 작성.
+- Claude Code 구현(feature/calendar-system: 43dd607·5570197·c6febb3·8ae36a8·177ff53·b29c6b1):
+  - AC-C01~15 334검사 PASS, 변이 8종 검출, 별도 프로세스 확인.
+  - 깨끗한 worktree CI 14단계 PASS(360/333/521/347/저장531/달력334).
+  - AC-C16: 사용자 일부 확인 + 사용자 지시에 따른 Claude 조작 렌더 창 확인(절차 1~5).
+  - [IH-120 검증 기록](IH-120-VALIDATION.md). review이며 Codex 후속 검토를 기다린다. ADR-018 Proposed. main/태그/릴리스 변경 없음.
 
 ## IH-121 — 심기·성장·수확
 

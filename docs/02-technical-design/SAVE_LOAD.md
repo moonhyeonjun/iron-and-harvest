@@ -170,3 +170,10 @@ rename 직전까지 실패하면 두 기존 은행 바이트가 동일해야 한
 ## IH-120 후속 schema2 설계 (미구현)
 
 현재 Accepted IH-112 계약/코드는 schema1·시험0이다. [CALENDAR](CALENDAR.md#6-저장-schema2와-구버전-이관)는 schema2 필수 calendar·0→1→2 검증 이관·기존 파일 보존·미래3+ 분리를 제안한다. 규칙 프로필/content1·새 컨텍스트/실패 복귀·선택적 clock blocker와 기존 fixture의 보존을 함께 검증해야 한다. 이 절은 현재 schema2 지원 완료를 뜻하지 않으며 실제 구현 차이/검증 후 지원 상태를 갱신한다.
+
+## IH-120 schema2 (2026-11-02)
+
+- 현재 schema는 2이며, 필수 `calendar`는 manifest 프로필의 rule_id/day_index/tick_in_day/revision이다. content는 1이다.
+- v0 → 1(facing) → v1 전체 검증 → 2(기본 달력 0/0/0) 순서로 메모리에서만 이관한다. 파일은 쓰지 않는다.
+- schema3 이상은 UNSUPPORTED다. IH-112의 schema2_future fixture는 보존하되 이제 calendar 누락으로 INVALID_SAVE다. 새 미래 fixture는 schema3_future다.
+- 자세한 내용은 [CALENDAR](CALENDAR.md)와 [IH-120 검증](../03-development/IH-120-VALIDATION.md)에 있다.
