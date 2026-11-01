@@ -1,6 +1,6 @@
 # IH-112 초기 저장·복원 구현 명세
 
-상태: **Proposed / 구현 준비 명세**, 2026-11-01. 기준 develop `8913c0d`, IH-110/111 done. 신규 클래스·씬·API·파일 저장은 아직 없다. Codex는 설계/검증, Claude Code는 구현을 맡는다. Godot4.7.2 Standard/GDScript/Compatibility 유지. [저장 방향](SAVE_SYSTEM.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md), [수락 조건](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md)를 따른다.
+상태: **Proposed / 구현됨(review)**, 2026-11-01. Claude Code가 구현하고 AC-S01~15를 자동 검증했다. AC-S16은 부분 확인이다([검증 기록](../03-development/IH-112-VALIDATION.md), 아래 '구현 결과·차이'). 원래 상태는 구현 준비 명세였다. 기준 develop `8913c0d`, IH-110/111 done. 신규 클래스·씬·API·파일 저장은 아직 없다. Codex는 설계/검증, Claude Code는 구현을 맡는다. Godot4.7.2 Standard/GDScript/Compatibility 유지. [저장 방향](SAVE_SYSTEM.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md), [수락 조건](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md)를 따른다.
 
 ## 목적·범위
 
@@ -136,3 +136,27 @@ rename 직전까지 실패하면 두 기존 은행 바이트가 동일해야 한
 [AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), 기존360/333/521/347 회귀·실패 주입·변이·실제 GUI·필수 PR CI가 구현 완료 관문이다. 신규 저장 검사는 아직 없다. 제품 경로·슬롯 수·수치/키·파일 레이아웃은 Proposed이며 실제 엔진/OS 측정으로 보완하고 ADR에 차이를 기록한다.
 
 공식 API 확인(2026-11-01): [JSON](https://docs.godotengine.org/en/stable/classes/class_json.html)은 숫자 변환·parse 오류·full_precision/비유한 값 제한의 근거, [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html)는 user 파일 I/O·flush/close, [DirAccess](https://docs.godotengine.org/en/stable/classes/class_diraccess.html)는 rename 오류/기존 대상 교체의 근거다. 이 문서의 A/B 프로토콜·실패/복구 정책은 프로젝트 설계 제안이며 공식 API가 crash/power-loss 보장을 제공한다는 뜻이 아니다. 실제4.7.2에서 구현·회귀로 확인한다.
+
+## 구현 결과·차이 (2026-11-01, Claude Code)
+
+- **모듈**: `systems/save/`(SaveCodec, SaveStore, SaveFileAdapter), `scripts/save/save_coordinator.gd`, `ui/save/`, `scenes/tests/save_load_test.tscn`.
+  - session_bootstrap.gd는 만들지 않았다. NEW/RESTORE 분기와 후보 검수는 gathering 맵의 최소 훅에 있다(`restore_context`, `start_inactive`, `activate`, `save_blocker`, `capture_payload`, static `save_manifest`/`restore_session`).
+- **4.7.2 측정**
+  - JSON 숫자는 모두 float(2^53까지 정확)다. `1e400`은 inf와 엔진 경고, trailing comma는 허용, 중복 키는 마지막 값이 남는다.
+  - full_precision 실수를 다시 읽으면 마지막 자리가 바뀔 수 있다. 그래서 encode 왕복 검사에서 위치만 0.0001을 허용한다.
+  - 잘못된 UTF-8은 엔진이 대체 문자로 바꾸며 메시지를 낸다. 그래서 codec이 먼저 엄격한 UTF-8 검사를 한다.
+  - rename은 같은 디렉터리의 기존 대상을 교체한다. flush는 fsync가 아니다.
+  - `OS.kill`은 waitpid까지 한다.
+  - PAUSABLE Player는 DISABLED 부모 아래에서도 처리된다.
+  - DISABLED body/area는 물리에서 빠지며, 다시 들어오면 감지 후보가 한 틱 비어 있다.
+- **상태표 보완**
+  - 손상+없음은 CORRUPT_SAVE이며 불러오기와 저장을 모두 거부한다.
+  - checksum이 맞는 CONTENT_MISMATCH는 INCOMPATIBLE로 분류해 보존한다.
+- **suspend**
+  - 명시 process_mode를 가진 모든 노드(Player 포함)를 각각 DISABLED로 둔다.
+  - live 월드는 물리를 KEEP_ACTIVE로 유지한다(실패 후 선택 상태 보존). 후보는 물리에서 빼고 WorldCollision만 ALWAYS로 둔다.
+  - 이동 게이트, 패널, interaction 상태는 건드리지 않는다.
+  - 저장 capture와 파일 I/O는 동기 단일 호출이므로 저장 중에는 월드를 정지하지 않는다.
+- **추가 코드**: STALE_SESSION, BOOTSTRAP_FAILED, NOT_READY, NO_RECOVERY, FOCUS_LOST. 결과를 보고하는 중에 들어온 요청은 반환값으로만 거부한다(재귀 방지).
+- **키**: F5/F9는 새 누름만 받고 한 프레임에 요청 1회다. GUI 루트는 `user://tests/ih112/gui`다. `--save-root=`는 `user://tests/ih112/` 접두사만 허용한다. `--fixture=corrupt-latest`는 시험 전용이다.
+- **내구성**: 프로세스 중단 회복은 macOS 실제 FS와 Linux CI에서 검증 대상이다. 전원 차단, Windows, 다중 writer는 미검증·미지원이다.

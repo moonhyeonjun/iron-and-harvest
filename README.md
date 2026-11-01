@@ -71,6 +71,9 @@ Codex는 a5cefeb에서 IH-110 수정 재현 위반0·전체 CI 11단계(인벤�
 
 [채집·자원 지점 명세](docs/02-technical-design/GATHERING.md), [AC-G01~14](docs/03-development/IH-111-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-111-HANDOFF.md)를 준비했다. 숨은 유한 재고→가방의 원자 전송과 즉시 상호작용을 설계했다. Codex가 1cb3471에서 원래 진단4종과 CI12단계·채집347검사 통과를 확인해 done으로 복귀했다. [검토 이력](docs/03-development/IH-111-REVIEW.md)의 수정 프롬프트는 완료됐다. IH-112 초기 저장·복원은 아래 명세로 구현 준비를 마쳤다. ADR-016 Proposed다. main/v0.2.0은 보존한다.
 
-## 다음 구현: IH-112
+## 구현됨(review): IH-112
 
-[저장·복원 상세 명세](docs/02-technical-design/SAVE_LOAD.md), [AC-S01~16](docs/03-development/IH-112-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-112-HANDOFF.md)를 작성했다. 단일 수동 슬롯의 A/B 두 세대와 버전 검증, 초기 재지급 없는 새 세션 복원을 제안한다. IH-112 ready(구현 전), ADR-017 Proposed다.
+[저장·복원 상세 명세](docs/02-technical-design/SAVE_LOAD.md), [AC-S01~16](docs/03-development/IH-112-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-112-HANDOFF.md)를 따른다. 2026-11-01 Claude Code가 구현했다([검증 기록](docs/03-development/IH-112-VALIDATION.md)).
+- 단일 수동 슬롯의 A/B 두 세대, 버전 검증, 초기 재지급 없는 새 세션 복원.
+- AC-S01~15 자동 검증 완료. AC-S16 GUI 절차 6이 미실행이라 review다. ADR-017 Proposed다.
+- 시험 장면: `python3 tools/godot.py res://scenes/tests/save_load_test.tscn`(F5 저장, F9 불러오기, 시험 저장 루트 `user://tests/ih112/gui`). 제품 저장 경로는 쓰지 않는다.

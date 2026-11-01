@@ -45,3 +45,12 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
 - [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29)로 develop 통합(merge ed554c5, PR/develop CI success). resolved 판정은 Codex 재검증 뒤에 한다. DEBT-004는 미변경이다.
 
 2026-11-01 Codex가 1cb3471에서 원래 진단4종 종료0/RESULT: PASS, 전체 CI12단계·채집347검사 PASS를 확인했다. BUG-007/008 resolved, IH-111 done 복귀. [독립 재검증](IH-111-VALIDATION.md#codex-독립-수정-재검증). 추가 수정 요청 없음. GUI는 기존 b5afd93 사용자 확인 기록이며 DEBT-004는 유지한다.
+
+## IH-112 구현 기록(2026-11-01)
+
+- **제품 결함**: 구현 중 발견한 문제는 모두 커밋 전에 고치고 회귀로 편입했다. 미해결 제품 결함은 없다. 다음 4건은 [검증 기록](IH-112-VALIDATION.md)에 있다.
+  - 해제된 후보를 타입 변수에 대입함
+  - 완료 신호 재귀
+  - 같은 프레임 suspend/resume 뒤 선택 공백
+  - 자식 PID 이중 대기
+- **관찰(미재현)**: GUI 창 3(corrupt-latest) 첫 인스턴스가 약 90초 동안 시작 fixture를 적용하지 않았다(파일 mtime·checksum 변화 없음, 로그는 엔진 헤더뿐). 같은 인자로 헤드리스·GUI를 다시 실행하면 즉시 적용된다. 원인은 확인하지 못했다. 영향은 시험 fixture 경로뿐이며, 이 관찰이 결함이라는 증거는 없다.

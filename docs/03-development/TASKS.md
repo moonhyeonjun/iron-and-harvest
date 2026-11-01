@@ -23,7 +23,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:done | IH-110 |
-| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:ready | IH-110, IH-111 |
+| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:review | IH-110, IH-111 |
 | IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
 | IH-130 | 건설·수리 프로젝트 | feature | priority:high | status:backlog | IH-120, IH-110 |
@@ -160,12 +160,17 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 ## IH-112 — 초기 저장과 복원
 
 - 목적: 채집/보관/이동한 세계를 저장하고 재시작 뒤 같은 상태로 이어간다.
-- 유형/우선순위/상태: feature / priority:critical / status:ready. 의존 IH-110/111 done.
+- 유형/우선순위/상태: feature / priority:critical / status:review. 의존 IH-110/111 done.
 - 요구사항: 위치·방향·bag/store/stock5재고·결속3개, 단일 수동 A/B 슬롯, schema1/시험v0·checksum·정규화, 명시 복구본, 후보 세션 검증 후 publish·이전 epoch 차단.
 - 관련 문서: [저장 방향](../02-technical-design/SAVE_SYSTEM.md), [구현 명세](../02-technical-design/SAVE_LOAD.md), [AC-S01~16](IH-112-ACCEPTANCE.md), [Claude 전달 프롬프트](IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md).
 - 예상 영향: SaveCodec/Store/Coordinator/Bootstrap, Gather restore/읽기 경계, Player 복원, 모달·Interaction suspend/epoch, 전용 맵/UI/runner·CI 등록.
 - 완료 조건: AC-S01~16·실제 파일/중단·GUI·실패 주입/변이·기존 회귀·필수 CI/리뷰/develop 통합, 검증 기록.
-- 현재 증거: 2026-11-01 Codex 상세 설계 완료. 구현·신규 검사·GUI는 미실행, 다음 담당 Claude Code.
+- 현재 증거: 2026-11-01 Codex 상세 설계 완료.
+- Claude Code 구현(feature/save-load-system: 9fce058, e213eff, 9985a63, 09e5273, 438ef89):
+  - AC-S01~15 자동 425검사 PASS, 변이 7종 검출, 별도 프로세스 재시작·SIGKILL 확인.
+  - 깨끗한 worktree CI 13단계 PASS(이동 360·상호작용 333·인벤토리 521·채집 347·저장 425).
+  - AC-S16: 사용자 GUI 절차 1~5 확인, 절차 6(최신 손상 → 복구본)은 사용자 GUI 미실행. 사용자가 이후 사용자 테스트를 중단했으므로 done이 아니다.
+  - [IH-112 검증 기록](IH-112-VALIDATION.md). ADR-017 Proposed.
 - 제외/TBD: 자동/종료 저장·슬롯 선택/삭제·Cloud·타 맵/달력/NPC. 수치/경로/파일 레이아웃은 Proposed, 실제4.7.2/OS 측정으로 구현 차이를 기록한다. v0.3.0 판정은 별도.
 
 ## IH-120 — 달력·계절·하루 경계

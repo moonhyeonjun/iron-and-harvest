@@ -380,3 +380,33 @@
 - 사용자 루트 정적 검사: 기존 미추적 AGENTS.md의 .Codex/rules 링크4개만 실패(종료1). 사용자 파일은 수정/커밋하지 않는다.
 - 변경16문서만 복사한 detached worktree 정적 검사 종료0: 필수42파일/디렉터리/Markdown 링크·펜스/리소스 경로/작업 그래프/ignore PASS. git diff --check PASS.
 - 게임 코드/씬/도구/테스트/CI 설정 변경 없음. 신규 저장 자동/GUI는 미실행이며 기존 회귀는 필수 PR CI로 확인한다. 실제 커밋/CI/merge/원격 결과는 PR 이력과 완료 보고에 기록한다.
+
+## 2026-11-01 — IH-112 초기 저장·복원 구현 (Claude Code)
+
+- **시작**: develop 4b31ed4(origin 일치), 사용자 미추적 AGENTS.md 보존·미커밋. `feature/save-load-system` 분기.
+- **4.7.2 탐침**
+  - JSON 숫자 float, 2^53 정밀도, 1e400→inf+경고, trailing comma 허용, 중복 키는 마지막 값.
+  - 실수 왕복 시 마지막 자리 변동, Vector2 float32.
+  - SHA-256(UTF-8), rename 교체, get_buffer 정확 길이, 잘못된 UTF-8 메시지.
+  - PAUSABLE Player는 DISABLED 부모 아래에서도 처리됨. 비활성 body/area는 물리에서 제거. 비활성 Button은 클릭 없음. Camera2D 비탈취.
+- **구현 커밋**:
+  - 9fce058: restore와 읽기 전용 검사
+  - e213eff: codec과 store
+  - 9985a63: 조율자, 시험 장면, UI
+  - 09e5273: runner와 CI 등록
+  - 438ef89: fixture 창 표시
+- **개발 중 발견·수정**(커밋 전)
+  - 해제된 후보를 타입 변수에 대입해 오류가 남.
+  - 완료 신호 리스너가 거부를 받으면 다시 보고되어 무한 재귀가 남 → 보고 중 거부는 반환만 한다.
+  - 같은 프레임 suspend/resume 뒤 Detector 후보가 한 틱 비어 E가 NO_TARGET이 됨 → live 월드 물리를 KEEP_ACTIVE로 유지하고, 물리 모드를 process보다 먼저 바꾼다.
+  - 이미 waitpid된 자식에 `is_process_running`을 불러 오류가 남.
+- **검증**
+  - runner: exit 0, 425검사, 2회 차이 0, 고아 0, 엔진 오류 0(INF 기대 경고 4). `--inject-failure`는 exit 1.
+  - 변이 7종 모두 검출(구문 오류 0).
+  - 기존 suite 360/333/521/347 PASS. Python 19 OK.
+  - 깨끗한 worktree CI(438ef89): 13단계 PASS, 저장 suite 23.4초, 누수 경고 0.
+- **GUI**: 사용자, 438ef89, `user://tests/ih112/gui`.
+  - 창 1(저장 1~5세대, F9 복원, BUSY, 복구 버튼)과 창 2(재시작 뒤 F9 5세대)는 로그·응답으로 확인했다.
+  - 창 3(corrupt-latest) 첫 인스턴스는 약 90초간 fixture를 적용하지 못했다(원인 미확인, 재실행 시 정상).
+  - 사용자가 "앞으로는 사용자 테스트는 진행하지 않는다"고 답해 절차 6은 미실행이다.
+- **결과**: AC-S01~15 pass, AC-S16 부분, IH-112 review, ADR-017 Proposed. main/태그/릴리스 없음. PR/CI/merge 결과는 후속 기록에 남긴다.
