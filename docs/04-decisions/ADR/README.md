@@ -24,4 +24,4 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 
 - [ADR-014 상호작용 경계](ADR-014-interaction-boundary.md) — Proposed, IH-102 구현·BUG-003/004 수정·수락 검증 완료. 최종 제품 결정은 후속.
 
-- [ADR-015 아이템·인벤토리 계약](ADR-015-inventory-contract.md) — Proposed. IH-110 상세 설계; Resource/JSON 비교·원자 거래·모달 검증 후 판정. ADR-003 전체를 대체하지 않음.
+- [ADR-015 아이템·인벤토리 계약](ADR-015-inventory-contract.md) — Proposed. IH-110 구현·기존 검증 완료 후 BUG-005/006 추가 재현으로 review. 수정·회귀 확인 후 Accepted 판정. ADR-003 전체를 대체하지 않음.

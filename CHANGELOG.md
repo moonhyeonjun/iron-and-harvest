@@ -1,5 +1,9 @@
 # 변경 이력
 
+## Unreleased — IH-110 기술 검토
+
+- 기존 CI 11단계 통과를 독립 확인한 뒤 BUG-005(UI/서비스 수명 재검증)·BUG-006(끝 개행 ID 허용)을 추가 재현했다. IH-110 review 재개, [검토·Claude 수정 프롬프트](docs/03-development/IH-110-REVIEW.md) 작성. 게임 코드 변경 없음.
+
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
 ## Unreleased — IH-110 구현 (Claude Code, 2026-11-01)

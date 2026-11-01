@@ -243,3 +243,14 @@
 - [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 160ca9e → develop, merge f26a77e66d9d63f9dd9216eae4f82d71fb28bde7(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41276480044/job/124759576975) success(11단계, 세 suite RESULT: PASS·엔진 오류0). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41276740036/job/124760326722) success.
 - 통합 tree = 160ca9e. IH-110 done. ADR-015 Proposed 유지(Accepted 판단은 별도). main·태그·릴리스 미변경.
 - 다음: IH-111 채집과 자원 지점(재고 NO_SPACE와 지점 소진의 단일 완료 경계), ADR-015 Accepted 판단.
+
+## 2026-11-01 — IH-110 Codex 기술 검토
+
+- 대상 develop/origin14302e5, 사용자 미추적 AGENTS.md 보존. 원격 run41277180799 success 확인.
+- clean detached worktree에서 공통 CI 종료0/11단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리375. 인벤토리 반복45종 차이0·고아0·엔진 오류0.
+- 추가 경계 진단 종료1/위반3: UI.queue_free 및 service.close 콜백 뒤에도 OPEN/게이트 소유(BUG-005), 끝 개행 ID가 유효하고 catalog/register 성공(BUG-006). 즉시 UI.free 진단은 _show에서 엔진 signal11 충돌을 기록했다. 혼합 스택 키는 정상 INVALID_SNAPSHOT. 세부 및 진단 종료 경고는 [리뷰](IH-110-REVIEW.md).
+- IH-110 done→review, BUG-005/006 open, ADR-015 Proposed 유지. 기존 PASS/통합 기록은 보존한다. GUI 새 조작/변이 재실행 없음; 이전025c863 사용자 GUI 확인과 구분한다.
+- docs/ih-110-technical-review에서 리뷰·재현·Claude 수정 프롬프트와 작업/검증 진입점만 갱신한다. 게임 코드·씬·테스트·CI 설정·main/태그는 변경하지 않는다. PR 검증 후 develop 통합, 실제 커밋/원격 결과는 PR 이력·완료 보고로 기록한다.
+- 다음: Claude Code의 두 결함 수정·실패 회귀 편입·GUI 확인·필수 CI. 이후 Codex 재검증 및 IH-111 상세 설계 판단.
+
+- 리뷰 문서 변경을 별도 worktree에 반영해 정적 검사 PASS(필수42파일/링크/경로/작업/ignore)를 확인했고 diff --check도 통과했다. 원래 사용자 트리 검사는 AGENTS.md의 기존 링크4개 때문에 종료1이며 해당 파일을 변경하지 않았다.
