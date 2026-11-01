@@ -66,7 +66,8 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_candidates.clear()
-	_clear_queue()
+	_cancel_queued = false
+	_discard_queue(REMOVED)
 	if _state == State.ACTIVE:
 		_close_active(REMOVED)
 	_set_selected(null)
@@ -211,7 +212,8 @@ func _close_active(reason: StringName) -> void:
 	_state = State.IDLE
 	_active_request_id = 0
 	_active_target = null
-	_clear_queue()
+	# An E queued during the session still gets a result, never a silent drop.
+	_discard_queue(BUSY)
 	if is_instance_valid(target):
 		target.end_interaction(request_id, reason != COMPLETED)
 	if _owns_movement_gate:

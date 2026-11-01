@@ -500,6 +500,24 @@ func _i07_presses() -> bool:
 	ids.append(_since(mark, "opened")[0].id if _since(mark, "opened").size() > 0 else -1)
 	await _close_active_with_escape()
 	await _end_case("AC-I07")
+	# E queued in the same tick the button closes the session: rejected BUSY, not dropped.
+	await _place(BASE, "down")
+	probe = _target("close_and_press", BASE + Vector2(0, 20))
+	await _ticks(3)
+	await _press_interact()
+	mark = _rec.size()
+	_interact_event()
+	_key(KEY_ENTER, true)
+	_key(KEY_ENTER, false)
+	await physics_frame
+	var same_tick: Array = _since(mark, "rejected")
+	var same_tick_closed: Array = _since(mark, "closed")
+	_check("AC-I07", same_tick_closed.size() == 1 and same_tick.size() == 1 and same_tick[0].reason == C.BUSY
+		and probe.get("begin_calls") == 1, "E queued while closing: closed %s rejected %s" % [same_tick_closed, same_tick])
+	ids.append(same_tick[0].id if same_tick.size() > 0 else -1)
+	_log("AC-I07", "E queued while the button closes the session: closed=%s request=%s" % [
+		same_tick_closed[0].reason if same_tick_closed.size() > 0 else "-", same_tick[0].reason if same_tick.size() > 0 else "-"])
+	await _end_case("AC-I07")
 	var increasing: bool = true
 	for i: int in range(1, ids.size()):
 		increasing = increasing and ids[i] > ids[i - 1]
