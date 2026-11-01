@@ -162,3 +162,7 @@ main/v0.1.0은 유지한다. v0.2.0 및 ADR Accepted 전환은 별도 판단이�
 사용자 미추적 AGENTS.md의 `.Codex/rules/*` 경로는 현재 없다. 저장소의 `.claude/rules/*`와 CONTRIBUTING 및 최신 사용자 역할 분담을 읽고 적용했다. AGENTS.md의 역할 문장/이전 IH-102 상태는 이번에 수정하거나 stage하지 않았다. README·TDD·생활 문서·ADR의 구현 전 설명은 현재 검토 상태와 구분하도록 정리했다.
 
 현재 사용자 작업 트리의 `validate_foundation.py`는 미추적 AGENTS.md에 있는 누락 `.Codex/rules/*` 링크4개 때문에 실패한다. 파일을 숨기거나 지우지 않았다. 위 10단계 PASS는 사용자 미추적 파일을 포함하지 않는 커밋 기준 clean worktree의 결과다.
+
+## Claude Code 수정 결과 (2026-11-01)
+
+`aaac5da`에서 위 재현을 기존 runner의 AC-I04/I08/I10 회귀로 편입해 수정 전 실패(26검사)를 확인했다. 이어 `0332b5a`에서 수정했다. 수정 후 재현 진단 종료0, runner 333검사 PASS, 깨끗한 worktree 로컬 CI 10단계 PASS를 확인했고, 사용자 GUI 확인 결과는 "1~5 모두 정상"이다. 포커스 상실·트리 이탈·queue_free 변형도 수정 전 실패를 확인해 함께 처리했다. 세부 사항은 [검증 기록](IH-102-VALIDATION.md)에 있다. 완료 판정은 PR 필수 CI와 develop 통합 뒤에 한다.
