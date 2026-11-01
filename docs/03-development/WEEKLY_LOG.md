@@ -179,3 +179,8 @@
 - GUI: 사용자, 빌드 0332b5a, "1~5 모두 정상". 이전 3d99d36 창 종료 후 재실행. 런타임 중복 ID·재진입은 화면 조작으로 만들 수 없어 자동 검사로만 확인.
 - 범위: 전역 잠금·새 게임플레이·아이템/인벤토리/채집 미추가. main·v0.1.0 미변경, v0.2.0·ADR Accepted는 별도 판단.
 - 다음: PR 필수 CI와 develop 통합 후 IH-102 done 기록.
+
+### BUG-003/004 통합 결과
+
+- [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 3225882 → develop, merge e5d7730f1b858b22a5ba9ead1880fe1fd73a8641(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269323346/job/124738634090) success(10단계, 새 회귀 12종 로컬과 동일). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269551599/job/124739307741) success.
+- 통합 tree = 3225882. BUG-003/004 resolved, IH-102 done 복귀. main·v0.1.0 미변경, v0.2.0·ADR-014 Accepted는 별도 판단.

@@ -165,4 +165,4 @@ main/v0.1.0은 유지한다. v0.2.0 및 ADR Accepted 전환은 별도 판단이�
 
 ## Claude Code 수정 결과 (2026-11-01)
 
-`aaac5da`에서 위 재현을 기존 runner의 AC-I04/I08/I10 회귀로 편입해 수정 전 실패(26검사)를 확인했다. 이어 `0332b5a`에서 수정했다. 수정 후 재현 진단 종료0, runner 333검사 PASS, 깨끗한 worktree 로컬 CI 10단계 PASS를 확인했고, 사용자 GUI 확인 결과는 "1~5 모두 정상"이다. 포커스 상실·트리 이탈·queue_free 변형도 수정 전 실패를 확인해 함께 처리했다. 세부 사항은 [검증 기록](IH-102-VALIDATION.md)에 있다. 완료 판정은 PR 필수 CI와 develop 통합 뒤에 한다.
+`aaac5da`에서 위 재현을 기존 runner의 AC-I04/I08/I10 회귀로 편입해 수정 전 실패(26검사)를 확인했다. 이어 `0332b5a`에서 수정했다. 수정 후 재현 진단 종료0, runner 333검사 PASS, 깨끗한 worktree 로컬 CI 10단계 PASS를 확인했고, 사용자 GUI 확인 결과는 "1~5 모두 정상"이다. 포커스 상실·트리 이탈·queue_free 변형도 수정 전 실패를 확인해 함께 처리했다. 세부 사항은 [검증 기록](IH-102-VALIDATION.md)에 있다. [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)의 필수 CI 성공 후 develop 통합(merge e5d7730), develop CI 성공을 확인해 IH-102 done으로 복귀했다.
