@@ -7,7 +7,7 @@
 - 기능 마일스톤 판정 PASS: IH-101 이동·충돌·카메라, IH-102 대상 선택·살펴보기·안전한 종료. [판정/승격 기준](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md).
 - BUG-001~004 수정과 회귀 포함. CI 10단계/Python19/이동360/상호작용333 검사, 기존 사용자 GUI 확인.
 - 엔진4.7.2 Standard/GDScript/Compatibility 고정, 기본 Foundation 씬 유지, 테스트 맵 명시 실행.
-- 개발용 소스 기준점이다. 채집·가방·저장·Export/Steam 출시·제품 라이선스는 후속 범위다. 원격 태그는 main CI 성공 후 발행한다.
+- 개발용 소스 기준점이다. 채집·가방·저장·Export/Steam 출시·제품 라이선스는 후속 범위다. main CI 성공 후 annotated 태그 v0.2.0을 `8901bac`에 발행하고 로컬/원격 일치를 확인했다.
 
 ## 구현 이력 — 2026-11-01 (v0.2.0에 포함)
 

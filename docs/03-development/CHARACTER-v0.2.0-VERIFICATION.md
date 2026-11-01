@@ -1,6 +1,19 @@
 # v0.2.0 Character 마일스톤 판정 — 2026-11-01
 
-## 판정
+## 발행 결과
+
+**v0.2.0 Character 확정.** 기능 판정과 main 승격 CI가 통과했고 annotated tag의 로컬/원격 객체 및 대상 커밋 일치를 확인했다.
+
+- 태그: [v0.2.0](https://github.com/moonhyeonjun/iron-and-harvest/tree/v0.2.0)
+- 대상 main 커밋: `8901bac890393defbfdf438bc2e5b36d7c94b2a3`
+- annotated tag 객체: `6a322acfa3b5f825f1877b9ebe0ac82eda39b2c6`
+- 판정 문서: commit `66aa9b7`, [PR #15](https://github.com/moonhyeonjun/iron-and-harvest/pull/15), merge `61b2813`.
+- main 승격: [PR #16](https://github.com/moonhyeonjun/iron-and-harvest/pull/16), [PR CI 성공](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41272706472), [main push CI 성공](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41272930692). main tree는 승격 원본61b2813과 동일하다.
+- main 이력을 포함한 docs/v0.2.0-publication을 PR로 develop에 통합해 발행 기록을 동기화한다. 이는 문서 후속 기록이며 태그를 이동하지 않는다.
+- v0.1.0 대상d176bd7과 객체7488fc9는 그대로 보존했다. GitHub Release 페이지·Export 실행파일·Steam 게시는 생성하지 않았다.
+
+## 발행 전 판정
+
 
 **기능 완료 조건 충족(PASS), main 승격·태그 생성 가능.** 기준은 기존 [MILESTONES](MILESTONES.md)의 “작은 맵에서 이동/대상 조작”과 IH-101/IH-102 수락 조건이다. 이번 판정을 위해 조건을 낮추거나 새 게임 기능을 추가하지 않았다. v0.2.0은 이동·상호작용을 갖춘 개발 기준점이며, 자립 가능한 마을 MVP나 Steam 출시판이 아니다.
 
