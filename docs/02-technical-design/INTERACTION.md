@@ -1,6 +1,6 @@
 # IH-102 상호작용 상세 명세
 
-상태: **Proposed 구현 기준안, IH-102 구현·검증·develop 통합 완료**. 2026-10-31 Codex 설계, 2026-11-01 Claude Code 구현. 결과와 설계 차이는 이 문서 끝과 [검증 기록](../03-development/IH-102-VALIDATION.md)에 있다. 엔진은 ADR-011, 이동은 기존 IH-101을 그대로 사용한다.
+상태: **Proposed 구현 기준안, develop 통합 후 Codex 추가 검토로 review 재개**(BUG-003/004, [검토·수정 기준](../03-development/IH-102-REVIEW.md)). 2026-10-31 Codex 설계, 2026-11-01 Claude Code 구현. 결과와 설계 차이는 이 문서 끝과 [검증 기록](../03-development/IH-102-VALIDATION.md)에 있다. 엔진은 ADR-011, 이동은 기존 IH-101을 그대로 사용한다.
 
 관련: [생활 시스템](../01-game-design/LIFE_SYSTEM.md), [이동 명세](PLAYER_MOVEMENT.md), [수락 조건](../03-development/IH-102-ACCEPTANCE.md), [인수인계](../03-development/IH-102-HANDOFF.md), [ADR-014](../04-decisions/ADR/ADR-014-interaction-boundary.md).
 

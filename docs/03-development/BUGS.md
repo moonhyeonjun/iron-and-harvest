@@ -1,6 +1,6 @@
 # 버그·환경 장애·기술 부채
 
-IH-101 이동 기능에서 확인된 결함은 아래에 기록한다. 검증하지 않은 기능을 결함 없음으로 선언하지 않는다.
+IH-101 이동과 IH-102 상호작용에서 확인된 결함은 아래에 기록한다. 검증하지 않은 기능을 결함 없음으로 선언하지 않는다.
 
 | ID | 분류 | 상태 | 재현/관찰 | 영향·다음 조치 |
 |---|---|---|---|---|
@@ -8,6 +8,8 @@ IH-101 이동 기능에서 확인된 결함은 아래에 기록한다. 검증하
 | ENV-003 | 검증 도구 | documented | CUA Sky service 시작 실패. IH-101에서도 Claude의 `screencapture`는 창 내용 없이 바탕화면만 기록, `osascript` 키 입력은 보조 접근 미허용(-25211) | GUI 수동 항목은 사용자 확인, 렌더링은 엔진 viewport 캡처로 보조. OS 창 자동 스크린샷/키 입력 없음 |
 | BUG-001 | IH-101 / medium | resolved | macOS 4.7.2 GUI로 테스트 맵 실행 시 시작 직후 `SCRIPT ERROR: Nonexistent function 'set_presentation' in base 'Nil'` (player_controller `_set_locomotion`). APPLICATION_FOCUS_IN→OUT이 트리 진입 전에 도착해 `_halt()`가 null Visual을 호출. 기능 영향은 없었고 사용자 GUI 확인은 정상이었음 | `571c1e9`: 상태는 기록하고 Visual 갱신은 `_ready` 이후. runner가 같은 순서를 재현하고 Logger로 엔진 오류를 수집해 수정 전 코드에서 종료1, 수정 후 GUI 시작 로그 오류0 |
 | BUG-002 | 테스트·문서 / low | resolved | IH-101 기록과 runner 주석은 headless에서 `parse_input_event`가 Viewport로 전달되지 않는다고 했지만 틀렸다. `flush_buffered_events()`가 동기 전달하며, IH-102에서 포커스 LineEdit에 'ee'가 찍혀 확인했다. IH-101 AC-08 UI 사례는 키를 두 번 전달했으나 판정 결론은 같았다 | `4f69d80`: 두 runner 모두 한 번만 전달. IH-101 runner 재실행 PASS, IH-101-VALIDATION·PLAYER_MOVEMENT·tests README 정정 |
+| BUG-003 | IH-102 / medium (P2) | open | `29b2ed3`: E 캡처 뒤 중복 ID 후보의 available을 true로 바꾸면 중복 검증 없이 패널 시작 | 선택에만 중복 필터가 있고 요청 검증에는 없음. [재현·수락 조건](IH-102-REVIEW.md). Claude가 실행/활성 검증과 AC-I04/I06/I10 회귀 추가 |
+| BUG-004 | IH-102 / medium (P2) | open | `29b2ed3`: Target.try_begin이 Controller를 disable한 뒤 true 반환해도 ACTIVE·패널·이동 차단 발생 | RESOLVING 취소 상태를 반환 후 재검증. [재현·수락 조건](IH-102-REVIEW.md). Claude가 정리/통지 횟수·AC-I08/I10 회귀 추가 |
 | DEBT-002 | 설계 한계 | documented | 이동 게이트는 단일 소유자 bool이다. 상호작용 세션 중 외부가 추가로 잠근 것은 구분되지 않아 세션 종료 시 해제될 수 있다(미검사) | 다중 모달/전투가 생길 때 상위 조율자 설계(ADR-014 검토 항목). 지금 전역 잠금 시스템은 만들지 않음 |
 | DEBT-003 | UI 글꼴 | documented | 한글 프롬프트/패널은 엔진 기본 글꼴의 시스템 fallback으로 표시된다(macOS 확인) | 배포 OS별 글꼴 포함 여부와 라이선스는 IH-006/IH-003에서 결정 |
 | ENV-002 | Git 초기 상태 | resolved | 최초 커밋 957dd3b와 main/develop ref 생성, push 성공 | 원격 SHA 일치와 기본 main 확인, GIT_BOOTSTRAP 참조 |

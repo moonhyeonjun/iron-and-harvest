@@ -4,6 +4,11 @@
 
 ## Unreleased — 2026-11-01
 
+### IH-102 Codex 후속 검토
+
+- 추가 경계 재현으로 BUG-003(실행 시 중복 ID 검증 누락), BUG-004(RESOLVING 중 disable 무시) 등록. IH-102 review 재개, 수정 수락 조건과 Claude 프롬프트 작성.
+- 기존 구현/통합/GUI 기록은 보존하고 현재 문서 상태 표기를 정리했다. 게임 코드와 CI 설정 변경 없음.
+
 ### IH-102 상호작용 대상·프롬프트 (Claude Code)
 
 - InteractionController(Player 마지막 자식, priority 10): Area2D 후보, 거리32·정면 dot0.5·world_solid 가시선, 정수 tuple 선택, 틱당 1개 입력 의도 큐와 캡처 대상 재검증, 단조 request ID, 세션·이동 게이트·포커스·삭제·제거 취소.
