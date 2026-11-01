@@ -57,3 +57,7 @@ Event는 event_id/type/date/actor_ids/target_ids/payload_version을 갖고 상�
 ## IH-110 인벤토리 경계 제안
 
 [상세 명세](INVENTORY.md): Catalog는 검증된 정의의 스칼라 사본, InventoryService는 상태의 유일한 쓰기 소유자다. UI → InventoryController → 도메인 명령 → 양쪽 상태 commit → 단일 변경 신호 → UI 재조회 순서를 따른다. Node/입력/시간과 도메인을 분리하며 Autoload/범용 이벤트 버스를 추가하지 않는다. 가방/살펴보기의 배타성은 작은 씬 조율자가 맡고 DEBT-002의 일반 다중 잠금 문제는 해결로 표기하지 않는다. 채집 소진+지급, 건설 다중 재료, 저장 복원은 별도 거래 경계를 요구한다. IH-110에서 game/systems/inventory(ItemDef·ItemCatalog·InventoryState·InventoryService), game/data/items, game/scripts/inventory(InventoryController), game/ui/inventory, game/scenes/tests/inventory_test로 구현했다. 서비스는 Node·입력을 참조하지 않는다.
+
+## IH-111 채집 경계 제안
+
+[상세 명세](GATHERING.md): 입력/Target 준비 → Interaction 최종 재검증 → RefCounted 단발 명령 → 기존 InventoryService.transfer → 양쪽 상태 설치 → UI/뷰 갱신. 지점별 숨은 재고를 원본으로 사용하여 별도 remaining과 재고의 이중 쓰기를 없앤다. INSTANT는 모달/게이트를 소유하지 않는다. 서비스는 세션 루트가 소유하고 지점 뷰 이탈은 재고를 초기화하지 않는다. 아직 미구현이며 ADR-016 Proposed다.

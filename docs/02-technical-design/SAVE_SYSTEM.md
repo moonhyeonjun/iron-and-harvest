@@ -29,3 +29,7 @@ SaveEnvelope(schema_version, content_version, build_id, engine_version, world, r
 ## IH-110과의 경계
 
 [인벤토리 명세](INVENTORY.md)는 ID·capacity·revision·slots의 순수 값 snapshot과 새 상태로의 메모리 왕복만 정의한다. 디스크 쓰기/SaveEnvelope/schema_version은 구현하지 않는다. 활성 ID 덮어쓰기·revision 되감기는 허용하지 않으며 IH-112가 새 세션 복원과 UI 요청 무효화를 함께 설계한다. JSON 숫자 변환/손상·미래 버전/아이템 ID migration은 저장 어댑터 책임으로 남는다.
+
+## IH-111과 IH-112 인계
+
+[채집 명세](GATHERING.md)는 PointBinding 목록과 숨은 지점 재고 snapshot을 저장 대상 후보로 지정한다. remaining/depleted를 중복 저장하지 않는다. 같은 세션 뷰 재바인딩은 파일 저장이 아니다. IH-112 복원은 초기 지급 없는 새 컨텍스트에서 정의/품목/owner/capacity/ID 참조를 검증하고 교체하는 방향이며, 실패 시 현재 상태를 보존한다. 준비 명령/뷰/WeakRef/request ID는 저장하지 않는다. 실제 포맷·스키마·migration은 아직 미정이다.

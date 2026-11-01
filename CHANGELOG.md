@@ -1,5 +1,10 @@
 # 변경 이력
 
+## Unreleased — IH-111 상세 설계
+
+- 유한 지점 재고→bag 원자 transfer, INSTANT 실행·취소·수명 경계, 소진/재진입·세 정의/fixture를 설계했다.
+- GATHERING, AC-G01~14, Claude 전달 프롬프트, ADR-016 Proposed 작성. IH-111 ready(구현 전), 관련 기획/기술/작업 진입점 갱신. 게임 코드/씬/CI 설정 변경 없음.
+
 ## Unreleased — IH-110 Codex 수정 재검증
 
 - BUG-005/006의 원래 재현 종료0/위반0, 전체 CI 11단계·인벤토리521검사 PASS를 확인했다. resolved·IH-110 done 유지, 검증/인수인계 안내 갱신. 게임 코드 변경 없음.

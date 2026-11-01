@@ -146,3 +146,7 @@ ACTIVE 동안 E는 새 행동을 만들지 않는다. 대상 삭제/숨김/avail
 
 - 중복 ID: 사용 가능한 후보끼리 ID가 겹치면 모두 무효다. 이 규칙은 선택·요청 실행·활성 세션 재검증에 같이 적용된다. 활성 세션은 열 때의 ID를 기준으로 하며, ID 변경이나 중복은 다음 틱 INVALID_TARGET 취소(end1·게이트 복구)다.
 - RESOLVING 취소: try_begin 실행 중 비활성화·포커스 상실·트리 이탈(queue_free 포함)이 일어나면, 반환 후 시작하지 않는다. 대상이 true를 반환했다면 end(cancelled) 1회, 요청은 해당 reason으로 1회 거부한다. 같은 호출 안에서 다시 활성화해도 취소는 유지된다.
+
+## IH-111 후속 실행 경계(제안·미구현)
+
+[채집 명세](GATHERING.md)가 INSTANT/EXECUTING 분기를 정의한다. 기존 Target은 기본 INSPECT로 보존한다. try_begin은 준비만 하며 지급하지 않는다. 취소 래치·대상/중복ID/제어 재검증 뒤 RefCounted 명령을 실행하고, commit 전 취소와 commit 후 표시 생략을 구분한다. 새 경계는 AC-G07~11로 검증하며 기존 AC-I 회귀를 유지한다. 이 절은 기존 IH-102 구현 완료 주장에 포함되지 않는다.

@@ -158,3 +158,7 @@ GUI가 사용한 키는 월드 입력으로 전파하지 않는다. 닫힌 상�
 - 결과 타입은 `InventoryService.Result`이다. 코드 `DUPLICATE_INVENTORY`, `INVALID_SNAPSHOT`을 추가했다. snapshot은 `decode_snapshot`/`register_snapshot`, ID는 String, 등록은 변경 이벤트 없음, close 후 읽기도 CLOSED다.
 - 조율자는 맵 루트의 InventoryController이며 입력 콜백에서 바로 연다. 입력은 닫힘 I=`_unhandled_input`, 열림 I/Escape/E=`_shortcut_input`의 단일 경로다. 보기 전환은 새 session ID를 발급한다. 가방 안 '보관함 보기' 버튼으로 키보드 경로를 제공하며, HUD 버튼은 마우스 전용이다.
 - 꽉 찬 보관함 GUI fixture는 `-- --fixture=full`이다. 이동 키를 누른 채라 Player가 neutral 대기이면 CONTROL_BLOCKED로 안내한다. DEBT-002는 그대로이며, 두 작성자의 배타적 사용만 지원한다.
+
+## IH-111 후속 사용(제안·미구현)
+
+[채집 명세](GATHERING.md)는 지점별 숨은1슬롯 재고에서 bag으로 기존 transfer를 호출한다. bag.add 후 별도 지점 차감을 만들지 않는다. 동일 InventoryService 인스턴스가 bag/store/stock을 소유하며 stock은 일반 UI 대상에서 제외한다. 재고 서비스에 Node·입력·자원 지점 로직을 넣지 않는다. 회당1개·초기량≤스택 한도는 IH-111 제한이며 일반 Inventory 한도를 변경하지 않는다.

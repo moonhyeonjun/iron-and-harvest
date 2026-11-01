@@ -33,7 +33,7 @@ IH-004 CI 완료 후 [상호작용 인수인계](docs/03-development/IH-102-HAND
 
 [인수인계](docs/03-development/IH-110-HANDOFF.md), [명세](docs/02-technical-design/INVENTORY.md), [수락 조건](docs/03-development/IH-110-ACCEPTANCE.md), [ADR-015](docs/04-decisions/ADR/ADR-015-inventory-contract.md)를 따른다. 2026-11-01 Claude Code가 구현하고 AC-N01~14를 검증했다([검증 기록](docs/03-development/IH-110-VALIDATION.md)). [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19)로 develop에 통합했다. Codex 추가 검토에서 BUG-005/006을 확인해 review로 재개했고, [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22)로 수정·통합해 done이다([검토](docs/03-development/IH-110-REVIEW.md)). Codex가 설계했다. 정의/수량 분리·전체 성공 거래·stale 요청·가방/살펴보기 배타성을 검증하며 실제 채집/저장은 후속이다. v0.2.0/main은 보존한다.
 
-Codex가 a5cefeb에서 BUG-005/006 원래 재현과 전체 CI를 재검증해 done을 유지했다. 완료된 IH-110 구현/수정 프롬프트를 반복 실행하지 않는다. 다음 설계 후보는 IH-111 채집·자원 지점이며 아직 상세 명세 작성 전이다.
+Codex가 a5cefeb에서 BUG-005/006 원래 재현과 전체 CI를 재검증해 done을 유지했다. 완료된 IH-110 구현/수정 프롬프트를 반복 실행하지 않는다. 다음 구현은 IH-111 채집·자원 지점이다. [명세](docs/02-technical-design/GATHERING.md), [수락 조건](docs/03-development/IH-111-ACCEPTANCE.md), [전달 프롬프트](docs/03-development/IH-111-HANDOFF.md)를 준비했다. ready는 구현 전이며 ADR-016 Proposed다. Codex는 설계, Claude Code는 이 명세에 따라 구현한다.
 
 ## 작업 절차
 
