@@ -23,7 +23,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
 | IH-111 | 채집과 자원 지점 | feature | priority:high | status:done | IH-110 |
-| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:review | IH-110, IH-111 |
+| IH-112 | 초기 저장과 복원 | feature | priority:critical | status:done | IH-110, IH-111 |
 | IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
 | IH-130 | 건설·수리 프로젝트 | feature | priority:high | status:backlog | IH-120, IH-110 |
@@ -160,7 +160,8 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 ## IH-112 — 초기 저장과 복원
 
 - 목적: 채집/보관/이동한 세계를 저장하고 재시작 뒤 같은 상태로 이어간다.
-- 유형/우선순위/상태: feature / priority:critical / status:review. 의존 IH-110/111 done.
+- 유형/우선순위/상태: feature / priority:critical / status:done. 의존 IH-110/111 done.
+- 최종 판정(2026-11-01): AC-S01~16·수정 검증·PR #39/develop CI 성공을 확인했다. ADR-017 Accepted. 아래 review 기록은 이력이다. [v0.3.0 판정](GATHERING-v0.3.0-VERIFICATION.md).
 - 요구사항: 위치·방향·bag/store/stock5재고·결속3개, 단일 수동 A/B 슬롯, schema1/시험v0·checksum·정규화, 명시 복구본, 후보 세션 검증 후 publish·이전 epoch 차단.
 - 관련 문서: [저장 방향](../02-technical-design/SAVE_SYSTEM.md), [구현 명세](../02-technical-design/SAVE_LOAD.md), [AC-S01~16](IH-112-ACCEPTANCE.md), [Claude 전달 프롬프트](IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md).
 - 예상 영향: SaveCodec/Store/Coordinator/Bootstrap, Gather restore/읽기 경계, Player 복원, 모달·Interaction suspend/epoch, 전용 맵/UI/runner·CI 등록.
@@ -348,3 +349,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 ## IH-112 Codex 수정 재검증 — 2026-11-01
 
 Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다. [검증 기록](IH-112-VALIDATION.md#codex-독립-수정-재검증). 구현/수정 프롬프트는 완료 이력이며 추가 코드 수정 요청은 없다.
+
+## v0.3.0 기능 판정 — 2026-11-01
+
+IH-110/111/112 done으로 Gathering 기능 완료 조건 PASS. main 승격·CI·태그 발행은 [판정 문서](GATHERING-v0.3.0-VERIFICATION.md)의 단계로 수행한다. IH-120은 다음 상세 설계 대상이며 아직 backlog다. 달력 구현을 시작하거나 ready로 임의 전환하지 않는다.

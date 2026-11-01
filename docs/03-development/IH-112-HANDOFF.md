@@ -1,5 +1,7 @@
 # Claude Code 인수인계 — IH-112
 
+**Codex 최종 판정(2026-11-01): IH-112 done, ADR-017 Accepted.** AC-S01~15 자동529검사·독립 진단5종, AC-S16 사용자 GUI 확인, PR #39 및 develop CI success를 대조했다. 기존 GUI는 빌드438ef89, 손상복구는3d248d0의 사용자 확인이며 Codex의 새 GUI 실행으로 주장하지 않는다. 사용자 테스트 재개가 최신 방침이다. 아래 review/부분 확인/중단 문구는 당시 이력이다. [v0.3.0 판정](GATHERING-v0.3.0-VERIFICATION.md)을 따른다.
+
 **BUG-009~011 수정·Codex 독립 재검증 완료(resolved, 2026-11-01).** 진단5종·CI13단계·저장529검사 PASS. IH-112 review는 AC-S16 손상복구 GUI 미확인으로 유지한다. [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). 수정 프롬프트는 완료됐으니 다시 실행하지 않는다. [Codex 수정 프롬프트](IH-112-REVIEW.md)는 과거 계약으로 보존한다. 아래 최초 구현 프롬프트는 완료 이력이며 다시 실행하지 않는다. IH-112 review 및 AC-S16 부분 확인을 유지한다.
 
 상태: **구현됨 / review**(2026-11-01 Claude Code, [검증 기록](IH-112-VALIDATION.md). AC-S16 절차 6은 사용자 GUI 미실행). 원래 상태는 상세 설계 완료 / 구현 ready였다(2026-11-01). IH-110/111은 구현·수정·독립 재검증 done. 설계 당시에는 파일 저장/신규 runner/GUI가 없었다. 현재는 구현·수정·독립 자동 검증이 완료됐으며 ADR-017은 Proposed다.

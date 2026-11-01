@@ -1,6 +1,6 @@
 # IH-112 초기 저장·복원 구현 명세
 
-상태: **Proposed / 구현됨(review)**, 2026-11-01. Claude Code가 구현하고 AC-S01~15를 자동 검증했다. AC-S16은 부분 확인이다([검증 기록](../03-development/IH-112-VALIDATION.md), 아래 '구현 결과·차이'). 원래 상태는 구현 준비 명세였다. 기준 develop `8913c0d`, IH-110/111 done. BUG-009~011은 수정·Codex 독립 재검증(진단5종·CI13단계·저장529)으로 resolved다. AC-S16 손상복구 GUI 미확인으로 review를 유지한다. [수정 리뷰](../03-development/IH-112-REVIEW.md)의 프롬프트는 완료 이력이다. Codex는 설계/검증, Claude Code는 구현을 맡는다. Godot4.7.2 Standard/GDScript/Compatibility 유지. [저장 방향](SAVE_SYSTEM.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md), [수락 조건](../03-development/IH-112-ACCEPTANCE.md), [전달 프롬프트](../03-development/IH-112-HANDOFF.md)를 따른다.
+상태: **구현·검증 완료 / IH-112 done / ADR-017 Accepted** (2026-11-01). AC-S01~15 자동529검사·독립 진단5종, AC-S16 사용자 GUI 확인과 PR/develop CI 성공을 근거로 판정했다. [검증 기록](../03-development/IH-112-VALIDATION.md), [수락 조건](../03-development/IH-112-ACCEPTANCE.md), [완료된 인수인계](../03-development/IH-112-HANDOFF.md), [ADR-017](../04-decisions/ADR/ADR-017-versioned-save-restore.md)을 따른다. 아래 최초 설계의 Proposed 수치/제품 경로/장기 확장과 실제 구현 차이를 구분한다. Codex는 설계·검증, Claude Code는 구현을 맡는다. Godot4.7.2 Standard/GDScript/Compatibility 유지.
 
 ## 목적·범위
 
@@ -133,7 +133,7 @@ rename 직전까지 실패하면 두 기존 은행 바이트가 동일해야 한
 
 최대 파일1MiB를 **읽기 전에** 검사하며 payload 길이·배열/문자열 길이·정확한5재고/3결속도 제한한다. 임의 Object/Resource 복원, str_to_var/bytes_to_var의 객체 허용, 세이브가 지정한 스크립트/씬 실행은 사용하지 않는다. JSON.parse 결과 타입을 검증한다. Godot JSON parser의 허용 문법(예: trailing comma)을 엄격 표준 파서라고 주장하지 않으며 별도 범용 JSON 파서를 작성하지 않는다. 유효 파싱 뒤에도 도메인 검증은 필수다.
 
-[AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), 기존360/333/521/347 회귀·실패 주입·변이·실제 GUI·필수 PR CI가 구현 완료 관문이다. 신규 저장 검사는 아직 없다. 제품 경로·슬롯 수·수치/키·파일 레이아웃은 Proposed이며 실제 엔진/OS 측정으로 보완하고 ADR에 차이를 기록한다.
+[AC-S01~16](../03-development/IH-112-ACCEPTANCE.md), 기존360/333/521/347 회귀·실패 주입·변이·실제 GUI·필수 PR CI가 구현 완료 관문이다. 저장 검사는 game/tests/test_save_load.gd 및 공통 CI에 구현됐다. 제품 경로·슬롯 수·수치/키·파일 레이아웃은 Proposed이며 실제 엔진/OS 측정으로 보완하고 ADR에 차이를 기록한다.
 
 공식 API 확인(2026-11-01): [JSON](https://docs.godotengine.org/en/stable/classes/class_json.html)은 숫자 변환·parse 오류·full_precision/비유한 값 제한의 근거, [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html)는 user 파일 I/O·flush/close, [DirAccess](https://docs.godotengine.org/en/stable/classes/class_diraccess.html)는 rename 오류/기존 대상 교체의 근거다. 이 문서의 A/B 프로토콜·실패/복구 정책은 프로젝트 설계 제안이며 공식 API가 crash/power-loss 보장을 제공한다는 뜻이 아니다. 실제4.7.2에서 구현·회귀로 확인한다.
 

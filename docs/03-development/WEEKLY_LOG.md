@@ -486,3 +486,11 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
   - 복원 뒤 이동·채집·전송
 - **로그**: RECOVERY_AVAILABLE(a=valid, b=CHECKSUM_MISMATCH) → load OK gen=1 recovered=true. 오류 0. 파일은 변하지 않았다. 창이 열려 있어 종료 코드는 미수집이다.
 - **결과**: AC-S16 미확인 항목 해소. IH-112 review 유지(done·v0.3.0은 Codex 후속 검토). main/태그/릴리스 없음.
+
+## 2026-11-01 — IH-112 최종 검토와 v0.3.0 Gathering 판정
+
+- 기준 develop36d86f6, PR #39 및 develop CI41311509122 success 확인. game/tools/tests/.github는 d2e1c88 독립 검증과 동일(diff0). 같은 코드의 전체 로컬 CI를 반복하지 않는다.
+- GUI는 사용자438ef89 기존 절차와3d248d0 손상복구 확인 “1~4 모두 정상”을 근거로 사용한다. Codex 신규 GUI/프로세스 종료 확인으로 주장하지 않는다. 사용자 테스트 재개 지시를 최신 방침으로 반영한다.
+- IH-112 done, ADR-017 Accepted(초기 저장 범위). v0.3.0 기능 완료 조건 PASS. 판정·수락/인수인계/기술 진입점·마일스톤·로드맵 갱신. 게임/씬/테스트/CI 변경 없음.
+- 문서 정적 검사·diff 검토 뒤 필수 PR CI로 develop 통합, develop→main 승격 PR과 main push CI, tree/ref 확인 후 annotated v0.3.0 생성·push한다. 실제 SHA/CI/태그는 PR 이력과 후속 발행 기록에 남긴다. GitHub Release/Export/Steam 게시는 만들지 않는다.
+- 사용자 AGENTS.md는 미추적 그대로 보존. 기존 링크4개 오류와 clean worktree 정적 검사를 구분한다. Windows·전원 차단·Cloud·다중 writer·DEBT-002/003/004·라이선스 한계를 보존한다. 다음은 IH-120 상세 설계다.

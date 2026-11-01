@@ -1,6 +1,6 @@
 # ADR-017: 버전 저장과 검증 후 새 세션 복원
 
-- 상태: **Proposed** (2026-11-01 구현·자동 검증 완료, AC-S16 부분, Accepted 판단 전)
+- 상태: **Accepted** (2026-11-01 Codex 최종 검토, IH-112 초기 저장 범위)
 - 날짜: 2026-11-01
 - 관련: IH-112, [SAVE_LOAD](../../02-technical-design/SAVE_LOAD.md), [ADR-004](ADR-004-save-system.md), [ADR-015](ADR-015-inventory-contract.md), [ADR-016](ADR-016-atomic-gathering.md)
 
@@ -16,7 +16,7 @@ Inventory/Gathering의 상태가 생겼고, 기존 build는 새 게임의 stock�
 - Resource/임의 Object 직렬화: 엔진 타입과 결합. 대신 ID·원시 값의 JSON과 엄격 도메인 검증을 사용.
 - live 서비스 수정 복원: 기존 참조/부분 실패를 다루기 어려움. 대신 별도 후보 컨텍스트/월드를 검증 후 교체.
 
-## 결정 제안·이유
+## 결정·이유
 
 JSON payload 문자열과 SHA256 envelope로 바이트 손상을 검사한다. schema1/content1과 시험v0→v1 migration으로 초기 버전 경계를 둔다. bool/소수/비유한 값을 검사하고 안전 정수 범위로 제한한다. ID·결속·전체 재고를 새 서비스에서 검증한다. 기존 GatherService.build와 복원 경로를 분리해 초기 stock을 다시 지급하지 않는다.
 
@@ -47,4 +47,12 @@ Claude Code가 이 제안대로 구현했다. 확인한 내용은 다음과 같�
 - 손상+없음과 checksum이 맞는 콘텐츠 불일치는 보존·거부한다.
 - live 월드의 물리는 유지하고 process만 정지한다.
 
-전원 차단, Windows, 다중 writer는 미검증이다. AC-S16 절차 6이 사용자 GUI 미실행이므로 상태는 Proposed를 유지한다.
+전원 차단, Windows, 다중 writer는 미검증이다. 이 한계를 유지한 채 IH-112의 단일 수동 A/B 슬롯·후보 검증/publish 계약을 Accepted로 전환한다.
+
+## Accepted 전환 근거 (2026-11-01)
+
+- 독립 자동 검증: d2e1c88에서 CI13단계·저장529검사, 원래 결함 진단5종 PASS. BUG-009~011 resolved. 보고 중 BUSY, 키 입력의 UI 수명 분리, 실제 명령 진입의 세션 정지 가드를 검증했다.
+- 사용자 GUI: 기존438ef89 절차와3d248d0 손상복구에서 “1~4 모두 정상”. 손상 최신본을 기본 Load로 거부·현재 세계 보존, 명시 이전 세대 복원·이후 조작을 확인했다. 기록 당시 GUI 종료 코드는 미수집이며 성공 종료로 소급하지 않는다.
+- PR #39 merge36d86f6, 필수 PR CI41311167844 및 develop CI41311509122 success. 현재 game/tools/tests/.github는 독립 검증 코드와 동일하다.
+- 초기 파일/세션 commit 계약의 승인이다. 향후 전체 NPC·달력 저장, 전원 차단 내구성, Windows·Cloud 지원을 승인/검증한 것은 아니다. ADR-004/015/016의 상태는 변경하지 않는다.
+- [수락/검증](../../03-development/IH-112-VALIDATION.md), [마일스톤 판정](../../03-development/GATHERING-v0.3.0-VERIFICATION.md).
