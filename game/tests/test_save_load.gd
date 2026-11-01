@@ -1132,8 +1132,10 @@ func _b010_report_reentry() -> bool:
 			nested.append(coordinator.request_save(coordinator.get_epoch()).code)
 			nested.append(coordinator.request_load(coordinator.get_epoch()))
 		var controller: InventoryController = _world().get("controller")
+		var bag_open: bool = true
 		if name.begins_with("bag open"):
 			controller.request_open(InventoryController.View.BAG)
+			bag_open = controller.get_state() == InventoryController.State.OPEN
 		var files: Dictionary = _bank_bytes(dir)
 		var epoch: int = coordinator.get_epoch()
 		var world: Node = _world()
@@ -1156,11 +1158,13 @@ func _b010_report_reentry() -> bool:
 		coordinator.operation_finished.disconnect(observer)
 		await _ticks(2)
 		outcomes[name] = [String(outer), nested]
-		_check("AC-S11", outer != SaveCoordinator.OK and nested == [&"BUSY", &"BUSY"] and _finished.size() - mark == 1
+		_check("AC-S11", bag_open and outer != SaveCoordinator.OK and nested == [&"BUSY", &"BUSY"] and _finished.size() - mark == 1
 			and _bank_bytes(dir) == files and coordinator.get_epoch() == epoch and _world() == world and _world_state() == state,
 			"%s: outer %s, nested %s, reports %d, files/epoch/world unchanged" % [name, outer, nested, _finished.size() - mark])
 		if name.begins_with("bag open"):
 			controller.request_close(&"CLOSED_BY_USER")
+			# The player needs one neutral tick before the gate counts as free again.
+			await _ticks(2)
 	var fresh: Dictionary = coordinator.request_save(coordinator.get_epoch())
 	_check("AC-S11", fresh.ok and fresh.generation == 1, "after the reports a normal save works: %s" % fresh.code)
 	_metrics["BUG-010"] = str(outcomes)
@@ -1234,6 +1238,25 @@ func _b011_suspended_commands() -> bool:
 			_tap_now(KEY_I)
 			await _ticks(2)
 			_check("AC-S10", opened_now and controller.get_state() == InventoryController.State.CLOSED, "%s: a new I opens and closes the bag" % name)
+	# The guard itself on an open panel (a load never starts with it open, so this is
+	# reached only by a suspension set directly): a transfer intent and a view switch are
+	# refused, the panel, its session and the stock stay as they are.
+	var direct_dir: String = _dir("b011_direct")
+	await _open_scene(direct_dir)
+	var direct: InventoryController = _world().get("controller")
+	var direct_ui: InventoryUI = _world().get("ui")
+	direct.request_open(InventoryController.View.STORE)
+	var session: int = direct.get_session_id()
+	var codes: Array = []
+	direct.command_finished.connect(func(_s: int, code: StringName) -> void: codes.append(code))
+	var state_before: Dictionary = _world_state()
+	_world().call("set_session_suspended", true)
+	direct_ui.transfer_requested.emit(session, &"player_bag", 0, &"wood", 1, _inv_snapshot("player_bag").revision, _inv_snapshot("test_store").revision)
+	var switched: StringName = direct.request_open(InventoryController.View.BAG)
+	_world().call("set_session_suspended", false)
+	_check("AC-S10", codes == [&"BUSY"] and switched == &"BUSY" and _world_state() == state_before and direct.get_session_id() == session
+		and direct.get_view() == InventoryController.View.STORE, "open panel while suspended: transfer %s, view switch %s, nothing changed" % [codes, switched])
+	direct.request_close(&"CLOSED_BY_USER")
 	_metrics["BUG-011"] = str(outcomes)
 	_log("AC-S10", "BUG-011: deferred intents while suspended %s" % [outcomes])
 	return true
