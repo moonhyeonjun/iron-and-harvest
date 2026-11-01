@@ -1,6 +1,10 @@
 # IH-110 Codex 기술 검토 — 2026-11-01
 
-## 판정
+## 현재 판정 — 수정 검증 완료
+
+2026-11-01 Codex가 `a5cefeb`에서 원래 재현 종료0/위반0 및 CI 11단계(인벤토리521검사) PASS를 확인했다. BUG-005/006 resolved·IH-110 done을 유지한다. [독립 검증 기록](IH-110-VALIDATION.md)을 따른다. 아래 최초 발견·재현·수정 프롬프트는 완료된 작업의 이력이며 다시 구현할 작업이 아니다. 다음 설계 후보는 IH-111이다.
+
+## 최초 검토 판정 (14302e5, 수정 전)
 
 대상 develop/origin `14302e5`. 기존 자동 검사·GUI 기록은 유지하지만 추가 경계에서 **BUG-005/006(P2) 재현 → IH-110 done에서 review로 재개**한다. 수정 후 회귀를 편입하고 재검증해야 done으로 복귀한다. ADR-015 Proposed, IH-111 구현 착수/새 마일스톤 판정은 보류한다. Codex는 게임 코드·씬·테스트·CI 설정을 수정하지 않았다.
 
@@ -51,7 +55,7 @@ close_service: callback=true ui_valid=true service_closed=true result="" state=2
 
 ## 간단 재현 스크립트
 
-아래를 임시 .gd로 저장하고 고정 실행기로 `python3 tools/godot.py --headless --script /absolute/path/probe.gd`를 실행한다. game/나 테스트 runner를 덮어쓰지 않는다. 현재 종료1/위반3(수명2 + ID1)이다. 추가 등록/catalog 출력은 같은 ID 결함의 영향 경로다. 진단 종료에 ObjectDB 클래스2개 경고도 기록됐다. 기존 suite는 고아/오류0이며 이 경고를 별도 제품 누수 결함으로 판정하지 않았다.
+아래를 임시 .gd로 저장하고 고정 실행기로 `python3 tools/godot.py --headless --script /absolute/path/probe.gd`를 실행한다. game/나 테스트 runner를 덮어쓰지 않는다. 수정 전14302e5에서는 종료1/위반3(수명2 + ID1), 수정 후a5cefeb에서는 종료0/위반0이다. 추가 등록/catalog 출력은 같은 ID 결함의 영향 경로다. 진단 종료에 ObjectDB 클래스2개 경고도 기록됐다. 기존 suite는 고아/오류0이며 이 경고를 별도 제품 누수 결함으로 판정하지 않았다.
 
 ```gdscript
 extends SceneTree

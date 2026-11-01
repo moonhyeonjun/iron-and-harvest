@@ -1,6 +1,6 @@
 # Claude Code 인수인계 — IH-110
 
-**현재 후속 작업: BUG-005/006 수정.** 최초 구현은 PR #19로 통합됐고, Codex 추가 검토의 BUG-005/006은 [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22)로 수정·통합해 **done**이다. 아래 최초 구현 프롬프트를 다시 실행하지 말고 [검토 문서의 수정 프롬프트](IH-110-REVIEW.md)를 사용한다.
+**현재 상태: 구현·수정·독립 검증 완료(done).** BUG-005/006은 PR #22로 수정·통합됐고 Codex가 a5cefeb에서 원래 재현과 전체 CI를 재검증했다([결과](IH-110-VALIDATION.md)). 아래 최초 구현 프롬프트와 [리뷰 수정 프롬프트](IH-110-REVIEW.md)는 완료된 이력이다. 다음 개발에는 새 작업 명세를 사용한다.
 
 상태: 상세 설계 완료 → **2026-11-01 Claude Code 구현·검증·통합(done)**, [검증 기록](IH-110-VALIDATION.md). 아래는 원래 인수인계 내용이다. Codex는 문서·검증 기준만 작성했다. IH-101/102와 IH-004 CI는 done, v0.2.0 Character는 원격 발행 완료다. main/v0.2.0을 변경하지 않고 최신 develop에서 구현한다.
 

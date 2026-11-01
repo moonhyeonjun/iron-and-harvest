@@ -1,6 +1,13 @@
 # IH-110 아이템 정의와 인벤토리 검증 — 2026-11-01
 
-**후속 판정(2026-11-01): Codex가 14302e5에서 기존 전체 CI 통과를 확인했으나 BUG-005/006을 추가 재현하여 IH-110을 review로 재개했다. 아래 수정 검증과 [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 통합으로 **done**에 복귀했다. [검토·수정 프롬프트](IH-110-REVIEW.md)를 따른다. 아래 Claude의 최초 검증·통합 기록은 당시 증거로 보존한다.**
+## BUG-005/006 Codex 독립 재검증 (2026-11-01)
+
+- 대상 develop/origin `a5cefeb`. 수정 코드와 신규 회귀를 검토했다. game/tools/tests/.github는 사용자 GUI 확인 빌드 `8dfe8bb`와 동일하다.
+- 리뷰에 보존된 원래 재현 스크립트를 그대로 추출·실행: 종료0/VIOLATIONS=0. UI 삭제 예약은 REMOVED, 서비스 종료는 SERVICE_UNAVAILABLE로 거부하며 두 경우 모두 CLOSED·게이트 미소유·Player 이동 가능. 개행 ID는 validator=false, register=INVALID_ARGUMENT, catalog.ok=false.
+- clean detached worktree에서 `python3 tools/run_ci.py`: 종료0, 11단계 PASS. Python19·경제7·이동360·상호작용333·인벤토리521. 인벤토리 반복2회 측정54종 차이0·고아0·엔진 오류0. UI 즉시 free/queue_free/remove_child·서비스 close의 OPENING/OPEN 회귀와 늦은 요청 무변경을 포함한다.
+- 원격 수정 PR #22·기록 PR #23 통합과 develop CI 성공을 확인했다. GUI는 새로 조작하지 않았으며 Claude 기록의 사용자 `8dfe8bb` 확인("1~4 모두 정상")을 구분해 사용한다. 실패 주입·변이는 Claude의 검증 기록을 유지하고 재실행하지 않았다.
+- 결과: **BUG-005/006 resolved, IH-110 done 유지**. 검토 범위에서 추가 수정 요청 없음. ADR-015 Proposed·DEBT-002/003·후속 채집/저장 범위는 유지한다. Codex는 게임 코드/씬/테스트/CI를 수정하지 않았다.
+- 로그: `build/ih-110-fix-codex-review/`(Git 무시). 사용자 미추적 AGENTS.md 보존. 해당 파일의 기존 .Codex/rules 링크4개와 clean worktree 정적 검사 통과를 구분한다.
 
 ## BUG-005/006 수정 검증 (2026-11-01, Claude Code)
 

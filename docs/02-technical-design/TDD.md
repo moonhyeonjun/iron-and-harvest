@@ -25,7 +25,7 @@
 
 ## 우선순위와 완료
 
-엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory/Calendar/Production이 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 Claude Code의 다음 작업은 IH-110 BUG-005/006 수정이다. Interaction 리뷰 수정은 완료했다.
+엔진 확인·빈 프로젝트 import/실행은 완료했다. IH-101 Player 이동·충돌은 구현·검증했다. IH-102 Interaction은 구현·검증했다. Inventory/Calendar/Production이 필요할 때 최소 서비스를 추가한다. headless import·정상 실행·관련 실패 경로 검증을 통과해야 기능 완료로 기록한다. IH-002는 완료다. Codex는 다음 구현 명세/기술 검증을 담당하고 IH-110 BUG-005/006 수정과 Codex 독립 재검증도 완료했다. 다음 설계 후보는 IH-111 채집이며 실제 구현은 별도 명세 후 Claude Code가 진행한다. Interaction 리뷰 수정은 완료했다.
 
 ## TBD
 
