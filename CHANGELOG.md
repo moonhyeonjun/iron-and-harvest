@@ -8,6 +8,7 @@
 - SaveLoadTest/SaveUI(F5/F9, 명시 복구 버튼, 시험 저장 루트).
 - `tests/test_save_load.gd`(425검사, 실제 파일·별도 프로세스·SIGKILL), fixture 4종, 공통 CI 13단계 등록.
 - AC-S16 GUI는 부분 확인(절차 6 미실행)이라 IH-112는 review다.
+- [PR #33](https://github.com/moonhyeonjun/iron-and-harvest/pull/33)로 develop 통합(merge 3ab4795), PR/develop CI success.
 
 ## Unreleased — IH-112 상세 설계
 

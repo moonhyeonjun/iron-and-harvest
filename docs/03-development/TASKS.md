@@ -171,6 +171,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
   - 깨끗한 worktree CI 13단계 PASS(이동 360·상호작용 333·인벤토리 521·채집 347·저장 425).
   - AC-S16: 사용자 GUI 절차 1~5 확인, 절차 6(최신 손상 → 복구본)은 사용자 GUI 미실행. 사용자가 이후 사용자 테스트를 중단했으므로 done이 아니다.
   - [IH-112 검증 기록](IH-112-VALIDATION.md). ADR-017 Proposed.
+  - [PR #33](https://github.com/moonhyeonjun/iron-and-harvest/pull/33) 필수 CI 성공(Linux 13단계·저장 425), merge 3ab4795, develop CI 성공. AC-S16 절차 6 미실행으로 review를 유지한다.
 - 제외/TBD: 자동/종료 저장·슬롯 선택/삭제·Cloud·타 맵/달력/NPC. 수치/경로/파일 레이아웃은 Proposed, 실제4.7.2/OS 측정으로 구현 차이를 기록한다. v0.3.0 판정은 별도.
 
 ## IH-120 — 달력·계절·하루 경계

@@ -288,4 +288,10 @@ macOS APFS에서 다음을 실제 파일로 검증했다: rename 교체, 단계�
 
 ## 통합 기록
 
-PR·CI·merge 결과는 PR 이력과 후속 기록에 남긴다.
+- [PR #33](https://github.com/moonhyeonjun/iron-and-harvest/pull/33): feature/save-load-system(`81214e4`) → develop. merge `3ab4795723344d162e74e91657920b7127e9068a`. 병합 전 mergeable_state=clean, base `4b31ed4`. 보호 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41302107156/job/124835042247): Ubuntu 24.04 / Godot 4.7.2에서 13단계 PASS. 이동 360, 상호작용 333, 인벤토리 521, 채집 347, 저장 425. 다섯 suite 모두 `RESULT: PASS`, 엔진 오류 0, 누수 경고 없음.
+  - Linux ext4에서도 확인: AC-S05 rename 교체·실패 주입, AC-S13 별도 프로세스 재시작과 4단계 SIGKILL(앞의 3단계는 1세대, after_rename은 2세대).
+  - 제품 `user://saves`는 생성하지 않았다.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41302454648/job/124836057429): develop push(`3ab4795`) CI checks success.
+- 통합 tree는 검증한 `81214e4`와 같다(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.
+- IH-112는 AC-S16 절차 6(사용자 GUI)이 미실행이라 **review**를 유지한다. ADR-017 Proposed.
