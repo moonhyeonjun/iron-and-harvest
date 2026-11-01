@@ -354,3 +354,14 @@
 - [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41293774055/job/124810245717) success.
 - 통합 tree = 1010bde. main(8901bac)·태그·릴리스 미변경.
 - 다음: Codex 독립 재검증(BUG-007/008 resolved, IH-111 done 판정), 이후 IH-112 초기 저장과 복원.
+
+## 2026-11-01 — BUG-007/008 Codex 수정 재검증
+
+- 대상 develop/origin1cb3471, 동일 SHA 원격 CI41294351856 success. 사용자 미추적 AGENTS.md 보존. game/tools/tests/.github는 사용자 GUI 확인 빌드b5afd93과 동일하다.
+- 원래 진단4종을 수정 없이 재실행해 모두 종료0/RESULT: PASS. HUD free/queue_free/다음 E 충돌0·bag9/stock5 보존, 내장3종 compile=false/build=INVALID_SETUP, 엔진 오류0.
+- clean detached worktree `python3 tools/run_ci.py`: 공통 CI 종료0/12단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집347. 채집 반복2회 측정26종 차이0·고아0·엔진 오류0. 로그 build/ih-111-fix-codex-review/.
+- 코드·회귀 검토: 추가 수정 요청 없음. BUG-007/008 resolved·IH-111 done 복귀. GUI/변이는 새로 실행하지 않고 Claude의b5afd93 사용자 확인·변이5종 기록과 구분했다.
+- docs/ih-111-fix-verification에서 검증/리뷰/수락/인수인계/작업/문제 기록과 현재 안내만 갱신한다. 게임 코드·씬·테스트·CI 설정/main/태그는 변경하지 않는다. 필수 PR CI 후 develop 통합, 실제 SHA/CI/원격 결과는 PR 이력과 완료 보고에 기록한다.
+- 다음 설계 후보: IH-112 초기 저장·복원. ADR-016 Proposed와 기존 부채는 유지한다.
+
+- 검증 문서14개를 별도 worktree에 반영해 정적 검사 PASS, diff --check PASS를 확인했다. 사용자 루트 검사는 AGENTS.md의 기존 링크4개만 실패하며 해당 파일을 수정/커밋하지 않았다.

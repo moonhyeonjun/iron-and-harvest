@@ -26,4 +26,4 @@ Accepted는 사용자 확정 원칙/현재 구조, Proposed는 검증/결정 대
 
 - [ADR-015 아이템·인벤토리 계약](ADR-015-inventory-contract.md) — Proposed. IH-110 구현·BUG-005/006 수정·Codex 독립 재검증 완료(done). Accepted 전환은 별도 판단. ADR-003 전체를 대체하지 않음.
 
-- [ADR-016 유한 재고 전송과 즉시 채집 경계](ADR-016-atomic-gathering.md) — Proposed. IH-111 구현·최초 수락 통합 후 BUG-007/008 추가 재현으로 review. [수정 검토](../../03-development/IH-111-REVIEW.md). ADR-014/015의 채집 연결을 구체화하며 전체를 대체하지 않음.
+- [ADR-016 유한 재고 전송과 즉시 채집 경계](ADR-016-atomic-gathering.md) — Proposed. IH-111 구현·BUG-007/008 수정·Codex 독립 재검증 완료(done). Accepted 전환은 별도 판단. [수정 검토](../../03-development/IH-111-REVIEW.md). ADR-014/015의 채집 연결을 구체화하며 전체를 대체하지 않음.

@@ -6,7 +6,7 @@
 
 **v0.2.0 Character 확정** — main `8901bac`에 annotated 태그를 생성하고 원격 반영을 검증했다. [판정·발행 기록](docs/03-development/CHARACTER-v0.2.0-VERIFICATION.md). 이동·상호작용 테스트 맵을 갖춘 개발 기준점이며 게임 출시판이 아니다.
 
-2026-11-01: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 기본 실행 씬은 빈 Foundation이며, 이동·상호작용은 별도 테스트 맵에서 실행한다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 플레이어 이동·충돌은 Claude Code가 구현하고 AC-01~12를 검증했다([검증 기록](docs/03-development/IH-101-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/movement_test.tscn`으로 실행하며 기본 진입점은 Foundation 그대로다. IH-102 상호작용은 구현·develop 통합 후 [Codex 리뷰](docs/03-development/IH-102-REVIEW.md)에서 BUG-003/004를 확인해 review로 재개했고, [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 인벤토리는 IH-110에서 구현·수정 검증을 마쳤다. 채집은 IH-111에서 구현됐으며 추가 결함 수정 검토 중이다. 파일 저장은 아직 없다.
+2026-11-01: **IH-002 완료. Godot4.7.2 Standard / GDScript / Compatibility**를 검증했다. Import·Headless·GDScript smoke·그래픽 실행을 통과했고, GUI 표시를 사용자가 확인했다. 기본 실행 씬은 빈 Foundation이며, 이동·상호작용은 별도 테스트 맵에서 실행한다. v0.1.0 Foundation은 기술 기반 마일스톤이며 게임 출시판이 아니다. 기존 태그v0.1.0의 대상d176bd7과 원격 일치를 [Foundation 재검증 기록](docs/03-development/FOUNDATION-v0.1.0-VERIFICATION.md)에서 확인했다. IH-101 플레이어 이동·충돌은 Claude Code가 구현하고 AC-01~12를 검증했다([검증 기록](docs/03-development/IH-101-VALIDATION.md)). 테스트 맵은 `python3 tools/godot.py res://scenes/tests/movement_test.tscn`으로 실행하며 기본 진입점은 Foundation 그대로다. IH-102 상호작용은 구현·develop 통합 후 [Codex 리뷰](docs/03-development/IH-102-REVIEW.md)에서 BUG-003/004를 확인해 review로 재개했고, [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 인벤토리는 IH-110에서 구현·수정 검증을 마쳤다. 채집은 IH-111에서 구현·수정·독립 재검증을 완료했다. 파일 저장은 아직 없다.
 
 최초 Foundation 커밋 `957dd3b`를 생성하고 `main`·`develop` 기준점을 구성했다. Git/GitHub는 사용자 요청 범위와 검증 조건에 따라 자율 운영한다. 원격 동기화와 실제 반영 기록은 [Git 구축 기록](docs/03-development/GIT_BOOTSTRAP.md)을 따른다. 최초 보고서는 당시 상태를 보존한 기록이다.
 
@@ -65,8 +65,8 @@ IH-004 CI는 정상/실패·통합 검증을 완료했다([검증 기록](docs/0
 
 Codex는 a5cefeb에서 IH-110 수정 재현 위반0·전체 CI 11단계(인벤토리521검사) 통과를 확인했다([독립 검증](docs/03-development/IH-110-VALIDATION.md)). IH-111 채집·자원 지점의 구현 준비 문서는 아래를 따른다.
 
-## 현재 검토: IH-111
+## 완료 기능: IH-111
 
-2026-11-01 Claude Code가 구현하고 AC-G01~14를 검증했다([검증 기록](docs/03-development/IH-111-VALIDATION.md), 최초 done → 후속 review). 시험 맵은 `python3 tools/godot.py res://scenes/tests/gathering_test.tscn`(`-- --fixture=full`/`rebind`)이다.
+2026-11-01 Claude Code가 구현하고 AC-G01~14를 검증했다([검증 기록](docs/03-development/IH-111-VALIDATION.md), 구현·수정·독립 재검증 done). 시험 맵은 `python3 tools/godot.py res://scenes/tests/gathering_test.tscn`(`-- --fixture=full`/`rebind`)이다.
 
-[채집·자원 지점 명세](docs/02-technical-design/GATHERING.md), [AC-G01~14](docs/03-development/IH-111-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-111-HANDOFF.md)를 준비했다. 숨은 유한 재고→가방의 원자 전송과 즉시 상호작용을 설계했다. 현재 BUG-007/008 재현으로 review다. [수정 전달 프롬프트](docs/03-development/IH-111-REVIEW.md)를 사용한다. ADR-016 Proposed다. main/v0.2.0은 보존한다.
+[채집·자원 지점 명세](docs/02-technical-design/GATHERING.md), [AC-G01~14](docs/03-development/IH-111-ACCEPTANCE.md), [Claude Code 전달 프롬프트](docs/03-development/IH-111-HANDOFF.md)를 준비했다. 숨은 유한 재고→가방의 원자 전송과 즉시 상호작용을 설계했다. Codex가 1cb3471에서 원래 진단4종과 CI12단계·채집347검사 통과를 확인해 done으로 복귀했다. [검토 이력](docs/03-development/IH-111-REVIEW.md)의 수정 프롬프트는 완료됐다. 다음 설계 후보는 IH-112 초기 저장·복원이다. ADR-016 Proposed다. main/v0.2.0은 보존한다.
