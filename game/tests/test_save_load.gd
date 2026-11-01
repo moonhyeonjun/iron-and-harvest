@@ -126,6 +126,7 @@ func _run() -> void:
 			["AC-S01", _s01_codec], ["AC-S02", _s02_numbers], ["AC-S03", _s03_references], ["AC-S05", _s05_commit],
 			["AC-S06", _s06_selection], ["AC-S07", _s07_migration], ["AC-S04", _s04_snapshot], ["AC-S08", _s08_restore],
 			["AC-S09", _s09_position], ["AC-S10", _s10_candidate_failures], ["AC-S11", _s11_epochs], ["AC-S12", _s12_keys],
+			["AC-S11", _b010_report_reentry], ["AC-S10", _b011_suspended_commands], ["AC-S12", _b009_ui_lifecycle],
 			["AC-S14", _s14_sequence], ["AC-S06", _s06_scene_recovery], ["AC-S13", _s13_processes],
 		]
 		for step: Array in steps:
@@ -1044,6 +1045,221 @@ func _s12_keys() -> bool:
 	_metrics["AC-S12"] = "%d %s" % [saves, loaded.code]
 	_log("AC-S12", "F5 x1 for press+echo+repeat; bag/inspect BUSY; keys during load ignored; failed load restores control")
 	return true
+
+
+# --- BUG-009 SaveUI lifetime and keys ----------------------------------------------------
+
+## Policy: F5/F9 are live input routed by the scene, not an intent shown on the panel, so
+## they use the coordinator's current epoch and keep working when SaveUI is freed, queued
+## for deletion or detached; only the display is skipped. A committed save/load stands.
+func _b009_ui_lifecycle() -> bool:
+	var outcomes: Dictionary = {}
+	for mode: String in ["free", "queue_free", "remove_child"]:
+		var dir: String = _dir("b009_" + mode)
+		await _open_scene(dir)
+		var ui: Node = _ui()
+		_remove_ui(ui, mode)
+		await _ticks(2)
+		var first: Dictionary = await _key_request(KEY_F5)
+		await _stand("branch_pile_01")
+		await _press_e()
+		var loaded: Dictionary = await _key_request(KEY_F9)
+		var wood: int = _inv().count("player_bag", "wood").value
+		await _ticks(2)
+		var second: Dictionary = await _key_request(KEY_F5)
+		var status: Dictionary = SaveStore.new(dir, _manifest).inspect()
+		outcomes[mode] = [String(first.get("code", "")), String(loaded.get("code", "")), String(second.get("code", ""))]
+		_check("AC-S12", first.get("ok") == true and first.generation == 1 and loaded.get("ok") == true and wood == 8
+			and second.get("ok") == true and second.generation == 2 and status.banks.a.generation == 1 and status.banks.b.generation == 2,
+			"UI %s: F5 gen1, F9 restores wood 8, next F5 gen2 (%s)" % [mode, outcomes[mode]])
+		if is_instance_valid(ui) and not ui.is_inside_tree():
+			ui.free()
+	# The UI is removed by the completion listener of a save; the next keys still work.
+	var dir_c: String = _dir("b009_in_callback")
+	await _open_scene(dir_c)
+	var remover: Callable = func(_result: Dictionary) -> void:
+		var current: Node = _ui()
+		if current != null:
+			current.queue_free()
+	_coord().operation_finished.connect(remover, CONNECT_ONE_SHOT)
+	var saved: Dictionary = await _key_request(KEY_F5)
+	await _ticks(2)
+	var after_free: Dictionary = await _key_request(KEY_F9)
+	var again: Dictionary = await _key_request(KEY_F5)
+	_check("AC-S12", saved.get("ok") == true and _ui() == null and after_free.get("ok") == true and again.get("generation") == 2,
+		"UI freed by the save listener: F9 and F5 still work once each")
+	# Removed while a load is staged, then the next key.
+	var dir_l: String = _dir("b009_during_load")
+	await _open_scene(dir_l)
+	await _key_request(KEY_F5)
+	_coord().stage_hook = func(stage: String) -> void:
+		if stage == "candidate_added" and _ui() != null:
+			_ui().queue_free()
+	var staged: Dictionary = await _key_request(KEY_F9)
+	_coord().stage_hook = Callable()
+	await _ticks(2)
+	var next: Dictionary = await _key_request(KEY_F5)
+	_check("AC-S12", staged.get("ok") == true and _ui() == null and next.get("ok") == true and next.generation == 2,
+		"UI freed while staging: load published, next F5 gen2")
+	# A failed load without a UI, then the next key.
+	var dir_f: String = _dir("b009_failed_load")
+	await _open_scene(dir_f)
+	var world: Node = _world()
+	_ui().free()
+	var failed: Dictionary = await _key_request(KEY_F9)
+	var after_fail: Dictionary = await _key_request(KEY_F5)
+	_check("AC-S12", failed.get("code") == SaveStore.NO_SAVE and _world() == world and after_fail.get("ok") == true
+		and after_fail.generation == 1, "no UI: F9 NO_SAVE keeps the world, next F5 gen1")
+	_metrics["BUG-009"] = str(outcomes)
+	_log("AC-S12", "BUG-009: keys without SaveUI (free/queue_free/remove_child, in callback, while staging, after failure) %s" % [outcomes])
+	return true
+
+
+# --- BUG-010 re-entry while a refusal is reported ----------------------------------------
+
+func _b010_report_reentry() -> bool:
+	var dir: String = _dir("b010")
+	await _open_scene(dir)
+	var coordinator: SaveCoordinator = _coord()
+	var outcomes: Dictionary = {}
+	for name: String in ["stale save", "stale load", "no save load", "bag open save", "bag open load"]:
+		var nested: Array = []
+		var once: Array = [false]
+		var observer: Callable = func(_result: Dictionary) -> void:
+			if once[0]:
+				return
+			once[0] = true
+			nested.append(coordinator.request_save(coordinator.get_epoch()).code)
+			nested.append(coordinator.request_load(coordinator.get_epoch()))
+		var controller: InventoryController = _world().get("controller")
+		if name.begins_with("bag open"):
+			controller.request_open(InventoryController.View.BAG)
+		var files: Dictionary = _bank_bytes(dir)
+		var epoch: int = coordinator.get_epoch()
+		var world: Node = _world()
+		var state: Dictionary = _world_state()
+		var mark: int = _finished.size()
+		coordinator.operation_finished.connect(observer)
+		var outer: StringName = &""
+		match name:
+			"stale save":
+				outer = coordinator.request_save(epoch - 1).code
+			"stale load":
+				outer = coordinator.request_load(epoch - 1)
+			"no save load":
+				coordinator.request_load(epoch)
+				outer = _finished[mark].code if _finished.size() > mark else &""
+			"bag open save":
+				outer = coordinator.request_save(epoch).code
+			"bag open load":
+				outer = coordinator.request_load(epoch)
+		coordinator.operation_finished.disconnect(observer)
+		await _ticks(2)
+		outcomes[name] = [String(outer), nested]
+		_check("AC-S11", outer != SaveCoordinator.OK and nested == [&"BUSY", &"BUSY"] and _finished.size() - mark == 1
+			and _bank_bytes(dir) == files and coordinator.get_epoch() == epoch and _world() == world and _world_state() == state,
+			"%s: outer %s, nested %s, reports %d, files/epoch/world unchanged" % [name, outer, nested, _finished.size() - mark])
+		if name.begins_with("bag open"):
+			controller.request_close(&"CLOSED_BY_USER")
+	var fresh: Dictionary = coordinator.request_save(coordinator.get_epoch())
+	_check("AC-S11", fresh.ok and fresh.generation == 1, "after the reports a normal save works: %s" % fresh.code)
+	_metrics["BUG-010"] = str(outcomes)
+	_log("AC-S11", "BUG-010: requests from refusal/failure reports all BUSY %s" % [outcomes])
+	return true
+
+
+# --- BUG-011 deferred commands into a suspended session ----------------------------------
+
+func _b011_suspended_commands() -> bool:
+	var outcomes: Dictionary = {}
+	for name: String in ["published", "invalid position", "focus out-in", "candidate removed"]:
+		var dir: String = _dir("b011_" + name.replace(" ", "_"))
+		await _open_scene(dir)
+		var coordinator: SaveCoordinator = _coord()
+		coordinator.request_save(coordinator.get_epoch())
+		var saved_state: Dictionary = _world_state()
+		if name == "invalid position":
+			_write_bank(dir, "a", _bank_text(1, func(p: Dictionary) -> void: p.player.position = {"x": 632.0, "y": 360.0}))
+		await _stand("branch_pile_01")
+		await _press_e()
+		var world: Node = _world()
+		var controller: InventoryController = world.get("controller")
+		var ui: InventoryUI = world.get("ui")
+		var before: Dictionary = _world_state()
+		var bag_revision: int = _inv_snapshot("player_bag").revision
+		var store_revision: int = _inv_snapshot("test_store").revision
+		var opens: Array = []
+		var transfers: Array = []
+		controller.open_rejected.connect(func(reason: StringName) -> void: opens.append(reason))
+		controller.opened.connect(func(_session: int, _view: int) -> void: opens.append(&"OPENED"))
+		controller.command_finished.connect(func(_session: int, code: StringName) -> void: transfers.append(code))
+		match name:
+			"focus out-in":
+				coordinator.stage_hook = func(stage: String) -> void:
+					if stage == "position_checked":
+						coordinator.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+						coordinator.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+			"candidate removed":
+				coordinator.stage_hook = func(stage: String) -> void:
+					if stage == "before_publish":
+						for child: Node in (_scene.get("host") as Node).get_children():
+							if child != world:
+								child.queue_free()
+		var mark: int = _finished.size()
+		coordinator.request_load(coordinator.get_epoch())
+		# Deferred intents of the old session land while it is suspended (before publish).
+		controller.request_open.call_deferred(InventoryController.View.STORE)
+		ui.view_requested.emit.call_deferred(1, InventoryController.View.STORE)
+		ui.transfer_requested.emit.call_deferred(1, &"player_bag", 0, &"wood", 1, bag_revision, store_revision)
+		var result: Dictionary = await _wait_finished(mark)
+		coordinator.stage_hook = Callable()
+		await _ticks(3)
+		outcomes[name] = [String(result.get("code", "")), opens.duplicate(), transfers.duplicate()]
+		var refused: bool = opens == [&"BUSY"] and transfers.size() == 1 and transfers[0] != &"" \
+			and transfers[0] != InventoryController.OK and transfers[0] != &"OK"
+		if name == "published":
+			var current: InventoryController = _world().get("controller")
+			_check("AC-S10", result.get("ok") == true and _world() != world and refused and _world_state().inventories == saved_state.inventories
+				and current.get_state() == InventoryController.State.CLOSED and not current.owns_movement_gate(),
+				"%s: old-session intents refused %s, new world as saved, its bag closed" % [name, outcomes[name]])
+		else:
+			var interaction: InteractionController = world.get("interaction")
+			_check("AC-S10", result.get("ok") == false and _world() == world and refused and _world_state() == before
+				and controller.get_state() == InventoryController.State.CLOSED and not controller.owns_movement_gate()
+				and interaction.is_interaction_enabled() and not _gather().has_pending_command() and _player().is_control_effective(),
+				"%s: %s; deferred open/view/transfer refused %s, panel/gate/stock unchanged" % [name, result.get("code"), outcomes[name]])
+			_tap_now(KEY_I)
+			await _ticks(2)
+			var opened_now: bool = controller.get_state() == InventoryController.State.OPEN
+			_tap_now(KEY_I)
+			await _ticks(2)
+			_check("AC-S10", opened_now and controller.get_state() == InventoryController.State.CLOSED, "%s: a new I opens and closes the bag" % name)
+	_metrics["BUG-011"] = str(outcomes)
+	_log("AC-S10", "BUG-011: deferred intents while suspended %s" % [outcomes])
+	return true
+
+
+func _remove_ui(ui: Node, mode: String) -> void:
+	match mode:
+		"free":
+			ui.free()
+		"queue_free":
+			ui.queue_free()
+		"remove_child":
+			ui.get_parent().remove_child(ui)
+
+
+## Presses a key through the real viewport and returns the one result it produced (or {}).
+func _key_request(code: Key) -> Dictionary:
+	var mark: int = _finished.size()
+	_tap_now(code)
+	for i: int in 6:
+		if _finished.size() > mark:
+			break
+		await physics_frame
+	await _ticks(1)
+	_check("AC-S12", _finished.size() - mark <= 1, "one key produced %d results" % (_finished.size() - mark))
+	return _finished[mark] if _finished.size() > mark else {}
 
 
 # --- AC-S13 restart and kill ---------------------------------------------------------------
