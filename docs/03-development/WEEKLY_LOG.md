@@ -269,3 +269,14 @@
 
 - [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 5f8bb51 → develop, merge cbb836b40f37a0f29173e541005529229ff037e4(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41278706636/job/124766026102) success(11단계, 새 회귀 로컬과 동일). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41278935113/job/124766685853) success.
 - 통합 tree = 5f8bb51. BUG-005/006 resolved, IH-110 done 복귀. ADR-015 Proposed 유지. main·태그·릴리스 미변경.
+
+## 2026-11-01 — BUG-005/006 Codex 수정 재검증
+
+- 대상 develop/origin a5cefeb, 사용자 미추적 AGENTS.md 보존. game/tools/tests/.github는 사용자 GUI 확인 빌드8dfe8bb와 동일.
+- 리뷰의 원래 재현을 그대로 실행해 종료0/위반0. UI 삭제·서비스 종료 모두 열기 거부/CLOSED/게이트 미소유/Player 이동 가능. 개행 ID는 validator·catalog 거부, register INVALID_ARGUMENT.
+- clean detached worktree `python3 tools/run_ci.py`: 종료0, 11단계 PASS. Python19·경제7·이동360·상호작용333·인벤토리521. 반복54종 차이0·고아0·엔진 오류0. 로그 build/ih-110-fix-codex-review/.
+- 수정 코드와 새 회귀 검토: 추가 수정 요청 없음. BUG-005/006 resolved·IH-110 done 유지. GUI/변이는 새로 실행하지 않고 Claude의8dfe8bb 사용자 확인·표적 변이 기록과 구분했다.
+- docs/ih-110-fix-verification에서 검증·리뷰·수락·인수인계·작업·문제 기록과 현재 안내를 갱신한다. 게임 코드/씬/테스트/CI/main/태그는 변경하지 않는다. PR 필수 CI 후 develop 통합, 실제 SHA/원격 결과는 PR 이력과 완료 보고로 기록한다.
+- 다음 설계 후보: IH-111 채집·자원 지점. ADR-015 Proposed 및 기존 부채 유지.
+
+- 재검증 문서12개를 별도 worktree에 반영해 정적 검사 PASS, diff --check PASS를 확인했다. 사용자 AGENTS.md는 수정/커밋하지 않았다.

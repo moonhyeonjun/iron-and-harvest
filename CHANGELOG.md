@@ -1,5 +1,9 @@
 # 변경 이력
 
+## Unreleased — IH-110 Codex 수정 재검증
+
+- BUG-005/006의 원래 재현 종료0/위반0, 전체 CI 11단계·인벤토리521검사 PASS를 확인했다. resolved·IH-110 done 유지, 검증/인수인계 안내 갱신. 게임 코드 변경 없음.
+
 ## Unreleased — IH-110 기술 검토
 
 - 기존 CI 11단계 통과를 독립 확인한 뒤 BUG-005(UI/서비스 수명 재검증)·BUG-006(끝 개행 ID 허용)을 추가 재현했다. IH-110 review 재개, [검토·Claude 수정 프롬프트](docs/03-development/IH-110-REVIEW.md) 작성. 게임 코드 변경 없음.
