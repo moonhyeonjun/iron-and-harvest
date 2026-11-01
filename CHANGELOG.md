@@ -6,6 +6,7 @@
 - BUG-010: 시작 전 거부를 보고하는 중에도 새 save/load는 BUSY이며 다시 보고하지 않는다.
 - BUG-011: 로드 동안 기존 세션을 정지 표시하고, InventoryController가 지연된 open/view/전송 의도를 거부한다(BUSY/STALE_SESSION). 강제 닫기나 게이트 추가는 없다.
 - 회귀 추가: 저장 runner 425→529검사.
+- [PR #36](https://github.com/moonhyeonjun/iron-and-harvest/pull/36)로 develop 통합(merge 5070bd8), PR/develop CI success. Codex 재검증 대기.
 
 ## Unreleased — IH-112 Codex 기술 검토
 

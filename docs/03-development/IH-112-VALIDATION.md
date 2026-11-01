@@ -380,3 +380,11 @@ macOS APFS에서 다음을 실제 파일로 검증했다: rename 교체, 단계�
 - 새 GUI는 실행하지 않았다. 사용자의 추가 사용자 테스트 중단 지시를 존중해 재요청하지 않았다. 이번 수정은 키·지연 호출 경로를 실제 Viewport 입력과 call_deferred로 자동 검증했으며, 실제 창 조작으로 확인한 것은 아니다.
 - AC-S16 절차 6(손상 최신본 → 기본 거부 → 복구본) 사용자 GUI는 **여전히 미확인**이다. IH-112는 review다.
 - 설계 차이(SAVE_LOAD 갱신): 키 요청 정책, 보고 중 BUSY, 세션 정지 경계.
+
+### 통합 기록
+
+- [PR #36](https://github.com/moonhyeonjun/iron-and-harvest/pull/36): `fix/save-input-and-session-boundaries`(`bb4d6fe`) → develop. merge `5070bd8f2701f40bae3e59653c345be686a08d42`. 병합 전 mergeable_state=clean, base `f98da4d`. 보호 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307243315/job/124850039990): Ubuntu 24.04 / Godot 4.7.2에서 13단계 PASS(360/333/521/347/529), 누수 경고 없음.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41307597804/job/124851080300): develop push(`5070bd8`) success.
+- 통합 tree는 검증한 `bb4d6fe`와 같다. main·태그·릴리스는 변경하지 않았다.
+- BUG-009~011은 fixed·통합 완료이며 resolved는 Codex 재검증 뒤에 판정한다. IH-112 review 유지(AC-S16 손상복구 GUI 미확인).
