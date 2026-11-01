@@ -1,5 +1,19 @@
 # v0.3.0 Gathering 마일스톤 판정 — 2026-11-01
 
+## 발행 결과
+
+**v0.3.0 Gathering 확정.** main 승격 PR·push CI와 tree 검증 후 annotated 태그를 생성·push하고 로컬/원격 객체 및 peeled SHA를 대조했다.
+
+- 태그: [v0.3.0](https://github.com/moonhyeonjun/iron-and-harvest/tree/v0.3.0)
+- 대상 main 커밋: `6ed5f8c981ff75fdc872d84cac48806c41e50a57`
+- annotated tag 객체: `7b491187c95a38dd9b7c9e18ae55c4894a06749a`
+- 판정 commit `7d611d9`, [PR #40](https://github.com/moonhyeonjun/iron-and-harvest/pull/40), merge `ee44adf53e5f1e8cf53f9406ff348631bdcacef4`, [필수 CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41312328623) success.
+- main 승격 [PR #41](https://github.com/moonhyeonjun/iron-and-harvest/pull/41), [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41312698021) 및 [main push CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41313035556) success. main tree는 승격 원본ee44adf와 동일하다.
+- 로컬/원격 main·태그 대조 완료. 기존 v0.1.0 대상d176bd7/객체7488fc9 및 v0.2.0 대상8901bac/객체6a322ac는 보존했다.
+- main 승격 이력을 포함한 docs/v0.3.0-publication을 PR로 develop에 통합해 기록을 동기화한다. 태그는 이 후속 문서 커밋으로 이동하지 않는다. 실제 후속 SHA/CI는 관련 PR 이력과 완료 보고에 남긴다.
+- GitHub Release 페이지·Export 실행파일·Steam 게시는 생성하지 않았다. 로그/API/ref 증거는 build/v0.3.0/에 있다.
+
+
 ## 기능 판정
 
 **완료 조건 충족(PASS).** IH-110/111/112 done. ADR-017은 초기 저장 범위에서 Accepted로 전환한다. 기존 MILESTONES의 “수집/이동/복원 일치”와 원래 수락 조건을 그대로 적용했다. v0.3.0은 채집·가방·초기 저장을 갖춘 개발 기준점이며 자립 가능한 마을 MVP나 Steam 출시판이 아니다.

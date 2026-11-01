@@ -353,3 +353,7 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
 ## v0.3.0 기능 판정 — 2026-11-01
 
 IH-110/111/112 done으로 Gathering 기능 완료 조건 PASS. main 승격·CI·태그 발행은 [판정 문서](GATHERING-v0.3.0-VERIFICATION.md)의 단계로 수행한다. IH-120은 다음 상세 설계 대상이며 아직 backlog다. 달력 구현을 시작하거나 ready로 임의 전환하지 않는다.
+
+## v0.3.0 발행 결과
+
+v0.3.0 Gathering 확정: 판정 PR #40(ee44adf) → main 승격 PR #41(6ed5f8c), PR/main CI success. annotated 태그 `7b491187c95a38dd9b7c9e18ae55c4894a06749a` → `6ed5f8c981ff75fdc872d84cac48806c41e50a57` 로컬/원격 일치. [발행 기록](GATHERING-v0.3.0-VERIFICATION.md). 기존 태그 보존, GitHub Release/Export/Steam 게시 없음. 다음은 IH-120 상세 설계(backlog).

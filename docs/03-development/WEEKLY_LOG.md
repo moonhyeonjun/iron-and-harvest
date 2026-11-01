@@ -494,3 +494,11 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
 - IH-112 done, ADR-017 Accepted(초기 저장 범위). v0.3.0 기능 완료 조건 PASS. 판정·수락/인수인계/기술 진입점·마일스톤·로드맵 갱신. 게임/씬/테스트/CI 변경 없음.
 - 문서 정적 검사·diff 검토 뒤 필수 PR CI로 develop 통합, develop→main 승격 PR과 main push CI, tree/ref 확인 후 annotated v0.3.0 생성·push한다. 실제 SHA/CI/태그는 PR 이력과 후속 발행 기록에 남긴다. GitHub Release/Export/Steam 게시는 만들지 않는다.
 - 사용자 AGENTS.md는 미추적 그대로 보존. 기존 링크4개 오류와 clean worktree 정적 검사를 구분한다. Windows·전원 차단·Cloud·다중 writer·DEBT-002/003/004·라이선스 한계를 보존한다. 다음은 IH-120 상세 설계다.
+
+## 2026-11-01 — v0.3.0 Gathering 발행 결과
+
+- 판정 commit7d611d9, PR #40 CI41312328623 success·develop mergeee44adf.
+- PR #41 합성 병합 CI41312698021 success, main merge `6ed5f8c981ff75fdc872d84cac48806c41e50a57`. main push CI41313035556 success. main tree = 승격 원본ee44adf 확인.
+- annotated v0.3.0 객체 `7b491187c95a38dd9b7c9e18ae55c4894a06749a` → `6ed5f8c981ff75fdc872d84cac48806c41e50a57`. 로컬/원격 객체·peeled SHA 및 main ref 확인. 기존 v0.1.0/v0.2.0 보존.
+- main 승격 이력을 포함한 docs/v0.3.0-publication에서 README/CHANGELOG/판정·마일스톤·로드맵·작업/주간 기록을 갱신한다. 정적 검사와 필수 PR CI를 거쳐 develop에 동기화하며 실제 후속 SHA/CI는 PR 이력에 남긴다. 태그 이동 없음.
+- 사용자 AGENTS.md 보존·미커밋, 게임/씬/테스트/CI 변경 없음. Release 페이지/Export/Steam 게시 없음. 다음은 IH-120 설계다.
