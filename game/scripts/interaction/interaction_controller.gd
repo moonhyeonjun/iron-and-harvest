@@ -100,6 +100,11 @@ func get_state() -> State:
 	return _state
 
 
+## Read-only view of the enable flag, for the inventory coordinator (IH-110).
+func is_interaction_enabled() -> bool:
+	return _enabled
+
+
 func get_selected_target_id() -> StringName:
 	return _selected_id
 
