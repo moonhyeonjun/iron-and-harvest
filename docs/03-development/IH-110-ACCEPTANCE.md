@@ -1,6 +1,6 @@
 # IH-110 수락 조건
 
-상태: **AC-N01~14 실행, 모두 pass**(2026-11-01, Claude Code 구현·자동 375검사, AC-N14는 사용자 GUI 확인, 빌드 `025c863`). 판정은 PR 필수 CI·develop 통합 확인 전까지 review다. 측정·명령·변이 검사·설계 차이는 [IH-110 검증 기록](IH-110-VALIDATION.md)에 있다. [명세](../02-technical-design/INVENTORY.md)가 계약의 단일 기준이며, 판정 기준은 낮추지 않았다.
+상태: **AC-N01~14 실행, 모두 pass**(2026-11-01, Claude Code 구현·자동 375검사, AC-N14는 사용자 GUI 확인, 빌드 `025c863`). [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 필수 CI 성공과 develop 통합(merge f26a77e)을 확인해 **전체 판정은 done**이다. 측정·명령·변이 검사·설계 차이는 [IH-110 검증 기록](IH-110-VALIDATION.md)에 있다. [명세](../02-technical-design/INVENTORY.md)가 계약의 단일 기준이며, 판정 기준은 낮추지 않았다.
 
 ## 자동 검사
 

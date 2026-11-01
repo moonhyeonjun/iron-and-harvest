@@ -1,6 +1,6 @@
 # IH-110 — 아이템·인벤토리 상세 설계
 
-상태: **Proposed / IH-110 구현·검증(review)**, 2026-11-01. 기준 develop `2b4b9aa`, Godot4.7.2 Standard/GDScript/Compatibility. 아래 클래스·경로·API는 계획대로 구현했으며, 차이는 문서 끝과 [검증 기록](../03-development/IH-110-VALIDATION.md)에 있다. 수치는 검증 fixture이고 제품 밸런스가 아니다. [아이템 기획](../01-game-design/ITEM_SYSTEM.md), [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md), [수락 조건](../03-development/IH-110-ACCEPTANCE.md), [Claude 인수인계](../03-development/IH-110-HANDOFF.md)를 함께 사용한다.
+상태: **Proposed / IH-110 구현·검증·develop 통합 완료**, 2026-11-01. 기준 develop `2b4b9aa`, Godot4.7.2 Standard/GDScript/Compatibility. 아래 클래스·경로·API는 계획대로 구현했으며, 차이는 문서 끝과 [검증 기록](../03-development/IH-110-VALIDATION.md)에 있다. 수치는 검증 fixture이고 제품 밸런스가 아니다. [아이템 기획](../01-game-design/ITEM_SYSTEM.md), [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md), [수락 조건](../03-development/IH-110-ACCEPTANCE.md), [Claude 인수인계](../03-development/IH-110-HANDOFF.md)를 함께 사용한다.
 
 ## 1. 경험과 범위
 
@@ -150,7 +150,7 @@ GUI가 사용한 키는 월드 입력으로 전파하지 않는다. 닫힌 상�
 - IH-130/132: 건설 비용·다중 재료·예약은 별도 batch transaction 설계가 필요하다. remove 여러 번 호출해 부분 차감하는 방식은 금지한다.
 - 전투/장비: stack_limit1은 고유 장비 인스턴스 모델이 아니다. 품질/내구도 도입 시 instance_id와 저장 migration을 별도 결정한다.
 
-구현 완료는 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)와 기존 회귀·필수 CI·GUI 증거·develop 통합으로 판정한다. 2026-11-01 AC-N01~14 pass(자동 375검사, 사용자 GUI). PR 필수 CI·develop 통합 전에는 review다. 최종 가방 크기/아이템 품목·스택/조작키·아트·글꼴·저장 형식은 TBD다.
+구현 완료는 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)와 기존 회귀·필수 CI·GUI 증거·develop 통합으로 판정한다. 2026-11-01 AC-N01~14 pass(자동 375검사, 사용자 GUI). [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19)로 develop 통합, done. 최종 가방 크기/아이템 품목·스택/조작키·아트·글꼴·저장 형식은 TBD다.
 
 ## 9. 구현 결과·차이 (2026-11-01)
 

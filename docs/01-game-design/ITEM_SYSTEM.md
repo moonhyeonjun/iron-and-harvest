@@ -24,4 +24,4 @@ v0.3 가방/채집, v0.4 씨앗/작물, v0.5 건설/생산 재료. [경제](ECON
 
 ## IH-110 구현 준비
 
-2026-11-01 상세 설계 완료, 같은 날 Claude Code 구현·검증([검증 기록](../03-development/IH-110-VALIDATION.md), review). 검증용 bag/store 각12슬롯, 목재·석재·철·밀·산열매·밀 씨앗·도끼7종을 제안했다. 도끼는 stack_limit1 소지품이고 사용 효과는 없다. Resource 카탈로그 기본안을 작은 JSON 예제와 비교 검증한다([ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md)). 전체 성공/실패·오래된 명령 거부·살펴보기와 가방의 배타적 UI를 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)로 판정한다. 파일 저장 왕복은 IH-112, 현재는 메모리 스냅샷 왕복만 포함한다. 가방 크기/품목/스택은 제품 수치 확정이 아니다.
+2026-11-01 상세 설계 완료, 같은 날 Claude Code 구현·검증([검증 기록](../03-development/IH-110-VALIDATION.md), done). 검증용 bag/store 각12슬롯, 목재·석재·철·밀·산열매·밀 씨앗·도끼7종을 제안했다. 도끼는 stack_limit1 소지품이고 사용 효과는 없다. Resource 카탈로그 기본안을 작은 JSON 예제와 비교 검증한다([ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md)). 전체 성공/실패·오래된 명령 거부·살펴보기와 가방의 배타적 UI를 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)로 판정한다. 파일 저장 왕복은 IH-112, 현재는 메모리 스냅샷 왕복만 포함한다. 가방 크기/품목/스택은 제품 수치 확정이 아니다.

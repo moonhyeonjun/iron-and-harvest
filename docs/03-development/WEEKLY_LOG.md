@@ -237,3 +237,9 @@
 - 자동: test_inventory 375검사 PASS(2회 차이0, 고아0, 엔진 오류0, 약8초). 실패 주입 종료1. 변이 10종과 엔진 오류 전용 변이 모두 검출. unittest 19. 깨끗한 worktree run_ci 11단계 PASS(이동 360, 상호작용 333 회귀 포함).
 - GUI: 사용자, 빌드 025c863, 일반·FULL 두 창, "1~5 모두 정상", 두 창 exit0·로그 오류0. Claude는 viewport 캡처로 배치만 보조 확인(ENV-003).
 - 결과: AC-N01~14 pass, IH-110 review. ADR-015 Proposed 유지(형식 선택 근거 기록). 제품 결함 없음. DEBT-002/003 유지. PR 필수 CI·develop 통합은 후속 기록. main/태그/릴리스 없음.
+
+### IH-110 통합 결과
+
+- [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 160ca9e → develop, merge f26a77e66d9d63f9dd9216eae4f82d71fb28bde7(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41276480044/job/124759576975) success(11단계, 세 suite RESULT: PASS·엔진 오류0). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41276740036/job/124760326722) success.
+- 통합 tree = 160ca9e. IH-110 done. ADR-015 Proposed 유지(Accepted 판단은 별도). main·태그·릴리스 미변경.
+- 다음: IH-111 채집과 자원 지점(재고 NO_SPACE와 지점 소진의 단일 완료 경계), ADR-015 Accepted 판단.
