@@ -2,6 +2,8 @@
 
 ## 현재 판정
 
+**AC-S16 손상 최신본 → 명시 복구 GUI: 사용자 확인 완료**(2026-11-01, 빌드 `3d248d0`, 사용자 테스트 재개 지시). [AC-S16 손상복구 GUI 기록](IH-112-VALIDATION.md#ac-s16-손상-최신본-복구-gui--2026-11-01-재개). 이로써 AC-S16의 미확인 항목이 해소됐다. IH-112 전체 완료와 v0.3.0 판정은 Codex 후속 검토에 남긴다. 아래 '추가 사용자 테스트를 재요청하지 않는다'는 재개 전 이력이다.
+
 Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5종(exit 0)과 깨끗한 worktree 공통 CI 13단계(저장 529검사)를 독립 재실행했다. **BUG-009~011 resolved, IH-112 review 유지**. AC-S16 손상 최신본의 명시 복구 GUI는 미확인이며 추가 사용자 테스트를 재요청하지 않는다. ADR-017 Proposed, main·태그·릴리스는 변경하지 않는다.
 
 ## 최초 Codex 후속 판정 — review
@@ -402,3 +404,37 @@ macOS APFS에서 다음을 실제 파일로 검증했다: rename 교체, 단계�
 - 로그/원본 진단: `build/ih-112-fix-codex-review/`(Git 제외). 고유 `user://tests/ih112/codex_probe_*` 및 runner 시험 루트만 사용했고 제품 saves·사용자 GUI 시험 파일은 건드리지 않았다. 새 GUI·변이 검사는 실행하지 않았다. Claude 변이 결과와 독립 실행 결과를 구분한다.
 - 판정: BUG-009~011 resolved. IH-112는 AC-S16 손상복구 GUI 미확인으로 review, ADR-017 Proposed 유지. 기존 추가 사용자 테스트 중단 지시를 존중하고 완료 기준을 임의로 낮추지 않는다. 추가 코드 수정 요청 없음. v0.3.0 판정은 별도다.
 - 사용자 미추적 AGENTS.md와 기존 링크4개 문제를 보존·미커밋한다. 독립 worktree의 정적 검사를 적용하며 이번 변경은 검토/개발 문서뿐이다. 문서 PR의 실제 commit/CI/merge 결과는 PR 이력과 완료 보고에 남긴다.
+
+## AC-S16 손상 최신본 복구 GUI — 2026-11-01 재개
+
+- **방침**: 사용자가 사용자 테스트 재개를 명시했다. 이전의 사용자 테스트 중단 기록은 이력으로 보존하고, 이번 재개 지시를 최신 방침으로 따른다. 이번에는 미확인이던 '최신 저장 손상 → 명시 복구본 불러오기' 한 항목만 확인했고, 전체 GUI 절차를 반복하지 않았다.
+- **확인 주체**: 사용자(실제 창·키보드·마우스·육안).
+- **빌드**: develop `3d248d0`. 게임·도구·테스트 코드는 수정 검증본 `bb4d6fe`와 같다(`git diff bb4d6fe 3d248d0 -- game tools tests` 없음). 해당 SHA의 develop CI는 성공했다.
+- **환경**: macOS 13.4 / Apple M1, Godot 4.7.2 Standard, Compatibility.
+- **시험 경로**: 새 전용 `user://tests/ih112/gui_recovery_20261101`. 준비 전에 없던 경로임을 확인했다. 기존 GUI 시험 파일(`user://tests/ih112/gui`, mtime 20:24/20:19)과 제품 `user://saves`(없음)는 건드리지 않았다.
+- **세대 준비**: 임시 헤드리스 준비 스크립트(제품 소스 아님, `game/build/`)가 실제 SaveLoadTest·서비스·coordinator 저장으로 두 세대를 만들었다(exit 0).
+
+| 세대 | 은행 | 위치·방향 | 가방 | 보관함 | 지점(나뭇가지/돌/산열매) |
+|---|---|---|---|---|---|
+| 1 | A | (300, 410) 왼쪽 | 목재 9·석재 10·산열매 0·도끼 1 | 비어 있음 | 5 / 4 / 3 |
+| 2 | B | (520, 560) 오른쪽 | 목재 5·석재 11·산열매 3·도끼 1 | 목재 4 | 5 / 3 / 0(소진) |
+
+- **fixture 적용 확인**(창을 띄운 뒤 6초, 사용자 조작 전):
+  - A: 1세대, checksum 유효, 파일 SHA 앞부분 `e4a820c7…`(준비 직후와 같음).
+  - B: 2세대, checksum 불일치(`68960a8c…` → `e20b4e4f…`).
+  - 직전 세대만 유효하고 최신만 손상된 상태를 확인한 뒤 사용자에게 안내했다.
+- **실행 명령**: `python3 tools/godot.py --position 80,60 res://scenes/tests/save_load_test.tscn -- --save-root=user://tests/ih112/gui_recovery_20261101 --fixture=corrupt-latest`
+- **안내 항목과 사용자 응답 "1~4 모두 정상"**:
+  1. 패널에 손상 fixture(2세대 B)와 '이전 1세대(복구 가능)'가 표시된다.
+  2. 이동 뒤 F9를 누르면 손상 안내가 뜨고 현재 세계(위치·수량)가 보존된다.
+  3. '이전 1세대로 복구' 버튼을 누르면 1세대 복원 안내가 뜨고, 위치·방향·합계·지점 수량이 1세대 기준과 일치하며 HUD에 [저장 복원]이 표시된다.
+  4. 복원 뒤 이동, 산열매 E 채집, 보관함 전송이 정상이다.
+- **프로세스 로그**(`build/ih-112-gui-recovery/gui.log`):
+  - `IH-112 fixture: damaged generation 2 in bank b`
+  - `IH-112 load: RECOVERY_AVAILABLE … [a=valid, b=corrupt(CHECKSUM_MISMATCH)]`
+  - `IH-112 load: OK gen=1 bank=a recovered=true`
+  - SCRIPT ERROR/ERROR/Parse Error 0.
+  - 사용자 확인 뒤에도 파일은 A 유효·B 손상 그대로다. 불러오기와 복구는 파일을 수정하지 않았다. F5는 누르지 않도록 안내했고, 저장 로그도 없다.
+  - 기록 시점에 창이 아직 열려 있어 프로세스 종료 코드는 수집하지 못했다.
+- **결과**: 손상 최신본의 기본 불러오기 거부·세계 보존·복구 안내, 명시 복구 선택에 따른 이전 세대 복원, 복원 뒤 조작을 사용자가 실제 GUI에서 확인했다. 결함은 발견되지 않았다.
+- **판정 범위**: AC-S16의 미확인 항목만 해소했다. IH-112 done, ADR-017 Accepted 전환, v0.3.0 판정은 Codex 후속 검토 대상이다.

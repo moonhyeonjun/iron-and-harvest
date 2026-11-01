@@ -180,6 +180,10 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
   - 저장 529검사, 변이 5종 검출, 깨끗한 worktree CI 13단계 PASS.
   - [수정 기록](IH-112-VALIDATION.md#bug-009011-수정--claude-code-2026-11-01). PR 필수 CI·develop 통합·Codex 재검증 전까지, 그리고 AC-S16 손상복구 GUI 미확인으로 review를 유지한다.
   - [PR #36](https://github.com/moonhyeonjun/iron-and-harvest/pull/36) 필수 CI 성공(13단계·저장 529), merge 5070bd8, develop CI 성공. Codex 재검증 대기.
+- AC-S16 손상복구 GUI(2026-11-01, 사용자 테스트 재개 지시):
+  - 사용자가 빌드 3d248d0, 새 시험 경로 `user://tests/ih112/gui_recovery_20261101`에서 확인했다.
+  - 손상 최신본(2세대 B)의 기본 F9 거부·세계 보존, 이전 1세대 명시 복구, 기준 일치, 복원 뒤 조작: "1~4 모두 정상". 로그 오류 0.
+  - [기록](IH-112-VALIDATION.md#ac-s16-손상-최신본-복구-gui--2026-11-01-재개). 상태는 review이며 IH-112 done·v0.3.0 판정은 Codex 후속 검토로 남긴다.
 
 ## IH-120 — 달력·계절·하루 경계
 

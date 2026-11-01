@@ -1,5 +1,9 @@
 # 변경 이력
 
+## Unreleased — IH-112 AC-S16 손상복구 GUI 확인 (2026-11-01)
+
+- 사용자 테스트 재개 지시에 따라 '최신 저장 손상 → 명시 복구본' GUI를 사용자가 확인했다(빌드 3d248d0, 새 시험 경로 `user://tests/ih112/gui_recovery_20261101`). 문서만 변경했고 게임 코드는 바뀌지 않았다. IH-112 done 판정은 Codex 후속 검토에 남긴다.
+
 ## Unreleased — IH-112 Codex 수정 재검증
 
 - d2e1c88에서 원래 진단5종·CI13단계·저장529검사 PASS를 독립 확인해 BUG-009~011 resolved로 판정했다.
