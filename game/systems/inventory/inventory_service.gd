@@ -96,6 +96,11 @@ func is_closed() -> bool:
 	return _closed
 
 
+## True while a commit and its change signal run. Read-only (IH-112 quiescence check).
+func is_busy() -> bool:
+	return _busy
+
+
 # --- creation --------------------------------------------------------------------
 
 func register_inventory(inventory_id: Variant, owner_id: Variant, capacity: Variant) -> Result:

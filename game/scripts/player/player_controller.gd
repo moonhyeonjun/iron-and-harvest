@@ -51,6 +51,17 @@ func get_locomotion() -> Locomotion:
 	return _locomotion
 
 
+## Places a freshly restored player (IH-112): saved position and facing, no velocity, IDLE,
+## and every movement key must be released once before the next move, so a key held
+## through a load never walks the new player. The movement gate and its owners are not
+## touched. Safe before _ready: the state is kept and presented once Visual exists.
+func restore_state(world_position: Vector2, facing: Facing) -> void:
+	global_position = world_position
+	_facing = facing
+	_neutral_required = true
+	_halt()
+
+
 func _notification(what: int) -> void:
 	# Input is polled, so UI event consumption cannot stop movement; focus is gated here.
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:

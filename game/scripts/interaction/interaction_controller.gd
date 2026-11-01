@@ -122,6 +122,12 @@ func get_candidate_count() -> int:
 	return _candidates.size()
 
 
+## True only with nothing in flight: IDLE, no queued E or Escape, not reporting. A save or
+## load waits for this instead of cancelling anything (IH-112). Read-only.
+func is_quiescent() -> bool:
+	return _state == State.IDLE and _queued_request_id == 0 and not _cancel_queued and not _reporting
+
+
 func _notification(what: int) -> void:
 	# Focus notifications may arrive before _ready (BUG-001); only flags change then.
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
