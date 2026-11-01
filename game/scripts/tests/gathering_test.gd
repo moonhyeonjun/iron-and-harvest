@@ -201,7 +201,9 @@ func _update_hud() -> void:
 			var counted: InventoryService.Result = inventory.count(inventory_id, item_id)
 			total += int(counted.value) if counted.ok else 0
 		total_parts.append("%s %d" % [inventory.get_item_info(item_id).fallback_name, total])
-	hud.show_lines("지점 " + " · ".join(point_parts), "합계(가방+보관함+지점) " + " · ".join(total_parts))
+	# The fixture name is shown in-game too: the window title alone was not enough to tell
+	# the normal/full/rebind windows apart during the manual GUI check.
+	hud.show_lines("[%s] 지점 " % fixture + " · ".join(point_parts), "합계(가방+보관함+지점) " + " · ".join(total_parts))
 
 
 func _bag_snapshot() -> Dictionary:
