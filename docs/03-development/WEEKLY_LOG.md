@@ -280,3 +280,18 @@
 - 다음 설계 후보: IH-111 채집·자원 지점. ADR-015 Proposed 및 기존 부채 유지.
 
 - 재검증 문서12개를 별도 worktree에 반영해 정적 검사 PASS, diff --check PASS를 확인했다. 사용자 AGENTS.md는 수정/커밋하지 않았다.
+
+## 2026-11-01 — IH-111 채집·자원 지점 상세 설계(Codex)
+
+- 기준 develop/origin de0c163, develop CI41280063347 success. 사용자 미추적 AGENTS.md 보존. docs/ih-111-gathering-design에서 설계 문서만 변경한다.
+- 기존 Interaction 실행/취소와 Inventory 원자 transfer·수명 수정 코드를 검토했다. 지점 숨은 재고→bag 전송, 단발 준비 명령, commit 전후 취소 경계, 뷰 재진입 보존을 제안한다.
+- 신규 GATHERING/AC-G01~14/HANDOFF/ADR-016과 관련 진입점 갱신. 세 종류 즉시 채집으로 범위를 제한하고 도구/시간/재생/파일 저장은 후속으로 남긴다.
+- IH-111 backlog→ready(상세 설계 완료), 구현·신규 검사·GUI 미실행. ADR-016 Proposed, IH-110 done 유지. 게임/씬/테스트/CI 설정/main/태그 변경 없음.
+- 검증은 문서 정적 검사·diff 검토와 필수 PR CI로 진행한다. 실제 결과는 아래 후속 기록 및 PR 이력에서 확인한다.
+- 다음: Claude Code가 IH-111-HANDOFF 전달용 프롬프트로 구현·AC 검증 후 인계. 이후 Codex 리뷰, IH-112 저장 상세 설계는 별도 작업이다.
+
+### IH-111 설계 검증
+
+- 사용자 루트 정적 검사 종료1: 미추적 AGENTS.md의 기존 .Codex/rules 링크4개만 실패. 해당 파일은 보존·미커밋한다.
+- 변경18파일만 복사한 detached worktree 정적 검사 종료0: 필수42파일/디렉터리/링크·펜스/리소스 경로/작업 그래프/ignore PASS. git diff --check PASS.
+- 게임/도구/테스트/CI 설정 변경 없음. 신규 채집 검사·GUI는 미실행. 기존 회귀는 보호된 PR CI에서 확인하며 실제 커밋/PR/CI 결과는 PR 이력과 완료 보고에 기록한다.

@@ -10,7 +10,7 @@ MVP: 캐릭터 이동·충돌, 대상 상호작용, 채집/벌목, 개인 인벤
 
 ## 데이터와 연결
 
-PlayerState(position, map_id, equipment), InteractionTarget(id, actions, range), GatherNode(id, remaining, reset_at), CropState(plot_id, crop_id, stage, planted_day). 획득은 [아이템](ITEM_SYSTEM.md), 성장은 [세계 시간](WORLD_SYSTEM.md), 대화는 [인물](CHARACTER_SYSTEM.md)에 연결한다. 도구를 눌렀다는 이유만으로 별도 숨은 자원을 생성하지 않는다.
+PlayerState(position, map_id, equipment), InteractionTarget(id, actions, range), GatherPoint(point_id, definition_id, stock_inventory_id; remaining은 재고에서 파생, 재생은 후속), CropState(plot_id, crop_id, stage, planted_day). 획득은 [아이템](ITEM_SYSTEM.md), 성장은 [세계 시간](WORLD_SYSTEM.md), 대화는 [인물](CHARACTER_SYSTEM.md)에 연결한다. 도구를 눌렀다는 이유만으로 별도 숨은 자원을 생성하지 않는다.
 
 ## 우선순위·완료 조건
 
@@ -22,8 +22,12 @@ IH-101의 이동·충돌·카메라와 임시 조작 기준은 [구현 명세](.
 
 ## 상호작용 구현 준비
 
-IH-004 CI 완료 후 [IH-102 명세](../02-technical-design/INTERACTION.md)를 작성했다. 가까운 정면 대상의 행동 안내→E로 살펴보기→설명 읽기→닫기를 최소 경험으로 검증한다. 벽 너머/범위 밖 행동, 삭제된 대상 실행, 중복 요청은 거부한다. 아이템/채집 보상은 이 단계에 포함하지 않는다. Claude Code가 구현·GUI 수락 검사를 완료하고 develop에 통합했다. 이후 [Codex 검토](../03-development/IH-102-REVIEW.md)에서 BUG-003/004를 재현해 review로 재개했고 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 수정·회귀 검사가 다음 작업이다.
+IH-004 CI 완료 후 [IH-102 명세](../02-technical-design/INTERACTION.md)를 작성했다. 가까운 정면 대상의 행동 안내→E로 살펴보기→설명 읽기→닫기를 최소 경험으로 검증한다. 벽 너머/범위 밖 행동, 삭제된 대상 실행, 중복 요청은 거부한다. 아이템/채집 보상은 이 단계에 포함하지 않는다. Claude Code가 구현·GUI 수락 검사를 완료하고 develop에 통합했다. 이후 [Codex 검토](../03-development/IH-102-REVIEW.md)에서 BUG-003/004를 재현해 review로 재개했고 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12)로 수정·통합해 done이다. 수정·회귀 검증을 완료했다.
 
 ## TBD
 
 이동 속도·조작 키·픽셀 크기·기력·개인 농장 크기·성장일수·재생량·쓰러짐 페널티. 이전 3×3/3일/기력100은 확정 수치가 아니다.
+
+## IH-111 채집 구현 준비
+
+[상세 명세](../02-technical-design/GATHERING.md)는 나뭇가지·돌·산열매를 E 새 누름당1개 즉시 채집하는 최소 루프다. 가방이 차면 지점은 보존되고, 마지막 성공 때 소진 표시로 바뀐다. 같은 세션 뷰 재진입에 재생되지 않는다. 초기 벌목은 나무 베기가 아닌 바닥 나뭇가지 줍기로 범위를 줄인다. 도구/작업시간/기력/재생/파일 저장은 후속이다. 세 정의·초기량은 Proposed 검증 수치이며 아직 구현되지 않았다.

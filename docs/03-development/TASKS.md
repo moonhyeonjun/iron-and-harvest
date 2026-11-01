@@ -22,7 +22,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 | IH-101 | 플레이어 이동·충돌 | feature | priority:high | status:done | IH-002 |
 | IH-102 | 상호작용 대상·프롬프트 | feature | priority:high | status:done | IH-101, IH-004 |
 | IH-110 | 아이템 정의와 인벤토리 | feature | priority:high | status:done | IH-102 |
-| IH-111 | 채집과 자원 지점 | feature | priority:high | status:backlog | IH-110 |
+| IH-111 | 채집과 자원 지점 | feature | priority:high | status:ready | IH-110 |
 | IH-112 | 초기 저장과 복원 | feature | priority:critical | status:backlog | IH-110, IH-111 |
 | IH-120 | 달력·계절·하루 경계 | feature | priority:high | status:backlog | IH-112 |
 | IH-121 | 심기·성장·수확 | feature | priority:high | status:backlog | IH-120 |
@@ -136,17 +136,18 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - Codex 후속 검토: 14302e5의 CI 11단계 PASS, 추가 진단은 수명2·ID1 위반으로 종료1. BUG-005/006 open, review로 재개. [수정 수락 조건](IH-110-REVIEW.md)을 충족한 후 done 복귀를 판정한다.
 - BUG-005/006 수정(2026-11-01): fix/inventory-lifecycle-and-id-validation `5004419`(실패 회귀)·`fb5cd0c`(수정)·`a714c5a`/`8dfe8bb`(검사 보완). 재현 진단 종료1→0, runner 수정 전 충돌·25실패 → 수정 후 PASS, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS(이동 360·상호작용 333·인벤토리 521), 사용자 GUI "1~4 모두 정상"(8dfe8bb). [PR #22](https://github.com/moonhyeonjun/iron-and-harvest/pull/22) 필수 CI 성공, merge cbb836b, develop CI 성공 → done.
 - Codex 수정 재검증(2026-11-01): a5cefeb의 원래 재현 종료0/위반0, 전체 CI 11단계/인벤토리521검사 PASS. BUG-005/006 resolved·IH-110 done 유지. [독립 검증](IH-110-VALIDATION.md).
-- 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. IH-111/112는 backlog 유지.
+- 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. 후속 IH-111은 상세 설계 ready, IH-112는 backlog다.
 
 ## IH-111 — 채집과 자원 지점
 
-- 목적: 채집과 자원 지점을 통해 해당 마일스톤의 검증 가능한 결과를 만든다.
-- 요구사항: 채집으로 재고 변화·소진 상태.
-- 관련 문서: [설계](../01-game-design/LIFE_SYSTEM.md).
-- 예상 영향 범위: GatherNode/Inventory.
-- 완료 조건: 요구 동작/산출물 확인, 아래 테스트 결과와 문서 갱신, 리뷰 완료.
-- 테스트 항목: 연타 중복·포화 유실·소진 재진입.
-- 현재 증거/미확정: 수량/재생 규칙 TBD.
+- 목적: 유한 월드 물자를 직접 채집해 가방으로 옮기는 수집 루프를 검증한다.
+- 유형/우선순위/상태: feature / priority:high / status:ready. 의존 IH-110 done.
+- 요구사항: 나뭇가지·돌·산열매, 새 E당1개, 숨은 stock→bag 원자 transfer, 소진 표시, full/stale/취소 보존, 같은 세션 뷰 재진입 보존.
+- 관련 문서: [생활](../01-game-design/LIFE_SYSTEM.md), [상세 설계](../02-technical-design/GATHERING.md), [수락 조건](IH-111-ACCEPTANCE.md), [Claude 전달 프롬프트](IH-111-HANDOFF.md), [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md).
+- 예상 영향: GatherDef/GatherService/GatherTarget, Interaction의 INSTANT 분기, 별도 GatheringTest/표시, 신규 runner/공통 CI 등록. Inventory transfer와 Player 정책 유지.
+- 완료 조건: AC-G01~14 자동·GUI, 기존 회귀, 실패 주입/변이, 검증 기록, 필수 CI/리뷰/develop 통합. 아직 구현·새 검사 없음.
+- 미포함: 도구/시간/재생/파일 저장/위임/농사/범용 잠금. 수량·표현은 검증용 Proposed, 제품 밸런스 TBD.
+- 현재 증거: 2026-11-01 Codex 상세 설계 완료. 실제 구현 완료와 구분하며 다음 담당은 Claude Code.
 
 ## IH-112 — 초기 저장과 복원
 
