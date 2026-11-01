@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://systems/inventory/item_def.gd" id="1_nrqy1"]
+
+[resource]
+script = ExtResource("1_nrqy1")
+item_id = &"stone"
+name_key = &"item.stone.name"
+fallback_name = "석재"
+category = &"material"
+stack_limit = 10

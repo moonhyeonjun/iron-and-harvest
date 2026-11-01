@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://systems/inventory/item_def.gd" id="1_87keo"]
+
+[resource]
+script = ExtResource("1_87keo")
+item_id = &"iron"
+name_key = &"item.iron.name"
+fallback_name = "철"
+category = &"material"
+stack_limit = 10

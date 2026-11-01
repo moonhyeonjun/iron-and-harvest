@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemCatalog" format=3]
+
+[ext_resource type="Script" path="res://systems/inventory/item_def.gd" id="1_he5sr"]
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="2_n01iu"]
+[ext_resource type="Resource" path="res://data/items/stone.tres" id="3_crbdb"]
+[ext_resource type="Resource" path="res://data/items/iron.tres" id="4_odksi"]
+[ext_resource type="Resource" path="res://data/items/wheat.tres" id="5_x15er"]
+[ext_resource type="Resource" path="res://data/items/berry.tres" id="6_ydbij"]
+[ext_resource type="Resource" path="res://data/items/seed_wheat.tres" id="7_g124b"]
+[ext_resource type="Resource" path="res://data/items/tool_axe.tres" id="8_k858r"]
+[ext_resource type="Script" path="res://systems/inventory/item_catalog.gd" id="9_s0cru"]
+
+[resource]
+script = ExtResource("9_s0cru")
+definitions = Array[ExtResource("1_he5sr")]([ExtResource("2_n01iu"), ExtResource("3_crbdb"), ExtResource("4_odksi"), ExtResource("5_x15er"), ExtResource("6_ydbij"), ExtResource("7_g124b"), ExtResource("8_k858r")])

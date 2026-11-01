@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://systems/inventory/item_def.gd" id="1_pkq13"]
+
+[resource]
+script = ExtResource("1_pkq13")
+item_id = &"wood"
+name_key = &"item.wood.name"
+fallback_name = "목재"
+category = &"material"
+stack_limit = 10

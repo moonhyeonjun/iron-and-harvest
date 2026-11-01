@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://systems/inventory/item_def.gd" id="1_rx23f"]
+
+[resource]
+script = ExtResource("1_rx23f")
+item_id = &"tool_axe"
+name_key = &"item.tool_axe.name"
+fallback_name = "도끼"
+category = &"tool"
+stack_limit = 1

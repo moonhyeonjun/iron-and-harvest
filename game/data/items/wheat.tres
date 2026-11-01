@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://systems/inventory/item_def.gd" id="1_11lrc"]
+
+[resource]
+script = ExtResource("1_11lrc")
+item_id = &"wheat"
+name_key = &"item.wheat.name"
+fallback_name = "밀"
+category = &"crop"
+stack_limit = 10
