@@ -2,6 +2,14 @@
 
 완료 조건과 검증을 충족한 버전만 자율적으로 태그/릴리스한다. Foundation 기술 관문을 충족했으며 태그/원격 반영 여부는 IH-002 검증 기록을 따른다.
 
+## Unreleased — IH-110 구현 (Claude Code, 2026-11-01)
+
+- ItemDef/ItemCatalog(.tres 7종 + 명시 catalog, 스칼라 복사 격리), InventoryState, InventoryService(고정 슬롯, 원자 add/remove/transfer, expected revision, 거래당 1회 변경 신호, 재진입 BUSY, 엄격 snapshot).
+- InventoryController(가방/살펴보기 배타, opening 래치, session ID, 게이트·interaction 복구)와 InventoryUI(표시·의도만), `scenes/tests/inventory_test.tscn` 유한 보관함(`--fixture=full`).
+- InputMap `inventory_toggle`(물리 I), `inventory_cancel`(Escape), `InteractionController.is_interaction_enabled()` 읽기 API.
+- `tests/test_inventory.gd`(375검사)와 JSON 비교 fixture, `tools/run_ci.py`에 inventory-acceptance 등록.
+- 수치는 검증 제안. 채집·소비·장비·제작·드롭·예약·파일 저장·통치·전역 잠금은 미구현. 태그/릴리스 없음.
+
 ## Unreleased — 설계
 
 - IH-110 아이템·인벤토리 상세 명세, AC-N01~14, Claude Code 인수인계, ADR-015 Proposed 작성.

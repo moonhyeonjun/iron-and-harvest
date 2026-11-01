@@ -56,4 +56,4 @@ Event는 event_id/type/date/actor_ids/target_ids/payload_version을 갖고 상�
 
 ## IH-110 인벤토리 경계 제안
 
-[상세 명세](INVENTORY.md): Catalog는 검증된 정의의 스칼라 사본, InventoryService는 상태의 유일한 쓰기 소유자다. UI → InventoryController → 도메인 명령 → 양쪽 상태 commit → 단일 변경 신호 → UI 재조회 순서를 따른다. Node/입력/시간과 도메인을 분리하며 Autoload/범용 이벤트 버스를 추가하지 않는다. 가방/살펴보기의 배타성은 작은 씬 조율자가 맡고 DEBT-002의 일반 다중 잠금 문제는 해결로 표기하지 않는다. 채집 소진+지급, 건설 다중 재료, 저장 복원은 별도 거래 경계를 요구한다. 현재는 설계이며 해당 클래스/씬은 미구현이다.
+[상세 명세](INVENTORY.md): Catalog는 검증된 정의의 스칼라 사본, InventoryService는 상태의 유일한 쓰기 소유자다. UI → InventoryController → 도메인 명령 → 양쪽 상태 commit → 단일 변경 신호 → UI 재조회 순서를 따른다. Node/입력/시간과 도메인을 분리하며 Autoload/범용 이벤트 버스를 추가하지 않는다. 가방/살펴보기의 배타성은 작은 씬 조율자가 맡고 DEBT-002의 일반 다중 잠금 문제는 해결로 표기하지 않는다. 채집 소진+지급, 건설 다중 재료, 저장 복원은 별도 거래 경계를 요구한다. IH-110에서 game/systems/inventory(ItemDef·ItemCatalog·InventoryState·InventoryService), game/data/items, game/scripts/inventory(InventoryController), game/ui/inventory, game/scenes/tests/inventory_test로 구현했다. 서비스는 Node·입력을 참조하지 않는다.

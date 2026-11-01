@@ -1,6 +1,6 @@
 # IH-110 — 아이템·인벤토리 상세 설계
 
-상태: **Proposed / 구현 준비 완료**, 2026-11-01. 기준 develop `2b4b9aa`, Godot4.7.2 Standard/GDScript/Compatibility. 이 문서의 클래스·경로·API는 구현 계약 제안이며 아직 존재하지 않는다. 수치는 검증 fixture이고 제품 밸런스가 아니다. [아이템 기획](../01-game-design/ITEM_SYSTEM.md), [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md), [수락 조건](../03-development/IH-110-ACCEPTANCE.md), [Claude 인수인계](../03-development/IH-110-HANDOFF.md)를 함께 사용한다.
+상태: **Proposed / IH-110 구현·검증(review)**, 2026-11-01. 기준 develop `2b4b9aa`, Godot4.7.2 Standard/GDScript/Compatibility. 아래 클래스·경로·API는 계획대로 구현했으며, 차이는 문서 끝과 [검증 기록](../03-development/IH-110-VALIDATION.md)에 있다. 수치는 검증 fixture이고 제품 밸런스가 아니다. [아이템 기획](../01-game-design/ITEM_SYSTEM.md), [ADR-015](../04-decisions/ADR/ADR-015-inventory-contract.md), [수락 조건](../03-development/IH-110-ACCEPTANCE.md), [Claude 인수인계](../03-development/IH-110-HANDOFF.md)를 함께 사용한다.
 
 ## 1. 경험과 범위
 
@@ -150,4 +150,11 @@ GUI가 사용한 키는 월드 입력으로 전파하지 않는다. 닫힌 상�
 - IH-130/132: 건설 비용·다중 재료·예약은 별도 batch transaction 설계가 필요하다. remove 여러 번 호출해 부분 차감하는 방식은 금지한다.
 - 전투/장비: stack_limit1은 고유 장비 인스턴스 모델이 아니다. 품질/내구도 도입 시 instance_id와 저장 migration을 별도 결정한다.
 
-구현 완료는 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)와 기존 회귀·필수 CI·GUI 증거·develop 통합으로 판정한다. 현재 **설계만 완료**이며 IH-110은 ready다. 최종 가방 크기/아이템 품목·스택/조작키·아트·글꼴·저장 형식은 TBD다.
+구현 완료는 [AC-N01~14](../03-development/IH-110-ACCEPTANCE.md)와 기존 회귀·필수 CI·GUI 증거·develop 통합으로 판정한다. 2026-11-01 AC-N01~14 pass(자동 375검사, 사용자 GUI). PR 필수 CI·develop 통합 전에는 review다. 최종 가방 크기/아이템 품목·스택/조작키·아트·글꼴·저장 형식은 TBD다.
+
+## 9. 구현 결과·차이 (2026-11-01)
+
+- 정의 형식: .tres + catalog.tres를 선택했다(근거는 [검증 기록](../03-development/IH-110-VALIDATION.md)의 형식 비교). JSON은 `game/tests/fixtures/inventory/`에만 있다. ItemDef 기본 stack_limit은 무효 값 0이므로 모든 정의가 한도를 명시해야 한다.
+- 결과 타입은 `InventoryService.Result`이다. 코드 `DUPLICATE_INVENTORY`, `INVALID_SNAPSHOT`을 추가했다. snapshot은 `decode_snapshot`/`register_snapshot`, ID는 String, 등록은 변경 이벤트 없음, close 후 읽기도 CLOSED다.
+- 조율자는 맵 루트의 InventoryController이며 입력 콜백에서 바로 연다. 입력은 닫힘 I=`_unhandled_input`, 열림 I/Escape/E=`_shortcut_input`의 단일 경로다. 보기 전환은 새 session ID를 발급한다. 가방 안 '보관함 보기' 버튼으로 키보드 경로를 제공하며, HUD 버튼은 마우스 전용이다.
+- 꽉 찬 보관함 GUI fixture는 `-- --fixture=full`이다. 이동 키를 누른 채라 Player가 neutral 대기이면 CONTROL_BLOCKED로 안내한다. DEBT-002는 그대로이며, 두 작성자의 배타적 사용만 지원한다.

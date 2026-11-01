@@ -1,6 +1,6 @@
 # ADR-015: 아이템 정의와 원자적 슬롯 인벤토리
 
-- 상태: **Proposed** — 설계 제안, 구현/검증 전.
+- 상태: **Proposed** — 구현·검증 완료(2026-11-01), Accepted 판정은 별도.
 - 날짜: 2026-11-01.
 - 관련: [ADR-003](ADR-003-data-management.md)의 아이템 포맷 후보를 구체화한다. 아직 supersedes하지 않으며 다른 정의/저장 형식을 확정하지 않는다. [ADR-014](ADR-014-interaction-boundary.md)의 보상 분리와 단일 게이트 제약을 유지한다.
 
@@ -27,3 +27,7 @@ v0.2.0은 이동·살펴보기까지 구현했다. 다음 채집에서 가방 �
 ## 수락 관문
 
 [명세](../../02-technical-design/INVENTORY.md)와 [AC-N01~14](../../03-development/IH-110-ACCEPTANCE.md)를 구현·검증하고, 두 형식 작은 예제의 결과/선택 이유를 IH-110-VALIDATION에 기록한다. 타입·공유 Resource 변조 격리·원자 이동·stale/reentrant·모달/GUI 회귀를 확인한 후 기술 결정 Accepted 여부를 판정한다. 최종 밸런스 TBD는 그 판정과 분리한다. 제안과 다른 선택은 근거·API/테스트 영향과 함께 기록한다.
+
+## 구현 검증 결과 (2026-11-01)
+
+Claude Code가 이 제안대로 구현했다. 작은 형식 비교에서 JSON은 stack_limit을 float로 읽고 숫자·키·문법 검사를 별도로 구현해야 했다. 반면 .tres는 타입을 유지했고, 공유 캐시 위험은 스칼라 복사로 막혔다(AC-N02). 그래서 **런타임 원본은 .tres + 명시 catalog.tres** 하나로 정했다. 원자성·stale·재진입·snapshot 격리·모달 배타성은 AC-N01~14와 변이 10종 검출로 확인했다([검증 기록](../../03-development/IH-110-VALIDATION.md)). 상태는 Proposed를 유지하며, Accepted 전환과 최종 수치(TBD)는 별도 판단한다. DEBT-002는 해결되지 않았다.
