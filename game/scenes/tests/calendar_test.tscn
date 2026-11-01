@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/tests/calendar_test.gd" id="1_scene"]
+[ext_resource type="PackedScene" path="res://scenes/tests/save_load_test.tscn" id="2_save_load"]
+[ext_resource type="Script" path="res://scripts/calendar/calendar_controller.gd" id="3_controller"]
+[ext_resource type="PackedScene" path="res://ui/calendar/calendar_hud.tscn" id="4_hud"]
+
+[node name="CalendarTest" type="Node"]
+script = ExtResource("1_scene")
+
+[node name="SaveLoad" parent="." instance=ExtResource("2_save_load")]
+
+[node name="CalendarController" type="Node" parent="."]
+script = ExtResource("3_controller")
+
+[node name="CalendarHUD" parent="." instance=ExtResource("4_hud")]
