@@ -31,7 +31,7 @@ IH-004 CI 완료 후 [상호작용 인수인계](docs/03-development/IH-102-HAND
 
 ## 다음 기능: IH-110
 
-[인수인계](docs/03-development/IH-110-HANDOFF.md), [명세](docs/02-technical-design/INVENTORY.md), [수락 조건](docs/03-development/IH-110-ACCEPTANCE.md), [ADR-015](docs/04-decisions/ADR/ADR-015-inventory-contract.md)를 따른다. ready는 구현 준비 상태이며 아이템/가방은 아직 없다. Codex가 설계했고 Claude Code가 구현한다. 정의/수량 분리·전체 성공 거래·stale 요청·가방/살펴보기 배타성을 검증하며 실제 채집/저장은 후속이다. v0.2.0/main은 보존한다.
+[인수인계](docs/03-development/IH-110-HANDOFF.md), [명세](docs/02-technical-design/INVENTORY.md), [수락 조건](docs/03-development/IH-110-ACCEPTANCE.md), [ADR-015](docs/04-decisions/ADR/ADR-015-inventory-contract.md)를 따른다. 2026-11-01 Claude Code가 구현하고 AC-N01~14를 검증했다([검증 기록](docs/03-development/IH-110-VALIDATION.md)). PR 필수 CI·develop 통합 전에는 review다. Codex가 설계했다. 정의/수량 분리·전체 성공 거래·stale 요청·가방/살펴보기 배타성을 검증하며 실제 채집/저장은 후속이다. v0.2.0/main은 보존한다.
 
 ## 작업 절차
 

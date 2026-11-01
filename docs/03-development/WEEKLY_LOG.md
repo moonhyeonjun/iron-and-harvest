@@ -228,3 +228,12 @@
 - 사용자 작업 트리 `python3 tools/validate_foundation.py`: 종료1, 미추적 AGENTS.md의 기존 .Codex/rules 링크4개만 실패. 사용자 파일은 변경/커밋하지 않는다.
 - 동일16개 문서 변경을 반영한 별도 detached worktree에서 정적 검사 종료0: 필수42파일·디렉터리·Markdown 링크/펜스·리소스 경로·작업 그래프·ignore 규칙 PASS. `git diff --check` 통과.
 - 게임/도구/테스트/CI 파일 변경 없음. 신규 인벤토리 검사와 GUI는 미실행이며 기존 회귀는 필수 PR CI에서 확인한다.
+
+## 2026-11-01 — IH-110 아이템·인벤토리 구현 (Claude Code)
+
+- 시작: develop clean(3803bc7, origin 일치), 사용자 untracked AGENTS.md 보존·미커밋. `feature/inventory-system` 분기. 게임 코드는 IH-102 수정 이후 변경 없음.
+- 구현: 정의/카탈로그·상태·서비스(b7efab6), 조율자·UI·맵(05cd2b3), runner·fixture(2a085e2), CI 등록(311a742), 시험 창 제목(025c863).
+- 형식 비교: JSON은 stack_limit을 float로 읽고 키·숫자·문법 검사를 따로 구현해야 함. .tres는 int 유지. .tres + catalog.tres를 런타임 원본으로 선택. ResourceSaver가 기본값과 같은 stack_limit을 생략하는 것을 발견해 기본값을 0(무효)으로 바꿈.
+- 자동: test_inventory 375검사 PASS(2회 차이0, 고아0, 엔진 오류0, 약8초). 실패 주입 종료1. 변이 10종과 엔진 오류 전용 변이 모두 검출. unittest 19. 깨끗한 worktree run_ci 11단계 PASS(이동 360, 상호작용 333 회귀 포함).
+- GUI: 사용자, 빌드 025c863, 일반·FULL 두 창, "1~5 모두 정상", 두 창 exit0·로그 오류0. Claude는 viewport 캡처로 배치만 보조 확인(ENV-003).
+- 결과: AC-N01~14 pass, IH-110 review. ADR-015 Proposed 유지(형식 선택 근거 기록). 제품 결함 없음. DEBT-002/003 유지. PR 필수 CI·develop 통합은 후속 기록. main/태그/릴리스 없음.
