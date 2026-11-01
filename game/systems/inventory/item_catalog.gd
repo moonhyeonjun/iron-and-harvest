@@ -11,19 +11,24 @@ const ID_MAX_LENGTH: int = 64
 
 @export var definitions: Array[ItemDef] = []
 
-static var _id_pattern: RegEx
-
-
-## True for ASCII lower-case IDs `[a-z][a-z0-9_]*` of 1..64 characters.
+## True when the whole value is an ASCII lower-case ID `[a-z][a-z0-9_]*` of 1..64
+## characters. Every character is checked (a regex `$` would accept a trailing newline,
+## BUG-006), and nothing is trimmed or case-folded, so distinct inputs never alias an ID.
 static func is_valid_id(value: Variant) -> bool:
 	if typeof(value) != TYPE_STRING and typeof(value) != TYPE_STRING_NAME:
 		return false
 	var text: String = String(value)
 	if text.is_empty() or text.length() > ID_MAX_LENGTH:
 		return false
-	if _id_pattern == null:
-		_id_pattern = RegEx.create_from_string("^[a-z][a-z0-9_]*$")
-	return _id_pattern.search(text) != null
+	for index: int in text.length():
+		var code: int = text.unicode_at(index)
+		var lower: bool = code >= 97 and code <= 122
+		if index == 0:
+			if not lower:
+				return false
+		elif not (lower or (code >= 48 and code <= 57) or code == 95):
+			return false
+	return true
 
 
 ## {"ok": bool, "errors": PackedStringArray, "records": {item_id: {...}}, "order": Array}.

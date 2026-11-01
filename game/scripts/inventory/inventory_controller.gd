@@ -84,6 +84,10 @@ func request_open(view: View) -> StringName:
 	if _state == State.OPENING:
 		return _reject(BUSY)
 	if _state == State.OPEN:
+		var broken: StringName = _dependency_lost()
+		if broken != OK:
+			request_close(broken)
+			return _reject(broken)
 		if view != _view:
 			_show(view)
 		return OK
@@ -119,7 +123,8 @@ func request_close(reason: StringName) -> void:
 		return
 	var session_id: int = _session_id
 	_state = State.CLOSED
-	if is_instance_valid(_ui):
+	# A UI merely detached from the tree is reset; a freed or deleting one is left alone.
+	if is_instance_valid(_ui) and not _ui.is_queued_for_deletion():
 		_ui.close_view(session_id)
 	if _owns_gate:
 		_owns_gate = false
@@ -144,8 +149,10 @@ func _exit_tree() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if _state == State.OPEN and not _player_usable():
-		request_close(REMOVED)
+	if _state == State.OPEN:
+		var broken: StringName = _dependency_lost()
+		if broken != OK:
+			request_close(broken)
 
 
 ## Closed: I opens the bag. Open: handled here, after the focused GUI control, so a
@@ -173,7 +180,7 @@ func _shortcut_input(event: InputEvent) -> void:
 func _open_blocker() -> StringName:
 	if _service == null or not is_instance_valid(_ui) or not is_instance_valid(_interaction):
 		return NOT_READY
-	if not is_inside_tree() or is_queued_for_deletion() or not _player_usable():
+	if not is_inside_tree() or is_queued_for_deletion() or not _player_usable() or not _ui_usable():
 		return REMOVED
 	if not _window_focused:
 		return FOCUS_LOST
@@ -188,8 +195,12 @@ func _open_blocker() -> StringName:
 	return OK
 
 
+## Re-checked after the interaction callback: anything may have been freed or closed.
 func _still_openable() -> StringName:
-	if not is_inside_tree() or is_queued_for_deletion() or not _player_usable() or not is_instance_valid(_interaction):
+	var broken: StringName = _dependency_lost()
+	if broken != OK:
+		return broken
+	if not is_instance_valid(_interaction):
 		return REMOVED
 	if not _window_focused:
 		return FOCUS_LOST
@@ -204,8 +215,25 @@ func _player_usable() -> bool:
 	return is_instance_valid(_player) and _player.is_inside_tree() and not _player.is_queued_for_deletion()
 
 
+func _ui_usable() -> bool:
+	return is_instance_valid(_ui) and _ui.is_inside_tree() and not _ui.is_queued_for_deletion()
+
+
+func _service_usable() -> bool:
+	return _service != null and not _service.is_closed() and _service.is_catalog_valid()
+
+
+## Why an open (or opening) panel can no longer stay up, or OK (BUG-005).
+func _dependency_lost() -> StringName:
+	if not is_inside_tree() or is_queued_for_deletion() or not _player_usable() or not _ui_usable():
+		return REMOVED
+	if not _service_usable():
+		return SERVICE_UNAVAILABLE
+	return OK
+
+
 func _reject(reason: StringName) -> StringName:
-	if is_instance_valid(_ui):
+	if _ui_usable():
 		_ui.show_notice(reason)
 	open_rejected.emit(reason)
 	return reason
@@ -240,7 +268,7 @@ func _view_model() -> Dictionary:
 
 func _on_inventories_changed(_changed: Array[StringName], _revisions: Dictionary) -> void:
 	# Display only; never issues another command from here.
-	if _state == State.OPEN:
+	if _state == State.OPEN and _ui_usable():
 		_ui.update_view(_session_id, _view_model())
 
 
@@ -252,7 +280,7 @@ func _on_transfer_requested(session_id: int, source_id: StringName, source_slot:
 	if code == OK:
 		var destination_id: StringName = _store_id if source_id == _bag_id else _bag_id
 		code = _service.transfer(source_id, source_slot, destination_id, quantity, source_revision, destination_revision).code
-	if _state == State.OPEN and session_id == _session_id:
+	if _state == State.OPEN and session_id == _session_id and _ui_usable():
 		_ui.show_result(session_id, code)
 		_ui.update_view(session_id, _view_model())
 	command_finished.emit(session_id, code)
@@ -261,6 +289,9 @@ func _on_transfer_requested(session_id: int, source_id: StringName, source_slot:
 func _transfer_blocker(session_id: int, source_id: StringName, source_slot: int, item_id: StringName) -> StringName:
 	if _state != State.OPEN or session_id != _session_id:
 		return STALE_SESSION
+	var broken: StringName = _dependency_lost()
+	if broken != OK:
+		return broken
 	if _view != View.STORE or (source_id != _bag_id and source_id != _store_id):
 		return WRONG_VIEW
 	var current: InventoryService.Result = _service.snapshot(source_id)

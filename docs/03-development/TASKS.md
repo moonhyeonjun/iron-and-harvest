@@ -134,6 +134,7 @@ v0.2.0 Character: IH-101/102 done과 회귀·GUI 증거를 근거로 [기능 마
 - 테스트 항목: 정의/별칭 격리·포화·부족·양방향 보존·stale/reentrant·snapshot 손상·모달 입력/수명·실제 GUI.
 - 현재 증거: feature/inventory-system(b7efab6, 05cd2b3, 2a085e2, 311a742, 025c863). AC-N01~13 자동 375검사 PASS, 변이 10종·엔진 오류 변이 검출, 로컬 CI 11단계 PASS(이동 360·상호작용 333 회귀 포함), AC-N14 사용자 GUI "1~5 모두 정상"(025c863). [IH-110 검증 기록](IH-110-VALIDATION.md). 12슬롯/7품목/스택10은 검증용 제안이며 ADR-015 Proposed. [PR #19](https://github.com/moonhyeonjun/iron-and-harvest/pull/19) 필수 CI 성공, merge f26a77e, develop CI 성공 → done.
 - Codex 후속 검토: 14302e5의 CI 11단계 PASS, 추가 진단은 수명2·ID1 위반으로 종료1. BUG-005/006 open, review로 재개. [수정 수락 조건](IH-110-REVIEW.md)을 충족한 후 done 복귀를 판정한다.
+- BUG-005/006 수정(2026-11-01): fix/inventory-lifecycle-and-id-validation `5004419`(실패 회귀)·`fb5cd0c`(수정)·`a714c5a`/`8dfe8bb`(검사 보완). 재현 진단 종료1→0, runner 수정 전 충돌·25실패 → 수정 후 PASS, 표적 변이 5종 검출, 깨끗한 worktree CI 11단계 PASS(이동 360·상호작용 333·인벤토리 521), 사용자 GUI "1~4 모두 정상"(8dfe8bb). PR 필수 CI·develop 통합 확인 전 review.
 - 제외: 실제 채집/저장/예약/장비 효과/정렬/실제 영지 창고. IH-111/112는 backlog 유지.
 
 ## IH-111 — 채집과 자원 지점
