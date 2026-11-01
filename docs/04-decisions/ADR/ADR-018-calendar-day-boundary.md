@@ -1,6 +1,6 @@
 # ADR-018: 정수 달력과 새벽 하루 경계·schema2 이관
 
-- 상태: **Proposed** (2026-11-01 상세 설계 ready, 구현·새 자동/GUI 검증 전)
+- 상태: **Proposed** (2026-11-02 구현·자동 검증 완료, Accepted 판단 전)
 - 날짜: 2026-11-01
 - 관련: IH-120, [CALENDAR](../../02-technical-design/CALENDAR.md), [수락 조건](../../03-development/IH-120-ACCEPTANCE.md), ADR-005(장기 시간 방향), ADR-017(Accepted 초기 저장)
 
@@ -38,3 +38,19 @@ schema2는 calendar 필수·content1 유지다. 정상v1 검증 뒤 기본 달�
 Rules/Service·외부 Controller/HUD·전용 맵, gathering의 snapshot/restore/suspend/close, Codec2/fixture·Coordinator의 작은 hook·CI 등록과 문서가 필요하다. 구현 차이를 기록하며 장기 기반이라는 이유로 범위를 늘리지 않는다.
 
 C01~16·기존 회귀·진짜 구버전/중간 이관·실패/수명/재진입·변이·반복·실제 GUI·필수 PR CI/develop 통합 후 Codex가 done/Accepted를 판단한다. ADR-005는 장기 방향 Proposed로 보존하며 이번 결정은 초기 시간 부분만 구체화한다. 월간/노화·제품 수치 전체를 승인하지 않는다.
+
+## 구현 검증 결과 (2026-11-02)
+
+Claude Code가 제안대로 구현했다([검증 기록](../../03-development/IH-120-VALIDATION.md)).
+- 정수 상태와 파생 날짜, 06:00 경계, 원자 전진과 1회 알림
+- 정지 사유 합성, N pending, 외부 blocker
+- schema2와 0→1→2 이관
+
+AC-C01~15 334검사, 변이 8종, 별도 프로세스, CI 14단계로 확인했다. GUI는 사용자 일부 확인과, 사용자 지시에 따른 Claude 조작 렌더 창 확인으로 나뉜다.
+
+구현 차이:
+- 이관 rule ID 고정
+- `is_busy`가 보고 중 포함
+- HUD layer 1
+
+증거와 별개로 Accepted 전환은 Codex 판단에 남기며, 상태는 Proposed다.

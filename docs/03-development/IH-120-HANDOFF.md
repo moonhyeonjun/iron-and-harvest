@@ -1,6 +1,6 @@
 # Claude Code 인수인계 — IH-120 달력·계절·하루 경계
 
-상태: **상세 설계 ready / 구현 전**, 2026-11-01. 기준 develop4d30344(IH-112 done·ADR-017 Accepted·v0.3.0 확정). Calendar 코드·신규 runner·새 GUI 검증은 없다. 아래 프롬프트는 다음 구현 작업용이다. Codex가 설계·기술 검토, Claude Code가 구현을 맡는다. 제품 수치와 장기 월간/노화 설계는 미확정이다.
+상태: **구현됨 / review**(2026-11-02 Claude Code, [검증 기록](IH-120-VALIDATION.md)). 아래 프롬프트는 완료 이력이며 다시 실행하지 않는다. 원래 상태는 상세 설계 ready / 구현 전(2026-11-01)이었다. 기준 develop4d30344(IH-112 done·ADR-017 Accepted·v0.3.0 확정). Calendar 코드·신규 runner·새 GUI 검증은 없다. 아래 프롬프트는 다음 구현 작업용이다. Codex가 설계·기술 검토, Claude Code가 구현을 맡는다. 제품 수치와 장기 월간/노화 설계는 미확정이다.
 
 ## 읽을 순서·수정 범위
 

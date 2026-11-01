@@ -513,3 +513,26 @@ Codex가 develop `d2e1c88`에서 수정 코드를 검토하고 원래 진단 5�
 - 다음: Claude Code가 인수인계 명세에 따라 작은 단계로 구현·자동/사용자 GUI 검증하고 Codex 후속 검토를 위해 review로 보고한다.
 
 - 설계 자체 검증: 날짜/표시 예시6종과 최대일자 계산을 독립 확인했다(build/ih-120-design/arithmetic.log). clean worktree 정적 검사 PASS, diff --check PASS. 신규 Calendar 코드 검증과는 구분한다. 사용자 루트는 AGENTS.md 기존 링크4개만 실패한다.
+
+## 2026-11-02 — IH-120 달력·계절·하루 경계 구현 (Claude Code)
+
+- **시작**: develop 2e62a15(origin 일치), 사용자 미추적 AGENTS.md 보존·미커밋. `feature/calendar-system` 분기. 게임 코드는 bb4d6fe 이후 변경이 없었다.
+- **구현 커밋**:
+  - 43dd607: 규칙·서비스
+  - 5570197: schema2와 IH-112 예상값 조정
+  - c6febb3: passive 달력과 coordinator hook
+  - 8ae36a8: Controller·HUD·장면
+  - 177ff53: runner·CI
+  - b29c6b1: HUD layer
+- **개발 중 발견**(runner로 잡아 커밋 전에 수정): 중첩 보고가 컨트롤러 busy 플래그를 풀어 경계 보고 중 P가 통과했다 → 바깥 보고 값을 보존하도록 수정했다.
+- **검증**
+  - runner 334 PASS(2회 차이 0, 고아 0, 오류 0). `--inject-failure` exit 1.
+  - 변이 8종 검출(구문 오류 0).
+  - 깨끗한 worktree CI 14단계 PASS(360/333/521/347/531/334, 누수 경고 0).
+- **GUI**
+  - 사용자(177ff53): 창 1의 1)·2)·4) 정상. 창 2는 복구 버튼으로 1세대 복원(로그). 창 A 빠른 프로필은 경계 28회.
+  - 첫 창 3은 Claude의 zsh `$args` 실행 오류로 기본 프로필이었다. 같은 원인으로 IH-111 '다 normal로만'과 IH-112 첫 창 3 현상이 설명된다.
+  - 창 B·C는 사용자가 "정상"이라 답했으나 불러오기 로그가 없어 미확인으로 처리했다.
+  - 사용자 지시("니가 직접 조작")에 따라 Claude가 b29c6b1의 렌더 창을 스크립트로 조작하고 캡처를 확인했다: 절차 1~5, 재시작, v1 이관, 손상 복구 모두 기대값. 이 과정에서 HUD가 가방 패널을 가리는 문제를 찾아 layer 1로 고쳤다.
+- **발견**: BUG-012(IH-112 SaveUI가 가방 패널을 가림, open).
+- **결과**: IH-120 review, ADR-018 Proposed. main/태그/릴리스 없음. PR/CI/merge 결과는 후속 기록에 남긴다.

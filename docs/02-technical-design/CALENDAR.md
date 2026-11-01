@@ -1,6 +1,6 @@
 # IH-120 달력·계절·하루 경계 상세 명세
 
-상태: **Proposed / 구현 ready**(2026-11-01). 기준 develop `4d30344`, IH-112 done·ADR-017 Accepted, v0.3.0 확정. 이번 작업은 설계뿐이며 Calendar 코드·신규 runner·GUI는 아직 없다. Codex는 설계·검증, Claude Code는 구현을 맡는다. [수락 조건](../03-development/IH-120-ACCEPTANCE.md), [인수인계](../03-development/IH-120-HANDOFF.md), [ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md)을 함께 따른다.
+상태: **Proposed / 구현됨(review)**(2026-11-02 Claude Code, [검증 기록](../03-development/IH-120-VALIDATION.md), 아래 '구현 결과·차이'). 원래 상태는 구현 ready(2026-11-01)였다. 기준 develop `4d30344`, IH-112 done·ADR-017 Accepted, v0.3.0 확정. 이번 작업은 설계뿐이며 Calendar 코드·신규 runner·GUI는 아직 없다. Codex는 설계·검증, Claude Code는 구현을 맡는다. [수락 조건](../03-development/IH-120-ACCEPTANCE.md), [인수인계](../03-development/IH-120-HANDOFF.md), [ADR-018](../04-decisions/ADR/ADR-018-calendar-day-boundary.md)을 함께 따른다.
 
 ## 목적·범위
 
@@ -137,3 +137,21 @@ python3 tools/run_ci.py
 일일 소비/생산·작물 계획의 실패/원자 commit·독립 cursor는 IH-121/131/Simulation에서 명세를 확장한다. 월 정의, 배속, 수면/밤길이, 농사 계절 반응, 생애/왕조 연령과 압축 연도의 관계, 제품 지원 연수/수치는 TBD다. 일자·연도 표시가 곧 인물 나이 변경이라는 전제를 넣지 않는다.
 
 Godot 공식 설명상 물리는 기본60Hz의 고정 주기이고 렌더 `_process`와 다르다. pause/process_mode가 멈춰도 signal 호출은 가능하므로 이번 설계는 명령 진입의 별도 가드를 요구한다. [물리/idle 처리](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html), [정지와 process mode](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html). 공식 stable 문서와 실제4.7.2의 호출 순서/설정은 구현 때 측정한다. 이번에 새 엔진 동작을 검증했다고 보고하지 않는다.
+
+## 구현 결과·차이 (2026-11-02, Claude Code)
+
+- **모듈**:
+  - `data/calendar/calendar_rules.json`(JSON 단일 원본), `systems/calendar/calendar_rules.gd`·`calendar_service.gd`
+  - `scripts/calendar/calendar_controller.gd`, `ui/calendar/calendar_hud.*`(layer 1, 모달 아래)
+  - `scenes/tests/calendar_test.tscn`(SaveLoadTest를 감싸는 장면), `tests/test_calendar.gd`·`support/calendar_child.gd`
+- **SaveCoordinator**: `is_busy()`가 보고 중을 포함한다. `set_external_blocker`(setup 선택 인자 포함, 기본은 빈 값)를 둔다.
+- **gathering 맵**: passive calendar와 `calendar_rules()`·`calendar_profile()`, `save_manifest(rule_id)`의 `calendar_profile`. SaveLoadTest는 `calendar_rule_id` hook과 `user://tests/ih120/` 접두사를 허용한다.
+- **schema2 이관**: 항상 `calendar_test_v1`로 한다(`SaveCodec.MIGRATION_RULE_ID`). 빠른 프로필 manifest에서 v1은 CONTENT_MISMATCH다. 중간 v1 검증을 거친 뒤 calendar를 추가한다.
+- **N 처리**: 요청은 QUEUED만 반환한다. 실행 결과는 다음 스텝에 한 번 보고한다. 거부 코드 대응은 검증 기록에 있다. 새 프로세스는 neutral 대기로 시작한다.
+- **4.7.2 측정**:
+  - max_fps 30/60/144에서 tick = 물리 스텝이다.
+  - 400ms 정지 뒤에는 처리된 스텝만 진행하고 보충하지 않는다.
+  - physics 30Hz에서는 정지한다.
+  - tree pause 중 ALWAYS Controller는 tick하지 않는다.
+  - process_mode는 deferred 호출을 막지 않으므로 서비스 가드가 필요하다.
+- **수치**: 프로필 값은 검증용 제안이다. 농사, 생산 결산, 노화, 수면, 배속, 오프라인은 없다.
