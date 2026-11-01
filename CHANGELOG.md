@@ -1,5 +1,9 @@
 # 변경 이력
 
+## Unreleased — IH-111 Codex 기술 검토
+
+- BUG-007(실제 채집 HUD 제거 후 호출·엔진 충돌), BUG-008(내장 정의의 비정수 수량 검증 우회)을 재현했다. IH-111 review 재개, [Claude 수정 프롬프트](docs/03-development/IH-111-REVIEW.md)와 수락 조건을 작성했다. 게임 코드 변경 없음.
+
 ## Unreleased — IH-111 채집·자원 지점 (Claude Code, 2026-11-01)
 
 - GatherDef/GatherCatalog(정의 3종, 원본 리터럴 검사), GatherService(build 일괄 검증·등록, 숨은 1슬롯 stock, 파생 잔량, 단발 명령 stock→bag transfer).

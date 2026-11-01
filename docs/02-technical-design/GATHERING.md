@@ -1,5 +1,7 @@
 # IH-111 채집·자원 지점 상세 설계
 
+**현재 구현 판정: review.** 최초 구현·수락 통합 뒤 Codex가 BUG-007/008을 추가 재현했다. [리뷰·수정 수락 조건](../03-development/IH-111-REVIEW.md)을 따른다. 아래 설계 계약과 최초 구현 결과는 보존하며 ADR-016 Proposed를 유지한다.
+
 상태: **Proposed / IH-111 구현·검증·develop 통합 완료**, 2026-11-01. 기준 develop `de0c163`(IH-110 BUG-005/006 독립 재검증 완료). 아래 계약대로 구현했으며 차이는 문서 끝과 [검증 기록](../03-development/IH-111-VALIDATION.md)에 있다. Godot4.7.2 Standard/GDScript/Compatibility 유지. Codex는 설계, Claude Code는 구현·검증한다. [ADR-016](../04-decisions/ADR/ADR-016-atomic-gathering.md), [수락 조건](../03-development/IH-111-ACCEPTANCE.md), [인수인계](../03-development/IH-111-HANDOFF.md)를 함께 따른다.
 
 ## 최소 플레이 경험과 범위

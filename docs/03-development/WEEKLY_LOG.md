@@ -311,3 +311,15 @@
 - [PR #26](https://github.com/moonhyeonjun/iron-and-harvest/pull/26) c036f90 → develop, merge 42e3f4b230bd901a6fdab1122e592ed809822ccf(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283403152/job/124779743066) success(12단계, 네 suite RESULT: PASS·엔진 오류0·누수 경고 없음). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41283663628/job/124780504085) success.
 - 통합 tree = c036f90. IH-111 done. ADR-016 Proposed 유지. main·태그·릴리스 미변경.
 - 다음: IH-112 초기 저장과 복원(지점 결속·숨은 stock 포함 snapshot), DEBT-004 결정, ADR-015/016 Accepted 판단.
+
+## 2026-11-01 — IH-111 Codex 기술 검토
+
+- 기준 develop/origin c266d52, 원격 CI41284249678 success. 미추적 사용자 AGENTS.md 보존. docs/ih-111-technical-review에서 문서만 변경한다.
+- 추가 진단: GatheringHUD.free 시 gathering_test146행 signal11/launcher250. queue_free는 첫 거래 bag9/stock5 성공·오류0, 다음 E에서 같은 충돌(BUG-007).
+- 내장 GatherDef의 initial_quantity 2.5/true/"3"은 각각2/1/3으로 로드·compile=true/build=OK. 분리 진단 종료1/위반3/엔진 오류0(BUG-008).
+- 원시 진단/로그 build/ih-111-codex-review/. GUI·표적 변이는 새로 실행하지 않았다. 기존7787c26 사용자 GUI 확인과 구분한다.
+- IH-111 done→review, BUG-007/008 open, ADR-016 Proposed 유지. 리뷰·수정 프롬프트·작업/수락/검증/인수인계 진입점을 갱신한다. 게임/씬/테스트/CI 설정/main/태그는 변경하지 않는다.
+- 다음: Claude Code 수정·실패 회귀 편입·표적 변이·GUI·필수 PR CI, 이후 Codex 재검증. IH-112 상세 설계는 별도 작업이다.
+
+- 독립 공통 CI 종료0/12단계 PASS: Python19·경제7·이동360·상호작용333·인벤토리521·채집309, 반복22종 차이0·고아0·엔진 오류0. 기존 suite 통과와 새 재현 실패를 구분한다.
+- 리뷰 문서13개를 반영한 별도 worktree 정적 검사 PASS, diff --check PASS. 사용자 루트는 AGENTS.md의 기존 링크4개만 실패하며 사용자 파일은 보존한다. 필수 PR CI 후 문서만 develop에 통합하고 실제 SHA/CI/원격 결과는 PR 이력과 완료 보고에 기록한다.
