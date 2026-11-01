@@ -203,10 +203,13 @@ func _g03_success() -> bool:
 	var gather: GatherService = session.gather
 	var before: Dictionary = _all_snapshots(inventory)
 	var seen: Array = []
-	inventory.inventories_changed.connect(func(ids: Array[StringName], revisions: Dictionary) -> void:
+	# The observer captures the services it listens to; disconnect it so no RefCounted cycle remains.
+	var observer: Callable = func(ids: Array[StringName], revisions: Dictionary) -> void:
 		seen.append({"ids": ids.map(func(id: StringName) -> String: return String(id)), "revisions": revisions.duplicate(),
-			"bag_wood": inventory.count("player_bag", "wood").value, "remaining": gather.query("branch_pile_01").value.remaining}))
+			"bag_wood": inventory.count("player_bag", "wood").value, "remaining": gather.query("branch_pile_01").value.remaining})
+	inventory.inventories_changed.connect(observer)
 	var result: GatherService.Result = _gather_once(gather, "branch_pile_01", 7)
+	inventory.inventories_changed.disconnect(observer)
 	var after: Dictionary = _all_snapshots(inventory)
 	var event: Dictionary = seen[0] if seen.size() == 1 else {}
 	var others_same: bool = after.test_store == before.test_store and after.stock_stone_01 == before.stock_stone_01 \
@@ -563,6 +566,7 @@ func _g09_after_commit() -> bool:
 		var events_before: int = _events.size()
 		await _press_e()
 		await _ticks(4)
+		inventory.inventories_changed.disconnect(breaker)
 		var payouts: int = _events.size() - events_before
 		_check("AC-G09", seen.size() == 1 and seen[0] == [9, 5] and payouts == 1 and not gather.has_pending_command(),
 			"%s during the change signal: committed once %s, events %d" % [action, seen, payouts])
