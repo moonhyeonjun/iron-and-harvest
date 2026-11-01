@@ -4,6 +4,7 @@ extends CanvasLayer
 ## profile and test root. Emits intents with the epoch (and revision) it was showing; it
 ## never touches the calendar. Labels are rewritten only when the visible minute, day or
 ## reasons change; the epoch/revision sent by the buttons are refreshed on every view.
+## Layer 1: below the modal panels (bag 3, inspect 2), so an open panel is never covered.
 
 signal pause_requested(epoch: int)
 signal next_day_requested(epoch: int, revision: int)
