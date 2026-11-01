@@ -184,3 +184,13 @@
 
 - [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 3225882 → develop, merge e5d7730f1b858b22a5ba9ead1880fe1fd73a8641(mergeable_state=clean). [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269323346/job/124738634090) success(10단계, 새 회귀 12종 로컬과 동일). [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41269551599/job/124739307741) success.
 - 통합 tree = 3225882. BUG-003/004 resolved, IH-102 done 복귀. main·v0.1.0 미변경, v0.2.0·ADR-014 Accepted는 별도 판단.
+
+## 2026-11-01 — BUG-003/004 Codex 수정 재검증
+
+- 대상 develop/origin `69561ca`. 추적 변경 없음, 사용자 미추적 AGENTS.md 보존. game/tools/tests/.github는 수정 빌드0332b5a와 동일.
+- 원래 재현 스크립트 종료0/위반0: 두 요청 모두 패널·ACTIVE=false, 이동 가능=true. 수정 코드와 추가 회귀를 검토했고 추가 수정이 필요한 결함 없음.
+- clean worktree `python3 tools/run_ci.py` 종료0/10단계 PASS: Python19, 이동360, 상호작용333. 반복2회 측정33종 차이0·고아0·엔진 오류0. 로그 build/ih-102-fix-codex-review/ci/.
+- PR #12/#13 merged, develop run41270032260 success 확인. GUI 새 조작 없음; 0332b5a 사용자 확인 기록을 구분해 사용했다. 실패 주입/변이는 Claude 기록으로 유지, 재실행하지 않음.
+- BUG-003/004 resolved와 IH-102 done 유지. 게임 코드/씬/엔진/CI는 변경하지 않고 리뷰/검증/작업/버그/주간 기록 및 README·HANDOFF의 완료된 수정 안내를 정리했다.
+- docs/ih-102-fix-verification에서 문서 커밋·필수 PR CI 후 develop 통합. 실제 SHA와 PR 결과는 Git 이력 및 최종 보고를 따른다.
+- 다음 설계 후보: v0.2.0 마일스톤 판정, IH-110 아이템·인벤토리 명세. main/v0.1.0·ADR Proposed 유지, 새 태그/릴리스 없음.

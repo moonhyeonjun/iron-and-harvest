@@ -4,6 +4,17 @@
 
 2026-11-01, `29b2ed3` 추가 검사에서 BUG-003/004가 재현되어 IH-102를 review로 재개했다. 이후 아래 수정 검증과 [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 통합으로 **done**에 복귀했다. 아래는 Claude Code 구현 당시의 검증 이력이며, 기존 299검사 PASS가 두 경계의 안전성을 입증하지는 않는다. 재현·수정 기준·전달 프롬프트는 [Codex 검토](IH-102-REVIEW.md)를 따른다.
 
+## Codex 독립 재검증 (2026-11-01)
+
+- 대상: develop/origin `69561cad9c44bf910797d01a0a600a265457fd14`. 게임/도구/테스트/CI 파일은 GUI 확인 빌드 `0332b5a`와 동일(`git diff --exit-code`).
+- 코드 검토: `_check_target`이 선택·실행·활성 세션의 중복 ID 정책을 공유하고, 활성 세션의 원래 ID를 보존한다. `_resolve_cancel`은 try_begin 중 disable/focus out/트리 이탈의 첫 사유를 유지하며 반환 후 `_start_blocker`로 재확인한다. 회귀에는 disable→enable, 세션 중 ID 변경, 삭제/재진입도 포함됐다.
+- 원래 Codex 재현 스크립트: `python3 tools/godot.py --headless --script /tmp/ih102-review-probe.gd`, 종료0/위반0. 두 사례 모두 ACTIVE=false, panel=false, control_effective=true. 스크립트는 IH-102-REVIEW의 원문에서 추출했다.
+- 전체 CI: clean detached worktree에서 `python3 tools/run_ci.py`, **종료0/10단계 PASS**. Python19개, IH-101 360검사, IH-102 333검사 PASS. 상호작용 2회 반복 측정33종 차이0·고아0·엔진 오류0. Import/기반 smoke/runtime도 통과. 로그: `build/ih-102-fix-codex-review/ci/`(Git 무시).
+- 원격: PR #12/#13 merged 확인, [동일 SHA의 develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41270032260) CI checks success를 GitHub API로 확인했다.
+- 이번에 GUI를 새로 조작하지 않았다. Claude 수정 기록의 사용자 확인(`0332b5a`, “1~5 모두 정상”)과 이번 자동 재검증을 구분한다. 실패 주입·수정 전 실패·변이 검증은 아래 Claude 실행 기록이며 이번에 다시 실행하지 않았다.
+- 판정: **BUG-003/004 resolved, IH-102 done 유지**. 코드/씬 추가 수정 없음. 다중 이동 잠금(DEBT-002), 배포 글꼴(DEBT-003), 제품 조작값과 ADR-012/014 상태는 기존 후속 범위다.
+- 원래 작업 트리의 미추적 AGENTS.md는 그대로 보존했다. 해당 파일의 없는 .Codex/rules 링크4개 문제는 이전 검토와 동일하며 clean worktree 결과와 구분한다. main=`64928e5`, v0.1.0 대상=`d176bd7` 유지; v0.2.0 태그/릴리스는 만들지 않았다.
+
 ## BUG-003/004 수정 검증 (2026-11-01, Claude Code)
 
 브랜치 `fix/interaction-request-validation` ← develop `dc2a185`. 커밋: `aaac5da` 실패 회귀 추가, `0332b5a` 수정. 환경은 위와 같다(macOS 13.4 / M1, Godot 4.7.2 Standard). 원시 로그는 `build/ih-102-fix/`(Git 무시).

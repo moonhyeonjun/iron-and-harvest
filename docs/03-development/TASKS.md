@@ -119,6 +119,7 @@ GitHub Issue를 원격 생성하지 않았다. 이 문서가 현재 작업 관�
 - 현재 증거/미확정: feature/interaction-system에서 구현(95c723e, f89d812, bcab854, 4f69d80, 5062a83, 3d99d36, bf8501b). AC-I01~12 자동 299검사 PASS, 사용자 GUI "1~5 모두 정상", 로컬 CI 10단계 PASS. [검증 기록](IH-102-VALIDATION.md). [PR #9](https://github.com/moonhyeonjun/iron-and-harvest/pull/9) 필수 CI 성공 후 merge 318fcd2로 develop 통합, develop push CI 성공, done. 반경/정면각/키/UI는 검증용 제안(ADR-014 Proposed).
 - 후속 판정(2026-11-01): Codex가 `29b2ed3`에서 BUG-003/004를 재현하여 review로 재개. [검토·Claude 수정 프롬프트](IH-102-REVIEW.md)의 실행 시 중복 ID/RESOLVING 취소 회귀를 보완해야 done으로 복귀한다. 기존 통합 이력은 보존한다.
 - BUG-003/004 수정(2026-11-01): fix/interaction-request-validation `aaac5da`(실패 회귀)·`0332b5a`(수정). runner 333검사 PASS, Codex 재현 종료0, 로컬 CI 10단계 PASS, 사용자 GUI "1~5 모두 정상"(0332b5a). [PR #12](https://github.com/moonhyeonjun/iron-and-harvest/pull/12) 필수 CI 성공, merge e5d7730, develop CI 성공 → done.
+- Codex 재검증(2026-11-01): `69561ca`에서 원래 재현 위반0, 전체 CI 10단계/상호작용333검사 PASS 및 원격 CI 성공 확인. BUG-003/004 resolved·IH-102 done 유지. [검증 기록](IH-102-VALIDATION.md).
 - 의존성 메모: IH-101은 기능 의존, IH-004는 사용자 지정 개발 순서와 PR 검증 기반이다.
 
 ## IH-110 — 아이템 정의와 인벤토리
