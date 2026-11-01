@@ -33,8 +33,8 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
 
 | ID | 분류 | 상태 | 재현/영향 | 다음 조치 |
 |---|---|---|---|---|
-| BUG-007 | IH-111 / medium (P2) | fixed(Claude, 통합·Codex 재검증 대기) | Inventory 변경 콜백에서 GatheringHUD.free 후 _on_gathered146행의 hud.show_toast가 signal11/exit250. queue_free는 첫 거래 bag9/stock5 성공 후 다음 E에서 같은 충돌 | HUD 쓰기·지연 갱신·rebind의 수명 가드, 실제 HUD 제거 후 후속 입력 회귀. [리뷰](IH-111-REVIEW.md) |
-| BUG-008 | IH-111 / medium (P2) | fixed(Claude, 통합·Codex 재검증 대기) | 내장 GatherDef(path에 ::)의 initial_quantity 2.5/true/"3"이 각각2/1/3으로 로드되고 compile=true/build=OK | 검증 불가 원본 fail-closed 또는 모든 지원 경로의 원본 타입 검증, 내장 fixture 회귀. [리뷰](IH-111-REVIEW.md) |
+| BUG-007 | IH-111 / medium (P2) | fixed(develop ed554c5, Codex 재검증 대기) | Inventory 변경 콜백에서 GatheringHUD.free 후 _on_gathered146행의 hud.show_toast가 signal11/exit250. queue_free는 첫 거래 bag9/stock5 성공 후 다음 E에서 같은 충돌 | HUD 쓰기·지연 갱신·rebind의 수명 가드, 실제 HUD 제거 후 후속 입력 회귀. [리뷰](IH-111-REVIEW.md) |
+| BUG-008 | IH-111 / medium (P2) | fixed(develop ed554c5, Codex 재검증 대기) | 내장 GatherDef(path에 ::)의 initial_quantity 2.5/true/"3"이 각각2/1/3으로 로드되고 compile=true/build=OK | 검증 불가 원본 fail-closed 또는 모든 지원 경로의 원본 타입 검증, 내장 fixture 회귀. [리뷰](IH-111-REVIEW.md) |
 
 위 두 건은 최초 구현 중 미발견 기록 이후 추가로 확인했다. IH-111 review 재개. DEBT-004의 기존 ItemDef 제한과 BUG-008의 GatherDef 우회를 구분한다.
 
@@ -42,4 +42,4 @@ IH-111 구현 중 제품 결함은 발견되지 않았다. 테스트 쪽 RefCoun
 - BUG-007: 시험 맵 HUD 쓰기 5곳에 수명 가드를 넣었다. 거래 결과는 유지된다.
 - BUG-008: 외부 `.tres`만 지원한다. 내장 정의는 거부하고, 경로 없는 정의는 opt-in일 때만 허용한다.
 - 수정 전 Codex 진단 4종은 실패했고, 수정 후 모두 PASS다. 회귀는 AC-G01/G09에 편입했다. 변이 5종 검출, 사용자 GUI 정상.
-- [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). resolved 판정은 develop 통합과 Codex 재검증 뒤에 한다. DEBT-004는 미변경이다.
+- [수정 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01). [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29)로 develop 통합(merge ed554c5, PR/develop CI success). resolved 판정은 Codex 재검증 뒤에 한다. DEBT-004는 미변경이다.

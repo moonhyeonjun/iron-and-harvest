@@ -216,3 +216,11 @@ int로 타입 지정된 Resource 필드에 `.tres` 값 `2.5`, `true`, `"3"`이 �
 - IH-110 ItemDef의 같은 엔진 변환 제한(DEBT-004)은 범위 밖이라 그대로 남는다.
 - HUD 가드는 시험 맵의 표시 계층에만 적용했다. 범용 UI 잠금이나 수명 프레임워크는 만들지 않았다.
 - Windows/Linux GUI는 미확인이다. IH-111 done 복귀는 Codex 독립 재검증과 develop 통합 이후 판정한다.
+
+### 통합 기록
+
+- [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29): `fix/gathering-hud-and-definition-validation`(`1010bde`) → develop. merge `ed554c59a56581f6dc3e76a2bbaa9b684df7918f`. 병합 전 mergeable_state=clean, base `f51ede5`. 보호 우회·강제 push 없음.
+- [PR CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41293472692/job/124809362090): Ubuntu 24.04 / Godot 4.7.2에서 12단계 PASS. 이동 360·상호작용 333·인벤토리 521·채집 347, 네 suite 모두 `RESULT: PASS`, 누수 경고 없음.
+- [develop CI](https://github.com/moonhyeonjun/iron-and-harvest/actions/runs/41293774055/job/124810245717): develop push(`ed554c5`) CI checks success.
+- 통합 tree는 검증한 `1010bde`과 동일하다(`git diff --exit-code`). main·태그·릴리스는 변경하지 않았다.
+- BUG-007/008은 fixed·통합 완료 상태다. resolved와 IH-111 done 복귀는 Codex 독립 재검증 뒤 판정한다.

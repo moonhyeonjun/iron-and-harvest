@@ -11,6 +11,7 @@
 - **BUG-008**: 지원 형식을 제한했다(외부 `.tres`만, 정수 리터럴 검사). 내장(`::`) 정의는 값과 무관하게 거부한다. 경로 없는 정의는 코드 전용 opt-in일 때만 허용한다. 내장 2.5/true/"3"/누락/정상 5종은 INVALID_SETUP·null로 처리되고, 출하 외부 정의는 성공한다.
 - 수정 전 Codex 진단 4종은 실패(exit 250 2회, FAIL)였고, 수정 후 모두 exit 0·PASS다. runner는 347검사 PASS다. 변이 5종(HUD 가드 3곳 제거, 내장 허용, 경로 없음 기본 허용)이 모두 검출됐다.
 - 사용자 GUI는 normal/full/rebind "1~5 모두 정상"(`b5afd93`)이다. 깨끗한 worktree CI 결과와 PR/통합은 [검증 기록](IH-111-VALIDATION.md#bug-007008-수정--claude-code-2026-11-01)에 있다.
+- [PR #29](https://github.com/moonhyeonjun/iron-and-harvest/pull/29)로 develop 통합(merge `ed554c5`, PR/develop CI success, 통합 tree=`1010bde`).
 - 남은 제한: DEBT-004(ItemDef) 미변경. Codex 독립 재검증 대기.
 
 ## 확인한 증거·검증 범위
